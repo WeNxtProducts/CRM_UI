@@ -1,0 +1,40 @@
+.custom-calendar {
+    .rbc-toolbar {
+      font-size: 14px; // Reduce font size
+      padding: 4px 8px; // Reduce padding
+      margin-bottom: 8px; // Reduce margin
+  
+      button {
+        background-color: #0382c8; // Custom blue color
+        color: #fff;
+        border-radius: 4px;
+        padding: 4px 10px;
+        margin: 2px;
+        border: none;
+        cursor: pointer;
+        font-size: 12px;
+  
+        &:hover {
+          background-color: #0267a3; // Darker blue on hover
+        }
+  
+        &.rbc-active {
+          background-color: #4CAF50; // Custom green color for active state
+        }
+      }
+    }
+  
+    .rbc-header {
+      font-size: 13px;
+      padding: 6px;
+    }
+  
+    .rbc-event {
+      font-size: 12px;
+      padding: 2px;
+    }
+    .rbc-label {
+        font-size: 12px;
+    }
+  }
+  

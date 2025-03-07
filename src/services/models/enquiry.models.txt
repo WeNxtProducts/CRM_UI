@@ -1,0 +1,9 @@
+import { z } from 'zod'
+
+export const EnquiryListResponseSchema = z.any()
+
+export type EnquiryListResponse = z.infer<typeof EnquiryListResponseSchema>
+
+export const EnquiryIdSchema = z.any()
+
+export type EnquiryIdResponse = z.infer<typeof EnquiryIdSchema>

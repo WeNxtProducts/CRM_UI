@@ -1,0 +1,62 @@
+import React from 'react'
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger
+} from '@/components/ui/dialog'
+import SentMessage from './sentMessage'
+
+const LeadDetailsDialog = ({ open, onClose, leadData }: any) => {
+	return (
+		<Dialog
+			open={open}
+			onOpenChange={onClose}>
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>Lead Details</DialogTitle>
+				</DialogHeader>
+
+            
+            <div className='space-y-4 grid grid-cols-2 items-center '>
+					<div>
+						<p className='text-xs'>Lead Name</p>
+						<p className='text-sm'>{leadData.name}</p>
+					</div>
+
+					<div>
+						<p className='text-xs'>Email Address</p>
+						<p className='text-sm'>{leadData.email || 'N\A'}</p>
+					</div>
+
+					<div>
+						<p className='text-xs'>Mobile Number</p>
+						<p className='text-sm'>{leadData.mobile || 'N\A'}</p>
+					</div>
+
+					<div>
+						<p className='text-xs'>Address</p>
+						<p className='text-sm'>{leadData.address || 'N\A'}</p>
+					</div>
+
+					<div>
+						<p className='text-xs'>Assignee</p>
+						<p className='text-sm'>{leadData.assignedBy || 'N\A'}</p>
+					</div>
+				</div>
+
+                <div>
+                    <p className='text-xs'>Description</p>
+                    <p className='text-sm'>{leadData.description || 'N\A'}</p>
+                </div>            
+			</DialogContent>
+            
+		</Dialog>
+	)
+}
+
+export default LeadDetailsDialog

@@ -1,0 +1,35 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import api, { type TResponse } from '@/lib/api'
+import endPoints from './endpoints'
+import {
+	type EnquiryIdResponse, EnquiryIdSchema,
+	type EnquiryListResponse, EnquiryListResponseSchema
+} from './models/enquiry.models'
+
+// Enquiry List
+export type EnquiryList = TResponse<EnquiryListResponse>
+
+export async function getEnqList(token: string | null) {
+	return api.get<EnquiryListResponse>(endPoints.enquiryList, EnquiryListResponseSchema, {
+		headers: { Authorization: token }
+	})
+}
+
+// Get Enquiry By Id
+export type EnquiryGetId = TResponse<EnquiryIdResponse>
+
+export type EnqId = {
+	enqId: any
+}
+
+export async function getEnquiryById(data: EnqId) {
+	return api.get(`${endPoints.enquiryList}/${data?.enqId}`, EnquiryIdSchema)
+}
+
+// Create Enquiry
+export async function createNewEnquiry(data: any) {
+	return api.post<any>(endPoints.enquiryList, data)
+}
+
+
+

@@ -1,0 +1,23 @@
+// const { data: EnquiyList, refetch } = useGetEnquiryListQuery()
+// const { data: EnquiryDetails, refetch: GetByIdRefetch } = useGetByEnquiryIdQuery({ enqId: 3 })
+// const [createEnquiryAPI] = useCreateEnquiryMutation()
+
+
+import api, { type TResponse } from '@/lib/api'
+import {
+    LoginResponseSchema,
+    type LoginResponse,
+} from './models/auth.models'
+import endPoints from './endpoints'
+
+export type LoginToken = TResponse<LoginResponse>
+
+export async function getLoginToken(token: string | null) {
+    return api.get<LoginResponse>(
+        endPoints.login,
+        LoginResponseSchema,
+        {
+            headers: { Authorization: token }
+        }
+    )
+}

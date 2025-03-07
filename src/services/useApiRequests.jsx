@@ -25,12 +25,6 @@ const useApiRequests = (apiName, method) => {
      };
      url += `?${convertObjectToQueryString(queryParams)}`;
     }
-    console.log({
-        method: method,
-        url: url,
-        data: payload,
-        headers: header,
-       })
     const response = await axiosInstance({
      method: method,
      url: url,

@@ -1,6 +1,6 @@
 'use client'
 
-// import { leadss } from '@/lib/constant'
+import { useRouter } from 'next/navigation'
 import { ArrowUp, Smartphone } from 'lucide-react'
 import whatsapp from '@/Images/icons8-whatsapp.svg'
 import mail from '@/Images/mail-image.svg'
@@ -8,33 +8,32 @@ import mobile from '@/Images/mobile-image.svg'
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { Button } from '../button'
-// import { DialogCloseButton } from './dialogbox'
 import FixAppoinment from './fixAppoinment'
 import moment from 'moment'
 import SentMessage from './sentMessage'
-// import LeadDetailsDialog from './leadDetailsDialog'
 
-const LeadtableListing = ({ leads = [] }: any) => {
-
+const LeadtableListing = ({ leads = []  }: any) => {
+	const router = useRouter()
 	const [openDialog, setOpenDialog] = useState(false)
 	const [messageDialog, setMessageDialog] = useState(false)
-	// const [leadDialog, setLeadDialog] = useState(false)
-	// const [selectedLead, setSelectedLead] = useState<any>(null)
-	const [activeIcon, setActiveIcon] = useState<string | null>(null);
-
+	const [selectedLead, setSelectedLead] = useState<{ leadSource: string; leadDesc: string, id:any } | null>(
+		null
+	)
+	const [activeIcon, setActiveIcon] = useState<string | null>(null)
 	const handleClose = () => {
 		setOpenDialog(false)
 		setMessageDialog(false)
 	}
 
-	const handleIconClick = (icon:string)=>{
+	const handleIconClick = (icon: any, lead: any) => {
 		setActiveIcon(icon)
 		setMessageDialog(true)
+		setSelectedLead({
+			leadSource: icon,
+			leadDesc: lead.leadDescription || '',
+			id  : lead.leadSeqNo
+		})
 	}
-
-	// const leadDialogeClose = ()=>{
-	// 	setLeadDialog(false)
-	// }
 
 	return (
 		<div className='space-y-4'>
@@ -43,10 +42,6 @@ const LeadtableListing = ({ leads = [] }: any) => {
 					<div
 						key={index}
 						className='grid grid-cols-8 items-center gap-3 rounded-lg bg-white p-4 shadow-md'
-						// onClick={()=>{
-						// 	setSelectedLead(task)
-						// 	setLeadDialog(true)
-						// }}
 					>
 						<div className='col-span-2 flex flex-col'>
 							<div className='text-sm text-gray-500'>{lead.leadSeqNo}</div>
@@ -66,7 +61,7 @@ const LeadtableListing = ({ leads = [] }: any) => {
 						<div className='col-span-1 flex flex-col text-sm'>
 							<div className='text-sm text-gray-500'>Priority</div>
 							<div
-								className={`mt-1 flex items-center gap-x-1  p-1  ${
+								className={`mt-1 flex items-center gap-x-1 p-1 ${
 									lead.leadPriority === 'High'
 										? 'text-green-500'
 										: lead.leadPriority === 'Medium'
@@ -76,7 +71,7 @@ const LeadtableListing = ({ leads = [] }: any) => {
 												: 'text-gray-400'
 								}`}>
 								<ArrowUp className='h-5 w-4' />
-								{lead.leadPriority} 
+								{lead.leadPriority}
 							</div>
 						</div>
 
@@ -130,7 +125,8 @@ const LeadtableListing = ({ leads = [] }: any) => {
 								width={30}
 								height={30}
 								alt='Mobile Icon'
-								className='rounded-full border bg-[#E6EDF5] p-1'
+								className='rounded-full border bg-[#E6EDF5] p-1 cursor-pointer'
+								onClick={() => router.push('/enquiry')}
 							/>
 							<Image
 								src={whatsapp}
@@ -139,14 +135,18 @@ const LeadtableListing = ({ leads = [] }: any) => {
 								alt='WhatsApp Icon'
 								onClick={(e) => {
 									e.stopPropagation()
-									handleIconClick('whatsapp')
+									handleIconClick('whatsapp', lead)
 								}}
 								className='cursor-pointer'
 							/>
-							{messageDialog && (
+							{messageDialog && selectedLead &&(
 								<SentMessage
 									messageOpen={messageDialog}
 									messageClose={() => setMessageDialog(false)}
+									activeIcon={activeIcon}
+									leadSource={selectedLead.leadSource}
+									leadDesc={selectedLead.leadDesc}
+									id = {selectedLead.id}
 								/>
 							)}
 
@@ -158,28 +158,22 @@ const LeadtableListing = ({ leads = [] }: any) => {
 								className='cursor-pointer rounded-full border bg-[#E6EDF5] p-1'
 								onClick={(e) => {
 									e.stopPropagation()
-									handleIconClick('mail')
+									handleIconClick('mail', lead)
 								}}
 							/>
-							{messageDialog && (
+							{messageDialog && selectedLead && (
 								<SentMessage
 									messageOpen={messageDialog}
 									messageClose={() => setMessageDialog(false)}
 									activeIcon={activeIcon}
+									leadSource={selectedLead.leadSource}
+									leadDesc={selectedLead.leadDesc}
+									id={selectedLead.id}
 								/>
 							)}
 						</div>
 					</div>
 				))}
-
-			{/* {leadDialog && selectedLead && (
-				<LeadDetailsDialog 
-				    open={leadDialog}
-					onClose={leadDialogeClose}
-					leadData={selectedLead}
-				/>
-
-			)} */}
 		</div>
 	)
 }

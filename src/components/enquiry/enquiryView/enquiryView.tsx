@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import EnquiryRightBar from '@/components/ui/enquiry-docUpload/enquiryRightBar'
 import { Separator } from '@/components/ui/separator'
 import { ArrowLeft, Check, ChevronRight, Pencil, Trash2 } from 'lucide-react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { enquiries } from '@/lib/constant'
 import { useForm } from 'react-hook-form'
 import { Input } from '@/components/ui/input'
@@ -13,6 +13,10 @@ import 'swiper/css'
 import { Navigation } from 'swiper/modules'
 import 'swiper/css/navigation'
 import ChatBar from '@/components/ui/enquiry-docUpload/chatBar'
+import useApiRequests from '@/services/useApiRequests'
+import { useSelector } from 'react-redux'
+import moment from 'moment'
+import { useRouter } from 'next/navigation'
 
 const documents = [
 	{ id: 1, name: 'phoneix-document.pdf', status: 'Upload complete' },
@@ -20,7 +24,40 @@ const documents = [
 	{ id: 3, name: 'design-mockup.png', status: 'Upload complete' }
 ]
 
+// interface GetEnqData{
+// 	enqLobName:string;
+// }
+
 const EnquiryView = () => {
+	const router = useRouter()
+	const fetchEnquiries: any = useApiRequests('enquiryById', 'GET')
+	const enqId = useSelector((state: any) => state?.apps?.enqId)
+	const [loader, setLoader] = useState(false)
+	const [getEnqData, setGetEnqData] = useState<any>()
+
+	const fetchData = async () => {
+		setLoader(true)
+		try {
+			const response = await fetchEnquiries('', {}, { enqId })
+			if (response?.status === 'error') {
+				console.log('error:', response)
+			} else {
+				response?.status === 'success'
+				console.log('success : ', response)
+				setGetEnqData(response.data)
+				console.log(response.data,'check')
+			}
+		} catch (err) {
+			console.log('err : ', err)
+		} finally {
+			setLoader(false)
+		}
+	}
+	useEffect(() => {
+		console.log('enqId : ', enqId)
+		fetchData()
+	}, [enqId])
+
 	const {
 		register,
 		handleSubmit,
@@ -32,7 +69,7 @@ const EnquiryView = () => {
 		<div>
 			<div className='mt-2 flex items-center gap-2 pl-1 md:pl-2 lg:pl-4'>
 				<div>
-					<button>
+					<button onClick={() => router.push('/enquiry')}>
 						<ArrowLeft className='h-6 w-8' />
 					</button>
 				</div>
@@ -46,7 +83,7 @@ const EnquiryView = () => {
 
 			<div className='mt-5 grid grid-cols-10 pl-2 pr-2'>
 				<div className='col-span-8'>
-					<div className='ml-2 grid grid-cols-3 gap-2 '>
+					<div className='ml-2 grid grid-cols-3 gap-2'>
 						<div>
 							<p>Sales</p>
 							<p className='font-semibold'>NA</p>
@@ -64,41 +101,42 @@ const EnquiryView = () => {
 
 					<Separator />
 
-					<div className='ml-2 mt-5 grid grid-cols-3 gap-4 pr-2 '>
+					<div className='ml-2 mt-5 grid grid-cols-3 gap-4 pr-2'>
 						<div className='col-span-2 grid grid-cols-2 gap-4'>
 							<div>
 								<p className='text-xs text-[#91929E]'>LOB</p>
-								<p className='font-semibold'>Marine</p>
+								<p className='font-semibold'>{getEnqData?.enqLobName}</p>
 							</div>
 							<div>
 								<p className='text-xs text-[#91929E]'>Product</p>
-								<p className='font-semibold'>Marine</p>
+								<p className='font-semibold'>{getEnqData?.enqProdName}</p>
 							</div>
 							<div>
 								<p className='text-xs text-[#91929E]'>Date of Receipt Enquiry</p>
-								<p className='font-semibold'>Nov 17, 2021 08:00</p>
+								<p className='font-semibold'>{moment(getEnqData?.enqDate).format('YYYY-MM-DD HH:mm')}</p>
 							</div>
 							<div>
 								<p className='text-xs text-[#91929E]'>Expected Date for Business</p>
-								<p className='font-semibold'>Nov 17, 2021 08:00</p>
+								<p className='font-semibold'>{moment(getEnqData?.enqExpDate).format('YYYY-MM-DD HH:mm')}</p>
 							</div>
 							<div>
 								<p className='text-xs text-[#91929E]'>Sum Insured</p>
-								<p className='font-semibold'>$6000</p>
+								<p className='font-semibold'>{getEnqData?.enqSumInsured}</p>
 							</div>
 							<div>
 								<p className='text-xs text-[#91929E]'>Premium</p>
-								<p className='font-semibold'>$600</p>
+								<p className='font-semibold'>{getEnqData?.enqSuggestedPrem}</p>
 							</div>
 
 							<div>
 								<p className='text-xs text-[#91929E]'>Buisness type</p>
-								<p className='font-semibold'>$600</p>
+								<p className='font-semibold'>{getEnqData?.enqBusType}</p>
 							</div>
 
 							<div>
 								<p className='text-xs text-[#91929E]'>Intermediary Name</p>
-								<p className='font-semibold'>$600</p>
+								<p className='font-semibold'>{getEnqData?.enqIntermedName}</p>
+
 							</div>
 
 							<div>
@@ -111,7 +149,7 @@ const EnquiryView = () => {
 						</div>
 
 						<div className='col-span-1'>
-							<div className='grid grid-cols-1 border bg-[#E5E9F2] '>
+							<div className='grid grid-cols-1 border bg-[#E5E9F2]'>
 								<div className='ml-2 mt-2 flex flex-row gap-x-1'>
 									<p className='font-semibold'>History (3)</p>
 								</div>
@@ -214,7 +252,7 @@ const EnquiryView = () => {
 							</div>
 						</div>
 
-						<div className='flex justify-center gap-x-3 mb-2'>
+						<div className='mb-2 flex justify-center gap-x-3'>
 							<Button>Back</Button>
 							<Button>Sumbit</Button>
 						</div>

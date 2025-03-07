@@ -32,7 +32,7 @@ const Prospectlist = () => {
 					<Button
 						variant='default'
 						size='sm'
-						onClick={() => router.push('/enquiryCreate')}>
+						onClick={() => router.push('/prospectView')}>
 						<Plus /> Create Quote
 					</Button>
 				</div>

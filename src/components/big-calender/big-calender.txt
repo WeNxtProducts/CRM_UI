@@ -42,7 +42,6 @@ const DISABLED_DATES: Moment[] = [
   moment("2025-07-04"), // Independence Day
 ];
 
-
 const CalendarComponent = () => {
   const [events, setEvents] = useState<CalendarEvent[]>([
     {

@@ -12,7 +12,8 @@ import {
 	SelectItem,
 	SelectLabel,
 	SelectTrigger,
-	SelectValue
+	SelectValue,
+	SelectWrapper
 } from '@/components/ui/select'
 import UploadListArea from '@/components/ui/enquiry-docUpload/uploadListArea'
 import { useRouter } from 'next/navigation'
@@ -50,7 +51,6 @@ const EnquiryForm = () => {
 				console.log('Enquiry saved successfully!')
 				// setEnquirySaved(true)
 				console.log('success : ', response)
-				
 			}
 		} catch (err) {
 			console.log('err : ', err)
@@ -60,7 +60,7 @@ const EnquiryForm = () => {
 	const onSubmit = (data: any) => {
 		console.log('form data:', data)
 		newData(data)
-		setEnquirySaved(true)
+		
 	}
 
 	return (
@@ -79,7 +79,7 @@ const EnquiryForm = () => {
 
 			<Separator />
 
-			<div className='mt-5 grid grid-cols-10 pl-2 pr-2'>
+			<div className='mt-5 grid grid-cols-10 pl-6 pr-2'>
 				<div className='col-span-8 pr-2'>
 					<form onSubmit={handleSubmit(onSubmit)}>
 						<div className='grid w-full grid-cols-1 gap-2 gap-y-5 md:grid-cols-3'>
@@ -87,24 +87,26 @@ const EnquiryForm = () => {
 								name='enqLobName'
 								control={control}
 								render={({ field }) => (
-									<Select
-										onValueChange={field.onChange}
-										value={field.value}>
-										<SelectTrigger className='w-full'>
-											<SelectValue placeholder='LOB' />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectGroup>
-												{Lob?.map((item: any) => (
-													<SelectItem
-														key={item?.value}
-														value={item?.value}>
-														{item?.label}
-													</SelectItem>
-												))}
-											</SelectGroup>
-										</SelectContent>
-									</Select>
+									<SelectWrapper label='LOB'>
+										<Select
+											onValueChange={field.onChange}
+											value={field.value}>
+											<SelectTrigger className='w-full'>
+												<SelectValue placeholder='Select LOB' />
+											</SelectTrigger>
+											<SelectContent>
+												<SelectGroup>
+													{Lob?.map((item: any) => (
+														<SelectItem
+															key={item?.value}
+															value={item?.value}>
+															{item?.label}
+														</SelectItem>
+													))}
+												</SelectGroup>
+											</SelectContent>
+										</Select>
+									</SelectWrapper>
 								)}
 							/>
 
@@ -112,11 +114,12 @@ const EnquiryForm = () => {
 								name='enqProdName'
 								control={control}
 								render={({ field }) => (
-									<Select
+									<SelectWrapper label='Product'>
+										<Select
 										onValueChange={field.onChange}
 										value={field.value}>
 										<SelectTrigger className='w-full'>
-											<SelectValue placeholder='Product' />
+											<SelectValue placeholder='Select Product' />
 										</SelectTrigger>
 										<SelectContent>
 											<SelectGroup>
@@ -130,6 +133,8 @@ const EnquiryForm = () => {
 											</SelectGroup>
 										</SelectContent>
 									</Select>
+									</SelectWrapper>
+									
 								)}
 							/>
 
@@ -138,11 +143,12 @@ const EnquiryForm = () => {
 								control={control}
 								defaultValue=''
 								render={({ field }) => (
+									<SelectWrapper label='Buisness Type'>
 									<Select
 										onValueChange={field.onChange}
 										value={field.value}>
 										<SelectTrigger className='w-full'>
-											<SelectValue placeholder='Business Type' />
+											<SelectValue placeholder='Select buisness type' />
 										</SelectTrigger>
 										<SelectContent>
 											<SelectGroup>
@@ -156,6 +162,7 @@ const EnquiryForm = () => {
 											</SelectGroup>
 										</SelectContent>
 									</Select>
+									</SelectWrapper>
 								)}
 							/>
 
@@ -166,6 +173,7 @@ const EnquiryForm = () => {
 									<DatePickerDemo
 										date={field.value}
 										setDate={field.onChange} // Updates the form state
+										label='Date of reciept for enquiry'
 									/>
 								)}
 							/>
@@ -176,7 +184,8 @@ const EnquiryForm = () => {
 								render={({ field }) => (
 									<DatePickerDemo
 										date={field.value}
-										setDate={field.onChange} // Updates the form state
+										setDate={field.onChange}
+										label='Expected date for buisness' // Updates the form state
 									/>
 								)}
 							/>
@@ -205,12 +214,13 @@ const EnquiryForm = () => {
 								name='enqIntermedName'
 								control={control}
 								render={({ field }) => (
+									<SelectWrapper label='Intermidiatery name'>
 									<Select
 										onValueChange={field.onChange}
 										value={field.value}
 										disabled={true}>
 										<SelectTrigger className='w-full'>
-											<SelectValue placeholder='Admin' />
+											<SelectValue placeholder='Name' />
 										</SelectTrigger>
 										<SelectContent>
 											<SelectGroup>
@@ -224,6 +234,7 @@ const EnquiryForm = () => {
 											</SelectGroup>
 										</SelectContent>
 									</Select>
+									</SelectWrapper>
 								)}
 							/>
 
@@ -231,11 +242,12 @@ const EnquiryForm = () => {
 								name='enqUnderwriter'
 								control={control}
 								render={({ field }) => (
+									<SelectWrapper label='Choose UnderWriter'>
 									<Select
 										onValueChange={field.onChange}
 										value={field.value}>
 										<SelectTrigger className='w-full'>
-											<SelectValue placeholder='Choose Underwriter' />
+											<SelectValue placeholder='Select Name' />
 										</SelectTrigger>
 										<SelectContent>
 											<SelectGroup>
@@ -249,6 +261,7 @@ const EnquiryForm = () => {
 											</SelectGroup>
 										</SelectContent>
 									</Select>
+									</SelectWrapper>
 								)}
 							/>
 
@@ -256,11 +269,12 @@ const EnquiryForm = () => {
 								name='enqQuoteFlag'
 								control={control}
 								render={({ field }) => (
+									<SelectWrapper label='Do you like to give a quote'>
 									<Select
 										onValueChange={field.onChange}
 										value={field.value}>
 										<SelectTrigger className='w-full'>
-											<SelectValue placeholder='Do you like to give a quote' />
+											<SelectValue placeholder='Select quote' />
 										</SelectTrigger>
 										<SelectContent>
 											<SelectGroup>
@@ -274,6 +288,7 @@ const EnquiryForm = () => {
 											</SelectGroup>
 										</SelectContent>
 									</Select>
+									</SelectWrapper>
 								)}
 							/>
 						</div>
@@ -297,25 +312,22 @@ const EnquiryForm = () => {
 						<div className='flex justify-center gap-x-3'>
 							<Button>Back</Button>
 
-							<Button>Sumbit</Button>
-							
-							
+							<Button onClick={()=>setEnquirySaved(true)}>Sumbit</Button>
 						</div>
 					</form>
 					{enquirySaved && (
-								<EnquirySavedDialog
-								enquiryDialogOpen={enquirySaved}
-								enquiryDialogHandle={() => {
-									setEnquirySaved(false)
-								}}
-								/>
-							)}
+						<EnquirySavedDialog
+							enquiryDialogOpen={enquirySaved}
+							enquiryDialogHandle={() => {
+								setEnquirySaved(false)
+							}}
+						/>
+					)}
 				</div>
 				<div className='col-span-2'>
 					<EnquiryRightBar />
 				</div>
 			</div>
-			
 		</div>
 	)
 }

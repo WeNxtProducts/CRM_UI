@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import React, { useEffect, useState } from 'react'
@@ -22,6 +21,7 @@ import {
 	SelectValue
 } from '@/components/ui/select'
 import Loader from '@/components/ui/Loader'
+import { useDispatch } from 'react-redux'
 
 const Enquirylist = () => {
 	// const enquiryList: any = useApiRequests('enquiryList', 'GET')
@@ -40,7 +40,7 @@ const Enquirylist = () => {
 
 	const fetchData = async (status = 'pending', offset = 1) => {
 		setLoader(true)
-		const queryParams = { status, page: offset -1, size: 10 }
+		const queryParams = { status, page: offset - 1, size: 10 }
 		// const queryParams = { status, offset: page == 1 ? 0 : (page-1) * 10, limit: 10 }
 		try {
 			const response = await fetchEnquiries('', queryParams)
@@ -126,7 +126,6 @@ const Enquirylist = () => {
 		// handleUpdateEnquiry()
 	}, [])
 
-
 	return (
 		<div className='bg-white'>
 			{loader && <Loader />}
@@ -167,7 +166,6 @@ const Enquirylist = () => {
 							<div>
 								<DatePickerWithRange />
 							</div>
-							
 							<Select>
 								<SelectTrigger className='w-[180px]'>
 									<SelectValue placeholder='Filter by' />
@@ -188,7 +186,7 @@ const Enquirylist = () => {
 								</SelectContent>
 							</Select>
 						</div>
-						{enqData&& enqData?.length > 0 && (
+						{enqData && enqData?.length > 0 && (
 							<div>
 								<Pagination
 									total={totalRecords}
@@ -200,7 +198,10 @@ const Enquirylist = () => {
 					</div>
 					{enqData && enqData?.length > 0 ? (
 						<div className='mt-10'>
-							<EnquiryListTable tableData={enqData} activetabs={activeTab} />
+							<EnquiryListTable
+								tableData={enqData}
+								activetabs={activeTab}
+							/>
 						</div>
 					) : (
 						<p>No data found</p>

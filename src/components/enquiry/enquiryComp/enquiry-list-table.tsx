@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
 	Table,
 	TableBody,
@@ -9,10 +9,14 @@ import {
 } from '@/components/ui/table'
 import { format, parseISO } from 'date-fns'
 import { Check, Ellipsis, Eye, FileText, X } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 // Import the Product array from the external file
 import { Lob, Product } from '@/lib/constant' // Adjust path as necessary
 import { Button } from '@/components/ui/button'
+import EnquiryAcceptedDialog from '@/components/ui/enquiry-docUpload/enquiryAcceptedDialog'
+import { useDispatch, useSelector } from 'react-redux'
+import { setEnqId } from '@/redux/slices'
 
 interface Enquiry {
 	enquiryNumber: string
@@ -29,6 +33,23 @@ interface EnquiryListTableProps {
 }
 
 const EnquiryListTable: React.FC<EnquiryListTableProps> = ({ tableData, activetabs }: any) => {
+	const router = useRouter()
+	const dispatch = useDispatch()
+	const [isDisabled, setIsDisabled] = useState(false)
+	const [messageAccepted, setMessageAccepted] = useState(false)
+
+	const handleClick = () => {
+		if (!isDisabled) {
+			setIsDisabled(true)
+			setMessageAccepted(true)
+		}
+	}
+
+	const handleClickView = (enqId: any) => {
+		dispatch(setEnqId(enqId?.enqSeqNo))
+		router.push('/enquiryView')
+	}
+
 	return (
 		<div className='mt-8'>
 			<Table>
@@ -91,23 +112,39 @@ const EnquiryListTable: React.FC<EnquiryListTableProps> = ({ tableData, activeta
 										)}
 									</div>
 								</TableCell>
-								<TableCell className='flex gap-x-3 '>
+								<TableCell className='flex gap-x-3'>
 									{activetabs === 'accEnq' ? (
 										<div className='flex flex-row gap-x-3'>
 											<Button
 												variant='default'
-												className='bg-primary text-xs text-white '>
-												Create Quote
+												className='bg-primary text-xs text-white'
+												onClick={() => router.push('/prospect')}>
+												Create Prospect
 											</Button>
-											<Ellipsis className='mt-1'/>
+											{/* <Ellipsis className='mt-1' /> */}
 										</div>
 									) : (
-										<div className='flex flex-row gap-x-3 mt-1'>
-											<Eye className='rounded-full border bg-[#E5E9F2] p-1' />
-											<FileText className='rounded-full border bg-[#E5E9F2] p-1' />
-											<X className='rounded-full border bg-[#E31D1D] p-1 text-[#FFFFFF]' />
-											<Check className='rounded-full border bg-[#06771F] p-1 text-[#FFFFFF]' />
-											<Ellipsis />
+										<div className='mt-1 flex flex-row gap-x-3'>
+											<Eye
+												onClick={() => handleClickView(enquiry)}
+												className='cursor-pointer rounded-full border bg-[#E5E9F2] p-1'
+											/>
+											<FileText className='cursor-pointer rounded-full border bg-[#E5E9F2] p-1' />
+											<X className='cursor-pointer rounded-full border bg-[#E31D1D] p-1 text-[#FFFFFF]' />
+											<Check
+												onClick={handleClick}
+												className={`rounded-full border bg-[#06771F] p-1 text-[#FFFFFF] ${
+													isDisabled ? 'pointer-events-none opacity-50' : 'cursor-pointer'
+												} `}
+											/>
+											{messageAccepted && (
+												<EnquiryAcceptedDialog
+													enquiryAccepted={messageAccepted}
+													enquiryAcceptedClose={setMessageAccepted}
+												/>
+											)}
+
+											{/* <Ellipsis /> */}
 										</div>
 									)}
 								</TableCell>

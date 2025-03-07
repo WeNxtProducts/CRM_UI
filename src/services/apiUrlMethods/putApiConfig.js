@@ -1,7 +1,8 @@
 const PUT_API_URL = {
- sendMessage:{
-    url:"api/leads/"
- }
+    
+    enqinfoUpdate:{
+        url:'api/enquiries/updateStatus'
+    }
 };
 
 export default PUT_API_URL;

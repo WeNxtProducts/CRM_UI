@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
 	Dialog,
 	DialogClose,
@@ -15,17 +15,48 @@ import Image from 'next/image'
 import whatsapp from '@/Images/icons8-whatsapp.svg'
 import mail from '@/Images/mail-image.svg'
 import SentMessageSuccesfully from './sentMessageSuccesfully'
+import useApiRequests from '@/services/useApiRequests'
 
-const SentMessage = ({ messageOpen, messageClose, activeIcon }: any) => {
-
+const SentMessage = ({ messageOpen, messageClose, activeIcon, leadSource, leadDesc, id }: any) => {
+	const messageSent: any = useApiRequests('sendMessage', 'POST')
 	const [sentMessage, setSentMessage] = useState(false)
-	const closed = ()=>{
+	const [messageText, setMessageText] = useState(leadDesc || '')
+	const closed = () => {
 		setSentMessage(false)
 		messageClose()
 	}
 	const handleSendMessage = () => {
-		setSentMessage(true); 
+		setSentMessage(true)
+		fetchSentMessage()
 	}
+
+	useEffect(() => {
+		console.log('leadSource : ', leadSource)
+	}, [leadSource])
+
+	const fetchSentMessage = async () => {
+		console.log('fetchSentMessage')
+		const payload = {
+			leadSource: leadSource,
+			leadDescription: messageText,
+			leadSeqNo :id
+		}
+		try {
+			const response = await messageSent(payload)
+			if (response?.status === 'error') {
+				console.log('error : ', response)
+			} else if (response?.status === 'success') {
+				console.log('success : ', response)
+			}
+		} catch (error) {
+			console.log('err :', error)
+		}
+	}
+
+	// useEffect(()=>{
+	// 	fetchSentMessage()
+	// }, [])
+
 	return (
 		<Dialog
 			open={messageOpen}
@@ -66,7 +97,9 @@ const SentMessage = ({ messageOpen, messageClose, activeIcon }: any) => {
 					<Textarea
 						id='description'
 						placeholder='Add some description of the task.'
-						className='w-full mt-2'
+						className='mt-2 w-full'
+						value={messageText}
+						onChange={(e) => setMessageText(e.target.value)}
 					/>
 				</div>
 
@@ -83,8 +116,6 @@ const SentMessage = ({ messageOpen, messageClose, activeIcon }: any) => {
 							onOpenChange={closed}
 						/>
 					)}
-
-
 				</div>
 			</DialogContent>
 		</Dialog>

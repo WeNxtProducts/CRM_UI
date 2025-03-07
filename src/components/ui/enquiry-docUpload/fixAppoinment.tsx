@@ -97,15 +97,11 @@ const FixAppoinment = ({ open, handleClose }: any) => {
 				</div>
 
 				<div>
-					<label
-						htmlFor='description'
-						className='mb-1 block text-sm font-medium text-gray-700'>
-						Description
-					</label>
 					<Textarea
+						label='Description'
 						id='description'
 						placeholder='Add some description of the task.'
-						className='w-full'
+						className='w-full mb-1 block text-sm font-medium text-gray-700'
 					/>
 				</div>
 

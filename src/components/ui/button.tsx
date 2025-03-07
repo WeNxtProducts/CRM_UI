@@ -15,9 +15,11 @@ const buttonVariants = cva(
         outline:
           "border border-primary text-primary bg-background hover:bg-accent hover:text-accent-foreground",
         accept:
-        "border border-accept_btn text-accept_btn hover:bg-accept_btn hover:text-[#FFFFFF]",
+        "border border-accept_btn text-accept_btn hover:bg-accept_btn hover:text-[#FFFFFF] w-full",
         reject:
-        "border border-reject_btn text-reject_btn bg-background hover:bg-accent hover:text-accent-foreground",
+        "border border-reject_btn text-reject_btn  hover:bg-reject_btn hover:text-[#FFFFFF] w-full",
+        inforeq:
+        "border border-inforeq_btn text-inforeq_btn  hover:bg-inforeq_btn hover:text-[#FFFFFF] w-full",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",

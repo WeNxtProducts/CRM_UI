@@ -19,6 +19,13 @@ const GET_API_URL = {
     },
     salesGraph: {
         url: '/api/saleslead/dashboard/salesgraph'
+    },
+    enquiryById: {
+        url: 'api/enquiries/get'
+    },
+
+    leadList: {
+        url: 'api/leads/getAll'
     }
 };
 

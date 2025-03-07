@@ -2,7 +2,7 @@
 
 import { ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import React from 'react'
+import React, { useState } from 'react'
 import { Separator } from '@/components/ui/separator'
 import { Input } from '@/components/ui/input'
 import { useForm, Controller } from 'react-hook-form'
@@ -20,11 +20,13 @@ import { Button } from '@/components/ui/button'
 import { DatePickerDemo } from '@/components/ui/datePicker'
 import LeadRightBar from '@/components/ui/enquiry-docUpload/leadRightBar'
 import useApiRequests from '@/services/useApiRequests'
-import { log } from 'console'
+import LeadCreatedSuccesfully from '@/components/ui/enquiry-docUpload/leadCreatedSuccesfully'
+
 
 const LeadForm = () => {
 	const router = useRouter()
 	// const [date, setDate] = React.useState<Date>()
+	const [leadAccDialog, setLeadAccDialog] = useState(false)
 	const {
 		register,
 		handleSubmit,
@@ -272,9 +274,20 @@ const LeadForm = () => {
 
 						<div className='mb-3 mt-3 flex justify-center gap-x-3'>
 							<Button>Back</Button>
-							<Button>Sumbit</Button>
+
+							<Button onClick={()=>{
+								setLeadAccDialog(true)
+							}}>Sumbit</Button>
 						</div>
 					</form>
+					{leadAccDialog && 
+					<LeadCreatedSuccesfully
+					   leadCreation={leadAccDialog}
+					   handleLeadCreation={()=>{
+						setLeadAccDialog(false)
+					   }}
+					   />
+					}
 				</div>
 				<div className='col-span-2'>
 					<LeadRightBar />

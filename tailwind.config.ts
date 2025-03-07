@@ -90,6 +90,11 @@ const config = {
 					100: '#FF8682', // lightRed
 					150: '#D46E6E' ,//light red
 				},
+				inkblue:{
+					100:"#002280"
+				},
+
+
 				'T-color': 'hsl(var(--title-color))',
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -108,6 +113,10 @@ const config = {
 				reject_btn:{
 					DEFAULT: 'hsl(12 76% 61%)',
 					foreground: 'red'
+				},
+				inforeq_btn:{
+					DEFAULT: 'hsl(var(--info-btn))',
+					foreground: 'hsl(var(--secondary-foreground))'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',

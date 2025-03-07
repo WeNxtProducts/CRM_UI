@@ -12,6 +12,16 @@ import {
 import Image from 'next/image'
 import illustration from '@/Images/illustration.png'
 import { Button } from '../button'
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectLabel,
+	SelectTrigger,
+	SelectValue,
+	SelectWrapper
+} from '@/components/ui/select'
 
 const EnquirySavedDialog = ({ enquiryDialogOpen, enquiryDialogHandle }: any) => {
 	return (
@@ -39,9 +49,11 @@ const EnquirySavedDialog = ({ enquiryDialogOpen, enquiryDialogHandle }: any) => 
 					</p>
 				</div>
 
-				<div>
-					<h3>Do you want to change the status</h3>
+				<div className='flex justify-center'>
+					<h3 className='font-semibold'>Do you want to change the status</h3>
+				</div>
 
+				<div className='mt-1 flex justify-center gap-x-6'>
 					<Button
 						variant='accept'
 						type='button'>
@@ -55,10 +67,18 @@ const EnquirySavedDialog = ({ enquiryDialogOpen, enquiryDialogHandle }: any) => 
 					</Button>
 
 					<Button
-						variant='default'
+						variant='inforeq'
 						type='button'>
 						Info Required
 					</Button>
+				</div>
+
+				<div>
+					<Select>
+						<SelectTrigger className='w-full text-[#002280] border-[#002280] flex justify-center'>
+							<SelectValue placeholder='Other Status' />
+						</SelectTrigger>
+					</Select>
 				</div>
 
 				<DialogFooter className='sm:justify-center'>

@@ -35,6 +35,7 @@ export function TimePicker({
           className="w-full" // extra padding for the icon
           {...props}
         />
+        
         {/* <div className="absolute top-[17px] right-0 flex items-center pr-3 pointer-events-none">
           <ClockIcon className="w-5 h-5" />
         </div> */}

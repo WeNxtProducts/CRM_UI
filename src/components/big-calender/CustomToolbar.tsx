@@ -1,20 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ToolbarProps } from "react-big-calendar";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { startOfWeek, startOfMonth, startOfDay } from "date-fns";
-import { MonthPicker } from "@/components/ui/monthpicker";
+import { MonthPicker } from "@/components/ui/monthPicker";
 import { Calendar } from "../ui/calendar";
 import { cn } from "@/lib/utils";
 
 const CustomToolbar: React.FC<ToolbarProps> = ({ label, onNavigate, onView, view }) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [open, setOpen] = React.useState(false)
-
-  useEffect(() => {
-    console.log("view : ", view)
-  }, [view])
 
   const handleDateChange = (date: Date | undefined) => {
     if (!date) return;
@@ -35,10 +31,6 @@ const CustomToolbar: React.FC<ToolbarProps> = ({ label, onNavigate, onView, view
         break;
     }
     setOpen(false)
-  };
-
-  const handleNavigation = (action: any) => {
-    onNavigate(action);
   };
 
   return (
@@ -108,20 +100,20 @@ const CustomToolbar: React.FC<ToolbarProps> = ({ label, onNavigate, onView, view
           </div>
           <div
             onClick={() => onView("day")}
-            className={cn("h-full px-4 border border-l-primary text-sm cursor-pointer flex items-center justify-center hover:bg-primary hover:text-white",
+            className={cn("h-full px-4 border border-l-primary text-sm cursor-pointer rounded-r-lg flex items-center justify-center hover:bg-primary hover:text-white",
               { "bg-primary text-white": view === "day" }
             )}
           >
             Day
           </div>
-          <div
+          {/* <div
             onClick={() => onView("agenda")}
             className={cn("h-full px-4 border border-l-primary text-sm cursor-pointer rounded-r-lg flex items-center justify-center hover:bg-primary hover:text-white",
               { "bg-primary text-white": view === "agenda" }
             )}
           >
             Agenda
-          </div>
+          </div> */}
         </div>
       </div>
 

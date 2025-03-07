@@ -1,14 +1,20 @@
-import React from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+'use client'
+
+import React, { useContext } from 'react';
 import { assets } from '@/assets'
 import Image from 'next/image';
+import { LeadContext } from './LeadDetails';
 
 const LeadCards = () => {
+    const { cardDetails }: any = useContext(LeadContext);
+    const { completed = 0, newlyAdded = 0, onPriority = 0, totalCount = 0 } = cardDetails
     const { rocketIcon, userIcon, priorityIcon, graphIcon } = assets.icons
     const cardsData = [
-        { id: 1, badgeCount: 2420, totalCount: 'Total Count', backgroundClr: "#FFF8C5", icon: rocketIcon, width: 18, height: 18 },
-        { id: 2, badgeCount: 420, totalCount: 'Newly Added', backgroundClr: "#C7E9F9", icon: userIcon, width: 18, height: 18 },
-        { id: 3, badgeCount: 40, totalCount: 'On Priority', backgroundClr: "#CFF3AF", icon: priorityIcon, width: 8, height: 8 },
-        { id: 4, badgeCount: 400, totalCount: 'Completed', backgroundClr: "#FFD9D9", icon: graphIcon, width: 18, height: 18 },
+        { id: 1, badgeCount: totalCount, totalCount: 'Total Count', backgroundClr: "#FFF8C5", icon: rocketIcon, width: 18, height: 18 },
+        { id: 2, badgeCount: newlyAdded, totalCount: 'Newly Added', backgroundClr: "#C7E9F9", icon: userIcon, width: 18, height: 18 },
+        { id: 3, badgeCount: onPriority, totalCount: 'On Priority', backgroundClr: "#CFF3AF", icon: priorityIcon, width: 8, height: 8 },
+        { id: 4, badgeCount: completed, totalCount: 'Completed', backgroundClr: "#FFD9D9", icon: graphIcon, width: 18, height: 18 },
     ];
 
     return (

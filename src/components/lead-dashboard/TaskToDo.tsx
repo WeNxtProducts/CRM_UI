@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
+'use client'
+
+import React, {useState,useEffect,useMemo } from 'react';
 import {
     // format, differenceInDays, differenceInHours, differenceInMinutes,
     isPast,
@@ -8,55 +10,30 @@ import {
 import { Button } from '../ui/button'
 import { format as tz, toZonedTime } from 'date-fns-tz';
 import { ChevronRight } from 'lucide-react';
+import useApiRequests from '@/services/useApiRequests'
 
 const TaskToDo = ({ setRightExpanded, rightExpanded }: any) => {
-    const taskToDo = [
-        {
-            id: 1,
-            taskName: 'Meeting with partners',
-            taskDescription: 'Prepare slides for the quarterly review',
-            taskDueDate: '2025-03-04T12:01:42Z',
-            taskStatus: 'In Progress',
-            assignedTo: 'John Doe',
-            taskPriority: 'High',
-        },
-        {
-            id: 2,
-            taskName: 'Web conference agenda',
-            taskDescription: 'Prepare slides for the quarterly review',
-            taskDueDate: '2025-03-05T18:30:00.000Z',
-            taskStatus: 'In Progress',
-            assignedTo: 'John Doe',
-            taskPriority: 'High',
-        },
-        {
-            id: 3,
-            taskName: 'Prepare Presentation',
-            taskDescription: 'Prepare slides for the quarterly review',
-            taskDueDate: '2025-03-03T18:30:00.000Z',
-            taskStatus: 'In Progress',
-            assignedTo: 'John Doe',
-            taskPriority: 'High',
-        },
-        {
-            id: 4,
-            taskName: 'Anna Lead Appointment',
-            taskDescription: 'Prepare slides for the quarterly review',
-            taskDueDate: '2025-03-06T18:30:00.000Z',
-            taskStatus: 'In Progress',
-            assignedTo: 'John Doe',
-            taskPriority: 'High',
-        },
-        {
-            id: 5,
-            taskName: 'Presentation to the new department',
-            taskDescription: 'Prepare slides for the quarterly review',
-            taskDueDate: '2025-03-01T18:30:00.000Z',
-            taskStatus: 'In Progress',
-            assignedTo: 'John Doe',
-            taskPriority: 'High',
-        },
-    ];
+    const taskList: any = useApiRequests('taskList', 'GET')
+    const [taskData,setTaskData] = useState([])
+
+
+    const handleEventList = async () => {
+        try {
+            const response = await taskList()
+            if (response?.status === 'error') {
+                console.log('error : ', response)
+            } else if (response?.status === 'success') {
+                console.log('success : ', response)
+                setTaskData(response?.data)
+            }
+        } catch (err) {
+            console.log('err : ', err)
+        }
+    }
+
+    useEffect(() => {
+        handleEventList()
+    }, [])
 
     // Function to format the remaining time as "X days X hrs X min
     // const getTimeDifference = (dueDate: string) => {
@@ -80,11 +57,11 @@ const TaskToDo = ({ setRightExpanded, rightExpanded }: any) => {
     //     return isOverdue ? `-${formattedTime}` : formattedTime;
     // };
 
-
-    // Sort tasks by due date (earliest first)
-    const sortedTasks = taskToDo.sort((a, b) =>
-        new Date(a.taskDueDate).getTime() - new Date(b.taskDueDate).getTime()
-    );
+    const sortedTasks = useMemo(() => {
+  return [...taskData].sort(
+    (a, b) => new Date(a.taskDueDate).getTime() - new Date(b.taskDueDate).getTime()
+  );
+}, [taskData]);
 
     return (
         <div>

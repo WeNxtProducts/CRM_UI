@@ -19,6 +19,8 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { format } from "date-fns";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import './big-calender.scss';
+import CustomToolbar from "./CustomToolbar";
 
 const localizer = momentLocalizer(moment);
 const DnDCalendar = withDragAndDrop(BigCalendar);
@@ -39,6 +41,7 @@ const DISABLED_DATES: Moment[] = [
   moment("2025-12-25"), // Christmas
   moment("2025-07-04"), // Independence Day
 ];
+
 
 const CalendarComponent = () => {
   const [events, setEvents] = useState<CalendarEvent[]>([
@@ -153,7 +156,7 @@ const CalendarComponent = () => {
   };
 
   return (
-    <div className="h-screen p-5 bg-gray-100">
+    <div className="h-screen p-0 bg-gray-100">
       <DnDCalendar
         localizer={localizer}
         events={events}
@@ -169,7 +172,11 @@ const CalendarComponent = () => {
         onView={(newView: any) => setView(newView)}
         step={60}
         timeslots={1}
-        className="bg-white shadow-md rounded-lg p-4 custom-scrollbar-lead-dashoard"
+        components={{
+          toolbar: (props) => <CustomToolbar {...props} />,
+          // event: CustomEventCard,
+        }}
+        className="bg-white shadow-md rounded-lg p-4 custom-calendar custom-scrollbar-lead-dashoard"
         eventPropGetter={eventStyleGetter}
       />
 
@@ -223,3 +230,172 @@ const CalendarComponent = () => {
 };
 
 export default CalendarComponent;
+
+
+scss
+
+.custom-calendar {
+    .rbc-toolbar {
+      font-size: 14px;
+      padding: 0px 0px;
+      margin-bottom: 5px;
+    }
+  
+    .rbc-header {
+      font-size: 13px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 25px !important;
+      background-color: hsl(var(--primary));
+    }
+  
+    .rbc-event {
+      font-size: 12px;
+      padding: 2px;
+    }
+    .rbc-label {
+        font-size: 12px;
+    }
+    .rbc-allday-cell {
+      display:none
+    }
+
+    .rbc-time-header-cell .rbc-today {
+      background-color: hsl(var(--primary-btn-foreground)) !important;
+    }
+  }
+  
+
+
+CustomToolbar.tsx
+
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { ToolbarProps } from "react-big-calendar";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { startOfWeek, startOfMonth, startOfDay } from "date-fns";
+import { MonthPicker } from "@/components/ui/monthPicker";
+import { Calendar } from "../ui/calendar";
+import { cn } from "@/lib/utils";
+
+const CustomToolbar: React.FC<ToolbarProps> = ({ label, onNavigate, onView, view }) => {
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [open, setOpen] = React.useState(false)
+
+  useEffect(() => {
+    console.log("view : ", view)
+  }, [view])
+
+  const handleDateChange = (date: Date | undefined) => {
+    if (!date) return;
+    setSelectedDate(date);
+
+    switch (view) {
+      case "month":
+        onNavigate("DATE", startOfMonth(date));
+        break;
+      case "week":
+        onNavigate("DATE", startOfWeek(date));
+        break;
+      case "day":
+        onNavigate("DATE", startOfDay(date));
+        break;
+      default:
+        onNavigate("DATE", date);
+        break;
+    }
+    setOpen(false)
+  };
+
+  return (
+    <div className="rbc-toolbar">
+      
+        <div className="flex items-center bg-[#E5E9F2] rounded-lg border border-primary h-[35px]">
+          <div
+            onClick={() => onNavigate("PREV")}
+            className="h-full px-4 border border-r-primary text-sm cursor-pointer rounded-l-lg flex items-center justify-center hover:bg-primary hover:text-white"
+          >
+            Back
+          </div>
+          <div
+            onClick={() => onNavigate("TODAY")}
+            className="h-full px-4 text-sm cursor-pointer flex items-center justify-center hover:bg-primary hover:text-white"
+          >
+            Today
+          </div>
+          <div
+            onClick={() => onNavigate("NEXT")}
+            className="h-full px-4 border border-l-primary text-sm cursor-pointer rounded-r-lg flex items-center justify-center hover:bg-primary hover:text-white"
+          >
+            Next
+          </div>
+        </div>
+
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <span className={cn(
+            "rbc-toolbar-label cursor-pointer text-[15px] font-semibold text-[#0A1629]"
+            , { "text-primary": open }
+          )}
+          >{label}</span>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0">
+          {view === "month" ? (
+            <MonthPicker onMonthSelect={handleDateChange} />
+          ) : (
+            <Calendar
+              mode="single"
+              selected={selectedDate}
+              onSelect={handleDateChange}
+              initialFocus
+            />
+          )}
+        </PopoverContent>
+      </Popover>
+      <div className="rbc-btn-group">
+        <div className="flex items-center bg-[#E5E9F2] rounded-lg border border-primary h-[35px]">
+          <div
+            onClick={() => onView("month")}
+            className={cn(
+              "h-full px-4 border border-r-primary text-sm cursor-pointer rounded-l-lg flex items-center justify-center hover:bg-primary hover:text-white",
+              { "bg-primary text-white": view === "month" }
+            )}
+          >
+            Month
+          </div>
+          <div
+            onClick={() => onView("week")}
+            className={cn(
+              "h-full px-4 border border-l-primary text-sm cursor-pointer flex items-center justify-center hover:bg-primary hover:text-white",
+              { "bg-primary text-white": view === "week" }
+            )}
+          >
+            Week
+          </div>
+          <div
+            onClick={() => onView("day")}
+            className={cn("h-full px-4 border border-l-primary text-sm cursor-pointer rounded-r-lg flex items-center justify-center hover:bg-primary hover:text-white",
+              { "bg-primary text-white": view === "day" }
+            )}
+          >
+            Day
+          </div>
+          {/* <div
+            onClick={() => onView("agenda")}
+            className={cn("h-full px-4 border border-l-primary text-sm cursor-pointer rounded-r-lg flex items-center justify-center hover:bg-primary hover:text-white",
+              { "bg-primary text-white": view === "agenda" }
+            )}
+          >
+            Agenda
+          </div> */}
+        </div>
+      </div>
+
+    </div>
+  );
+};
+
+export default CustomToolbar;

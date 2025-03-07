@@ -36,7 +36,7 @@ const LeadDashboard = () => {
                 <div className="col-span-3 grid grid-cols-1 gap-4">
                     {rightExpanded !== 'tasks' && (
                         <div
-                            className={`bg-white rounded-xl ${rightExpanded === 'events' ? 'h-full' : 'max-h-[415px]'} p-3 transition-all duration-300
+                            className={`bg-white rounded-xl ${rightExpanded === 'events' ? 'h-[121vh]' : 'max-h-[415px]'} p-3 transition-all duration-300
                              overflow-y-auto overflow-x-hidden custom-scrollbar-lead-dashoard`}
                         >
                             <Events
@@ -48,7 +48,7 @@ const LeadDashboard = () => {
 
                     {rightExpanded !== 'events' && (
                         <div
-                            className={`bg-[#E5E9F2] ${rightExpanded === 'tasks' ? 'h-full' : 'max-h-[250px]'} rounded-xl p-3 transition-all duration-300 
+                            className={`bg-[#E5E9F2] ${rightExpanded === 'tasks' ? 'h-[121vh]' : 'max-h-[250px]'} rounded-xl p-3 transition-all duration-300 
                                 overflow-y-auto overflow-x-hidden custom-scrollbar-lead-dashoard`}
                         >
                             <TaskToDo 

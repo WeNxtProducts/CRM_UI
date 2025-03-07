@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import * as React from 'react'
@@ -9,13 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
-interface DatePickerProps {
-  date: Date | undefined
-  setDate: (date: Date | undefined) => void
-  label?: string
-}
-
-export function DatePickerDemo({ date, setDate, label = 'Select Date' }: DatePickerProps) {
+export function DatePickerDemo({ date, setDate, label = 'Select Date' }: any) {
   const [open, setOpen] = React.useState(false)
 
   return (
@@ -30,7 +25,7 @@ export function DatePickerDemo({ date, setDate, label = 'Select Date' }: DatePic
               !date && 'text-muted-foreground'
             )}
           >
-            {date ? format(date, 'dd-MM-yyyy') : <span>Pick a date</span>}
+            {date ? format(date, 'yyyy-MM-dd') : <span>Pick a date</span>}
             <CalendarIcon className="ml-2 h-4 w-4" />
           </Button>
         </PopoverTrigger>
@@ -39,7 +34,9 @@ export function DatePickerDemo({ date, setDate, label = 'Select Date' }: DatePic
             mode="single"
             selected={date}
             onSelect={(selectedDate) => {
-              setDate(selectedDate)
+              if (selectedDate) {
+                setDate(format(selectedDate, 'yyyy-MM-dd')) // Ensure selected date is stored in the correct format
+              }
               setOpen(false) // Auto-close on select
             }}
             initialFocus

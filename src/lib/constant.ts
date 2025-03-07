@@ -212,6 +212,3 @@ export const tasks = [
     type: 'Marine',
     date: 'Oct 17, 2020 08:00',
 }]
-
-
-  

@@ -2,9 +2,23 @@ const GET_API_URL = {
     enquiryList: {
         url: 'api/enquiries/getAll'
     },
-
     leadList: {
         url: 'api/leads/getAll'
+    },
+    eventList: {
+        url: '/api/saleslead/dashboard/events'
+    },
+    taskList: {
+        url: '/api/saleslead/dashboard/tasks'
+    },
+    activityList: {
+        url: '/api/saleslead/dashboard/activitylogs'
+    },
+    leadCards: {
+        url: '/api/saleslead/dashboard/stats'
+    },
+    salesGraph: {
+        url: '/api/saleslead/dashboard/salesgraph'
     }
 };
 

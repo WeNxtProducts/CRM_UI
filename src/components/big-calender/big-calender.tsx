@@ -168,7 +168,7 @@ const CalendarComponent = () => {
         step={60}
         timeslots={1}
         components={{
-          toolbar: (props:) => <CustomToolbar {...props} />,
+          toolbar: (props) => <CustomToolbar {...props} />,
         }}
         className="bg-white shadow-md rounded-lg p-4 custom-calendar custom-scrollbar-lead-dashoard"
         eventPropGetter={eventStyleGetter}

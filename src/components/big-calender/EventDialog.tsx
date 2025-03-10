@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { format, addMinutes } from "date-fns";
+import { format, addMinutes, add, parse } from "date-fns";
 import {
   Dialog,
   DialogContent,
@@ -16,13 +16,15 @@ import { DatePickerDemo } from "../ui/datePicker";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectWrapper } from "@/components/ui/select";
 import { Button } from "../ui/button";
 import { TimePicker } from "../ui/timePicker";
-import { Switch } from "@/components/ui/switch";
+import useApiRequests from "@/services/useApiRequests";
+import toast from "../ui/toast";
+import { Trash2 } from 'lucide-react';
+// import { Switch } from "@/components/ui/switch";
 
 const getDefaultInitialState = () => {
   const now = new Date();
 
   return {
-    id: 0,
     eventName: "",
     eventDescription: "",
     eventPriority: "high",
@@ -30,7 +32,6 @@ const getDefaultInitialState = () => {
     eventStartTime: format(now, "HH:mm"),
     eventEndTime: format(addMinutes(now, 30), "HH:mm"),
     eventEndDate: format(now, "yyyy-MM-dd"),
-    color: "#4CAF50",
   };
 };
 
@@ -38,8 +39,9 @@ interface EventDialogProps {
   open: boolean;
   handleClose: (data?: any) => void;
   startDate?: any;
+  endDate?: any;
   currentEvent?: {
-    id: any;
+    id?: any;
     eventPriority: string;
     eventDescription: string;
     eventName: string;
@@ -47,11 +49,13 @@ interface EventDialogProps {
     eventStartTime: string;
     eventEndTime: string;
     eventEndDate?: string;
-    color: string;
   };
 }
 
-const EventDialog: React.FC<EventDialogProps> = ({ open, handleClose, currentEvent, startDate }) => {
+const EventDialog: React.FC<EventDialogProps> = ({ open, handleClose, currentEvent, startDate, endDate }) => {
+  const creatEvent: any = useApiRequests('createEditEvents', 'POST')
+  const editEvent: any = useApiRequests('createEditEvents', 'PUT')
+  const deleteEvent: any = useApiRequests('createEditEvents', 'DELETE')
   const [initialState, setInitialState] = useState<any>(null);
   const [isDateRange, setIsDateRange] = useState(false);
 
@@ -69,20 +73,64 @@ const EventDialog: React.FC<EventDialogProps> = ({ open, handleClose, currentEve
       if (startDate) {
         defaultState.eventDate = format(startDate, "yyyy-MM-dd");
         defaultState.eventEndDate = format(startDate, "yyyy-MM-dd");
+        defaultState.eventStartTime = format(startDate, "HH:mm");
+        defaultState.eventEndTime = format(endDate, "HH:mm");
+        if (defaultState.eventStartTime === "00:00" && defaultState.eventEndTime === "00:00") {
+          const now = new Date();
+          defaultState.eventStartTime = format(now, "HH:mm");
+          defaultState.eventEndTime = format(add(now, { hours: 1 }), "HH:mm");
+        }
       }
       setInitialState(defaultState);
       reset(defaultState);
     }
-  }, [currentEvent, startDate, reset]);
+  }, [currentEvent, startDate, endDate, reset]);
+
+  const handleCreateEvent = async (event: any, apiCalls: any) => {
+    try {
+      const response = await apiCalls(event, {}, currentEvent ? { id: currentEvent?.id } : {})
+      if (response?.status === 'error') {
+        console.log('error : ', response)
+        toast.error('Event Not Created');
+      } else if (response?.status === 'success') {
+        toast.success('Event Created Successfully');
+        console.log("success : ", response)
+        handleClose(response?.data);
+      }
+    } catch (err) {
+      console.log('err : ', err)
+    }
+  }
 
   const onSubmit = (data: any) => {
+    const now = new Date();
+    const startTimeDate = parse(data.eventStartTime, "HH:mm", now);
+    const endTimeDate = parse(data.eventEndTime, "HH:mm", now);
+
     const finalData = {
       ...data,
-      id: Date.now(),
       eventEndDate: isDateRange ? data.eventEndDate : data.eventDate,
+      eventStartTime: format(startTimeDate, "HH:mm:ss"),
+      eventEndTime: format(endTimeDate, "HH:mm:ss")
     };
-    handleClose(finalData);
+
+    console.log("finalData:", finalData);
+    handleCreateEvent(finalData, currentEvent ? editEvent : creatEvent)
   };
+
+  const handleDeleteEvent = async (event: any) => {
+    try {
+      const response = await deleteEvent('', {}, { id: event?.id })
+      if (response?.status === 'error') {
+        toast.error('Event Not Deleted');
+      } else if (response?.status === 'success') {
+        toast.success('Event Deleted Successfully');
+        handleClose(false)
+      }
+    } catch (err) {
+      console.log('err : ', err)
+    }
+  }
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
@@ -90,7 +138,18 @@ const EventDialog: React.FC<EventDialogProps> = ({ open, handleClose, currentEve
         <div className="flex flex-col h-[88vh] custom-scrollbar-lead-dashoard">
           <div className="flex-shrink-0 p-4 border-b">
             <DialogHeader>
-              <DialogTitle>{currentEvent ? "Edit Event" : "Add Event"}</DialogTitle>
+            <DialogTitle>
+              <div className="flex items-center">
+                <p>{currentEvent ? "Edit Event" : "Add Event"}</p>
+                {currentEvent && 
+                  <Trash2
+                    onClick={()=>{
+                      handleDeleteEvent(currentEvent)
+                    }}
+                    className="w-6 h-6 text-white bg-red-500 rounded-md p-1 ml-5 cursor-pointer" />
+                }
+              </div>
+            </DialogTitle>
             </DialogHeader>
           </div>
 

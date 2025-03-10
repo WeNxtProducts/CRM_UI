@@ -48,7 +48,7 @@ const LeadDashboard = () => {
 
                     {rightExpanded !== 'events' && (
                         <div
-                            className={`bg-[#E5E9F2] ${rightExpanded === 'tasks' ? 'h-[121vh]' : 'max-h-[250px]'} rounded-xl p-3 transition-all duration-300 
+                            className={`bg-[#E5E9F2] relative ${rightExpanded === 'tasks' ? 'h-[121vh]' : 'h-[250px]'} rounded-xl p-0 transition-all duration-300 
                                 overflow-y-auto overflow-x-hidden custom-scrollbar-lead-dashoard`}
                         >
                             <TaskToDo 

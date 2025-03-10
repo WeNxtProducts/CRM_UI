@@ -1,62 +1,68 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Calendar as BigCalendar, momentLocalizer, SlotInfo, View } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
+// import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import CustomToolbar from "./CustomToolbar";
 import EventDialog from "./EventDialog";
+import Loader from "../ui/Loader";
+import useApiRequests from "@/services/useApiRequests";
+import { transformEvent ,eventStyleGetter} from "./calenderHelper";
 import './big-calender.scss';
 
 const localizer = momentLocalizer(moment);
-const DnDCalendar = withDragAndDrop(BigCalendar);
-
-// const DISABLED_DATES: Moment[] = [
-//   moment("2025-01-01"), // New Year
-//   moment("2025-12-25"), // Christmas
-//   moment("2025-07-04"), // Independence Day
-// ];
-
+// const DnDCalendar = withDragAndDrop(BigCalendar);
 
 const CalendarComponent = () => {
-  const [events, setEvents] = useState<any[]>([
-    {
-      id: 1,
-      eventPriority: 'high',
-      eventDescription: "Launch of the new product line",
-      eventName: "Product Launch",
-      eventDate: '2025-03-07',
-      eventStartTime: '10:01',
-      eventEndDate: '2025-03-07',
-      eventEndTime: '21:30',
-    },
-  ]);
-
+  const eventList: any = useApiRequests('eventList', 'GET')
+  const [eventData, setEventData] = useState<any[]>([])
+  const [loader, setLoader] = useState(false)
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [currentEvent, setCurrentEvent] = useState<any>(null);
   const [startDate, setStartDate] = useState<Date | undefined>(new Date());
+  const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   const [view, setView] = useState<View>("month");
 
   const handleClose = (finalData: any) => {
     console.log("finalData : ", finalData)
     setModalVisible(false)
-    handleSave(finalData)
+    if(finalData){
+      handleSave(finalData)
+    } else if(!finalData){
+      console.log("Deleted")
+    }
+    
   }
 
-  // const disabledDate = (current: Moment): boolean => {
-  //   return (
-  //     current.day() === 0 || // Sunday
-  //     current.day() === 6 || // Saturday
-  //     DISABLED_DATES.some((d) => d.isSame(current, "day"))
-  //   );
-  // };
+  const handleEventList = async () => {
+    setLoader(true)
+    try {
+      const response = await eventList()
+      if (response?.status === 'error') {
+        console.log('error : ', response)
+      } else if (response?.status === 'success') {
+        const events = Array.isArray(response.data) ? response.data : [];
+        const transformedEvents = events.map((event: any) => transformEvent({ ...event }));
+        setEventData(transformedEvents)
+      }
+    } catch (err) {
+      console.log('err : ', err)
+    } finally {
+      setLoader(false)
+    }
+  }
 
-  const handleSelectSlot = ({ start }: SlotInfo) => {
-    // if (disabledDate(moment(start))) return;
+  useEffect(() => {
+    handleEventList()
+  }, [])
+
+  const handleSelectSlot = ({ start, end }: SlotInfo) => {
     setCurrentEvent(null);
+    setEndDate(end)
     setStartDate(start);
     setModalVisible(true);
   };
@@ -67,112 +73,47 @@ const CalendarComponent = () => {
   };
 
   const handleSave = (newEvent: any) => {
-    setEvents((prevEvents) => {
+    setEventData((prevEvents: any) => {
       if (currentEvent) {
-        return prevEvents.map((e) => (e.id === currentEvent.id ? newEvent : e));
+        return prevEvents.map((e: any) => (e?.id === currentEvent.id ? newEvent : e));
       } else {
         return [...prevEvents, newEvent];
       }
     });
+    setCurrentEvent(null)
   };
-
-
-  const eventStyleGetter = (event: any) => {
-    let backgroundColor = "#3174ad";
-    let borderColor = "#3174ad";
-
-    if (event.eventPriority) {
-      switch (event.eventPriority) {
-        case "high":
-          backgroundColor = "#FFA09B";
-          borderColor = "#E52020"
-          break;
-        case "moderate":
-          backgroundColor = "#E7D283";
-          borderColor = "#FFB22C"
-          break;
-        case "low":
-          backgroundColor = "#B3D8A8";
-          borderColor = "#0D4715"
-          break;
-        default:
-          break;
-      }
-    }
-
-    return {
-      style: {
-        backgroundColor,
-        borderLeft: `3px solid ${borderColor}`,
-        color: "black",
-        borderRadius: "5px",
-        padding: "5px",
-      },
-    };
-  };
-
-  const handleEventDrop = ({ event, start, end }: any) => {
-    setEvents((prevEvents) =>
-      prevEvents.map((e) =>
-        e.id === event.id
-          ? {
-              ...e,
-              eventDate: moment(start).format("YYYY-MM-DD"),
-              eventStartTime: moment(start).format("HH:mm"),
-              eventEndDate: moment(end).format("YYYY-MM-DD"),
-              eventEndTime: moment(end).format("HH:mm"),
-            }
-          : e
-      )
-    );
-  };
-  
-  const handleEventResize = ({ event, start, end }: any) => {
-    setEvents((prevEvents) =>
-      prevEvents.map((e) =>
-        e.id === event.id
-          ? {
-              ...e,
-              eventEndDate: moment(end).format("YYYY-MM-DD"),
-              eventEndTime: moment(end).format("HH:mm"),
-            }
-          : e
-      )
-    );
-  };
-
 
   return (
     <div className="h-screen p-0 bg-gray-100">
-      <DnDCalendar
-        titleAccessor={(event: any) => event.eventName}
-        startAccessor={(event: any) =>
-          moment(`${event.eventDate} ${event.eventStartTime}`, "YYYY-MM-DD hh:mm").toDate()
-        }
-        endAccessor={(event: any) =>
-          moment(`${event.eventEndDate} ${event.eventEndTime}`, "YYYY-MM-DD hh:mm").toDate()
-        }
+      {loader && <Loader />}
+      {eventData?.length > 0 &&
+        <BigCalendar
+          titleAccessor={(event: any) => event.eventName || 'No Name'}
+          startAccessor={(event: any) =>
+            moment(`${event.eventDate} ${event.eventStartTime}`, "YYYY-MM-DD hh:mm").toDate()
+          }
+          endAccessor={(event: any) =>
+            moment(`${event.eventEndDate} ${event.eventEndTime}`, "YYYY-MM-DD hh:mm").toDate()
+          }
 
-        localizer={localizer}
-        events={events}
-        selectable
-        onSelectEvent={handleSelectEvent}
-        onSelectSlot={handleSelectSlot}
-        onEventDrop={handleEventDrop}
-        onEventResize={handleEventResize}
-        resizable
-        views={["month", "week", "day", "agenda"]}
-        defaultView="month"
-        view={view}
-        onView={(newView: any) => setView(newView)}
-        step={60}
-        timeslots={1}
-        components={{
-          toolbar: (props) => <CustomToolbar {...props} />,
-        }}
-        className="bg-white shadow-md rounded-lg p-4 custom-calendar custom-scrollbar-lead-dashoard"
-        eventPropGetter={eventStyleGetter}
-      />
+          localizer={localizer}
+          events={eventData}
+          selectable
+          onSelectEvent={handleSelectEvent}
+          onSelectSlot={handleSelectSlot}
+          views={["month", "week", "day", "agenda"]}
+          defaultView="month"
+          view={view}
+          onView={(newView: any) => setView(newView)}
+          step={60}
+          timeslots={1}
+          components={{
+            toolbar: (props) => <CustomToolbar {...props} />,
+          }}
+          className="bg-white shadow-md rounded-lg p-4 custom-calendar custom-scrollbar-lead-dashoard"
+          eventPropGetter={eventStyleGetter}
+        />
+      }
 
       {modalVisible &&
         <EventDialog
@@ -180,6 +121,7 @@ const CalendarComponent = () => {
           handleClose={handleClose}
           currentEvent={currentEvent}
           startDate={startDate}
+          endDate={endDate}
         />
       }
     </div>

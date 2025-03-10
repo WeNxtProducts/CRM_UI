@@ -6,6 +6,7 @@ import LeadCards from './LeadCards';
 import { DatePickerWithRange } from '../ui/filterDate';
 import LeadCharts from './LeadCharts';
 import useApiRequests from '@/services/useApiRequests'
+import Loader from '../ui/Loader';
 
 export const LeadContext: any = createContext({});
 
@@ -15,8 +16,10 @@ const LeadDetails = () => {
 
     const [cardDetails, setCardDetails] = useState<any>({})
     const [graphDetails, setGraphDetails] = useState<any>([])
+    const [loader, setLoader] = useState(false)
 
     const handleLeadCards = async () => {
+        setLoader(true)
         try {
             const response = await leadCards()
             if (response?.status === 'error') {
@@ -26,10 +29,13 @@ const LeadDetails = () => {
             }
         } catch (err) {
             console.log('err : ', err)
+        } finally {
+            setLoader(false)
         }
     }
 
     const handleGraphDetails = async () => {
+        setLoader(true)
         try {
             const response = await salesGraph()
             if (response?.status === 'error') {
@@ -39,6 +45,8 @@ const LeadDetails = () => {
             }
         } catch (err) {
             console.log('err : ', err)
+        } finally {
+            setLoader(false)
         }
     }
 
@@ -48,12 +56,13 @@ const LeadDetails = () => {
     }, [])
 
     const data = {
-        cardDetails,graphDetails
+        cardDetails, graphDetails
     }
 
     return (
         <LeadContext.Provider value={data}>
             <div>
+                {loader && <Loader />}
                 <h2 className='text-[20px] text-T-color font-medium mb-1'>Lead Details</h2>
                 <DatePickerWithRange />
                 {cardDetails !== null && <LeadCards />}

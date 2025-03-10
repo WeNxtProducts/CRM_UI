@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import React, {useState,useEffect,useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
     // format, differenceInDays, differenceInHours, differenceInMinutes,
     isPast,
@@ -9,12 +9,12 @@ import {
 } from 'date-fns';
 import { Button } from '../ui/button'
 import { format as tz, toZonedTime } from 'date-fns-tz';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight ,MoveRight } from 'lucide-react';
 import useApiRequests from '@/services/useApiRequests'
 
 const TaskToDo = ({ setRightExpanded, rightExpanded }: any) => {
     const taskList: any = useApiRequests('taskList', 'GET')
-    const [taskData,setTaskData] = useState([])
+    const [taskData, setTaskData] = useState<any>([])
 
 
     const handleEventList = async () => {
@@ -58,51 +58,56 @@ const TaskToDo = ({ setRightExpanded, rightExpanded }: any) => {
     // };
 
     const sortedTasks = useMemo(() => {
-  return [...taskData].sort(
-    (a, b) => new Date(a.taskDueDate).getTime() - new Date(b.taskDueDate).getTime()
-  );
-}, [taskData]);
+        return [...taskData].sort(
+            (a: any, b: any) => new Date(a.taskDueDate).getTime() - new Date(b.taskDueDate).getTime()
+        );
+    }, [taskData]);
 
     return (
-        <div>
-            <div className='flex justify-between'>
-                <h2 className='text-lg font-semibold'>Tasks</h2>
-                <Button
-                    variant='link'
-                    size='sm'
-                    onClick={() => {
-                        setRightExpanded(rightExpanded === 'tasks' ? null : 'tasks')
-                    }}
-                >
-                    {rightExpanded === 'tasks' ? 'Collapse' : 'View All'} <ChevronRight />
-                </Button>
-            </div>
-            <div>
-                {sortedTasks.map((task) => {
-                    const dueDate = new Date(task.taskDueDate);
-                    const utcDate = toZonedTime(dueDate, 'UTC');
-                    const formattedDate = tz(utcDate, 'd MMM yyyy', { timeZone: 'UTC' });
-                    // const timeDiff = getTimeDifference(task.taskDueDate);
-                    const isOverdue = isPast(dueDate);
-
-                    return (
-                        <div
-                            key={task.id}
-                            className={`flex items-center p-2 my-2 border rounded ${isOverdue ? 'text-red-500' : ''
-                                }`}
-                        >
-                            <div className='w-24 text-sm font-semibold'>{formattedDate}</div>
-                            <div className='flex-1 ml-4'>
-                                <div className='text-sm font-medium'>{task.taskName}</div>
-                                {/* <div className='text-xs text-gray-500'>
-                                    {timeDiff}
-                                </div> */}
-                            </div>
-                        </div>
-                    );
-                })}
-            </div>
+        <div className="">
+        <div className="flex justify-between px-3 py-1">
+          <h2 className="text-lg font-semibold">Tasks</h2>
+          <Button
+            variant="link"
+            size="sm"
+            onClick={() => {
+              setRightExpanded(rightExpanded === 'tasks' ? null : 'tasks');
+            }}
+          >
+            {rightExpanded === 'tasks' ? 'Collapse' : 'View All'} <ChevronRight />
+          </Button>
         </div>
+        
+        {/* Main tasks list with bottom padding */}
+        <div className="pb-2">
+          {sortedTasks?.map((task) => {
+            const dueDate = new Date(task?.taskDueDate);
+            const utcDate = toZonedTime(dueDate, 'UTC');
+            const formattedDate = tz(utcDate, 'd MMM yyyy', { timeZone: 'UTC' });
+            const isOverdue = isPast(dueDate);
+            
+            return (
+              <div
+                key={task.id}
+                className={`flex items-center px-3 py-2 border rounded ${
+                  isOverdue ? 'text-red-500' : ''
+                }`}
+              >
+                <div className="w-24 text-sm font-semibold">{formattedDate}</div>
+                <div className="flex-1 ml-4">
+                  <div className="text-sm font-medium">{task.taskName}</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      
+        <div className="sticky bottom-0 left-0 right-0 bg-white p-2 flex items-center justify-between cursor-pointer">
+          <p className="text-sm font-light ml-2">Add New Task</p>
+          <MoveRight className="text-[#514EF3]"/>
+        </div>
+      </div>
+      
     );
 };
 

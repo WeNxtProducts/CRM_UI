@@ -12,8 +12,10 @@ import {
 import Image from 'next/image'
 import illustration from '@/Images/illustration.png'
 import { Button } from '../button'
+import { useRouter } from "next/navigation";
 
 const LeadCreatedSuccesfully = ({leadCreation,handleLeadCreation}:any) => {
+	const router = useRouter()
     
 	return (
 		<Dialog
@@ -46,6 +48,7 @@ const LeadCreatedSuccesfully = ({leadCreation,handleLeadCreation}:any) => {
 						<Button
 							variant='default'
 							type='button'
+							onClick={()=>router.push('/lead')}
 							>
 							Close
 						</Button>

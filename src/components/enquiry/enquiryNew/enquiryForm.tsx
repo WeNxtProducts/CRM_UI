@@ -49,7 +49,7 @@ const EnquiryForm = () => {
 				console.log('error : ', response)
 			} else if (response?.status === 'success') {
 				console.log('Enquiry saved successfully!')
-				// setEnquirySaved(true)
+				setEnquirySaved(true)
 				console.log('success : ', response)
 			}
 		} catch (err) {
@@ -60,7 +60,6 @@ const EnquiryForm = () => {
 	const onSubmit = (data: any) => {
 		console.log('form data:', data)
 		newData(data)
-		
 	}
 
 	return (
@@ -116,25 +115,24 @@ const EnquiryForm = () => {
 								render={({ field }) => (
 									<SelectWrapper label='Product'>
 										<Select
-										onValueChange={field.onChange}
-										value={field.value}>
-										<SelectTrigger className='w-full'>
-											<SelectValue placeholder='Select Product' />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectGroup>
-												{Product?.map((item: any) => (
-													<SelectItem
-														key={item?.value}
-														value={item?.value}>
-														{item?.label}
-													</SelectItem>
-												))}
-											</SelectGroup>
-										</SelectContent>
-									</Select>
+											onValueChange={field.onChange}
+											value={field.value}>
+											<SelectTrigger className='w-full'>
+												<SelectValue placeholder='Select Product' />
+											</SelectTrigger>
+											<SelectContent>
+												<SelectGroup>
+													{Product?.map((item: any) => (
+														<SelectItem
+															key={item?.value}
+															value={item?.value}>
+															{item?.label}
+														</SelectItem>
+													))}
+												</SelectGroup>
+											</SelectContent>
+										</Select>
 									</SelectWrapper>
-									
 								)}
 							/>
 
@@ -144,24 +142,24 @@ const EnquiryForm = () => {
 								defaultValue=''
 								render={({ field }) => (
 									<SelectWrapper label='Buisness Type'>
-									<Select
-										onValueChange={field.onChange}
-										value={field.value}>
-										<SelectTrigger className='w-full'>
-											<SelectValue placeholder='Select buisness type' />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectGroup>
-												{Business.map((item: any) => (
-													<SelectItem
-														key={item.value}
-														value={item.value}>
-														{item.label}
-													</SelectItem>
-												))}
-											</SelectGroup>
-										</SelectContent>
-									</Select>
+										<Select
+											onValueChange={field.onChange}
+											value={field.value}>
+											<SelectTrigger className='w-full'>
+												<SelectValue placeholder='Select buisness type' />
+											</SelectTrigger>
+											<SelectContent>
+												<SelectGroup>
+													{Business.map((item: any) => (
+														<SelectItem
+															key={item.value}
+															value={item.value}>
+															{item.label}
+														</SelectItem>
+													))}
+												</SelectGroup>
+											</SelectContent>
+										</Select>
 									</SelectWrapper>
 								)}
 							/>
@@ -215,25 +213,25 @@ const EnquiryForm = () => {
 								control={control}
 								render={({ field }) => (
 									<SelectWrapper label='Intermidiatery name'>
-									<Select
-										onValueChange={field.onChange}
-										value={field.value}
-										disabled={true}>
-										<SelectTrigger className='w-full'>
-											<SelectValue placeholder='Name' />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectGroup>
-												{gender?.map((item: any) => (
-													<SelectItem
-														key={item?.value}
-														value={item?.value}>
-														{item?.label}
-													</SelectItem>
-												))}
-											</SelectGroup>
-										</SelectContent>
-									</Select>
+										<Select
+											onValueChange={field.onChange}
+											value={field.value}
+											disabled={true}>
+											<SelectTrigger className='w-full'>
+												<SelectValue placeholder='Name' />
+											</SelectTrigger>
+											<SelectContent>
+												<SelectGroup>
+													{gender?.map((item: any) => (
+														<SelectItem
+															key={item?.value}
+															value={item?.value}>
+															{item?.label}
+														</SelectItem>
+													))}
+												</SelectGroup>
+											</SelectContent>
+										</Select>
 									</SelectWrapper>
 								)}
 							/>
@@ -243,24 +241,24 @@ const EnquiryForm = () => {
 								control={control}
 								render={({ field }) => (
 									<SelectWrapper label='Choose UnderWriter'>
-									<Select
-										onValueChange={field.onChange}
-										value={field.value}>
-										<SelectTrigger className='w-full'>
-											<SelectValue placeholder='Select Name' />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectGroup>
-												{Underwriter?.map((item: any) => (
-													<SelectItem
-														key={item?.value}
-														value={item?.value}>
-														{item?.label}
-													</SelectItem>
-												))}
-											</SelectGroup>
-										</SelectContent>
-									</Select>
+										<Select
+											onValueChange={field.onChange}
+											value={field.value}>
+											<SelectTrigger className='w-full'>
+												<SelectValue placeholder='Select Name' />
+											</SelectTrigger>
+											<SelectContent>
+												<SelectGroup>
+													{Underwriter?.map((item: any) => (
+														<SelectItem
+															key={item?.value}
+															value={item?.value}>
+															{item?.label}
+														</SelectItem>
+													))}
+												</SelectGroup>
+											</SelectContent>
+										</Select>
 									</SelectWrapper>
 								)}
 							/>
@@ -270,24 +268,24 @@ const EnquiryForm = () => {
 								control={control}
 								render={({ field }) => (
 									<SelectWrapper label='Do you like to give a quote'>
-									<Select
-										onValueChange={field.onChange}
-										value={field.value}>
-										<SelectTrigger className='w-full'>
-											<SelectValue placeholder='Select quote' />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectGroup>
-												{Quote?.map((item: any) => (
-													<SelectItem
-														key={item?.value}
-														value={item?.value}>
-														{item?.label}
-													</SelectItem>
-												))}
-											</SelectGroup>
-										</SelectContent>
-									</Select>
+										<Select
+											onValueChange={field.onChange}
+											value={field.value}>
+											<SelectTrigger className='w-full'>
+												<SelectValue placeholder='Select quote' />
+											</SelectTrigger>
+											<SelectContent>
+												<SelectGroup>
+													{Quote?.map((item: any) => (
+														<SelectItem
+															key={item?.value}
+															value={item?.value}>
+															{item?.label}
+														</SelectItem>
+													))}
+												</SelectGroup>
+											</SelectContent>
+										</Select>
 									</SelectWrapper>
 								)}
 							/>
@@ -312,7 +310,7 @@ const EnquiryForm = () => {
 						<div className='flex justify-center gap-x-3'>
 							<Button>Back</Button>
 
-							<Button onClick={()=>setEnquirySaved(true)}>Sumbit</Button>
+							<Button onClick={() => setEnquirySaved(true)}>Sumbit</Button>
 						</div>
 					</form>
 					{enquirySaved && (

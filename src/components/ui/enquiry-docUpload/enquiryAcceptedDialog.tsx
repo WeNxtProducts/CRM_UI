@@ -56,14 +56,14 @@ console.log("enquiryenquiryenquiry")
 					</p>
 				</div>
 
-                {/* <div className='mt-2'>
+                <div className='mt-2'>
 					<Textarea
 						label='Description'
 						id='description'
 						placeholder='Add some description of the task.'
 						className='w-full mb-1 block text-sm font-medium text-gray-700'
 					/>
-				</div> */}
+				</div>
 
                 <DialogFooter className='sm:justify-center'>
 					<DialogClose asChild>

@@ -30,7 +30,7 @@ interface Enquiry {
 interface EnquiryListTableProps {
 	tableData: Enquiry[]
 	activetabs: string
-	refreshData: (data: any) => void
+	refreshData: () => void
 }
 
 const EnquiryListTable: React.FC<EnquiryListTableProps> = ({
@@ -67,7 +67,7 @@ const EnquiryListTable: React.FC<EnquiryListTableProps> = ({
 	}
 
 	const closedDialaog2 = (enqId: any) => {
-		refreshData(enqId)
+		refreshData()
 	}
 
 	const status = async (enq: any, status: any) => {

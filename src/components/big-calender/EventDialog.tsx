@@ -138,18 +138,18 @@ const EventDialog: React.FC<EventDialogProps> = ({ open, handleClose, currentEve
         <div className="flex flex-col h-[88vh] custom-scrollbar-lead-dashoard">
           <div className="flex-shrink-0 p-4 border-b">
             <DialogHeader>
-            <DialogTitle>
-              <div className="flex items-center">
-                <p>{currentEvent ? "Edit Event" : "Add Event"}</p>
-                {currentEvent && 
-                  <Trash2
-                    onClick={()=>{
-                      handleDeleteEvent(currentEvent)
-                    }}
-                    className="w-6 h-6 text-white bg-red-500 rounded-md p-1 ml-5 cursor-pointer" />
-                }
-              </div>
-            </DialogTitle>
+              <DialogTitle>
+                <div className="flex items-center">
+                  <p>{currentEvent ? "Edit Event" : "Add Event"}</p>
+                  {currentEvent &&
+                    <Trash2
+                      onClick={() => {
+                        handleDeleteEvent(currentEvent)
+                      }}
+                      className="w-6 h-6 text-white bg-red-500 rounded-md p-1 ml-5 cursor-pointer" />
+                  }
+                </div>
+              </DialogTitle>
             </DialogHeader>
           </div>
 

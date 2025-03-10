@@ -3,6 +3,7 @@ import { ThemeProviders } from "./theme-providers";
 import { AppProvider } from "./app-provider";
 import { fonts } from "@/lib/font";
 import { cn } from "@/lib/utils";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const fontVariables = [...fonts.map((f) => f.variable), 'font-custom'];
@@ -25,6 +26,7 @@ export default function RootLayout({
         >
           <ThemeProviders>
             {children}
+            <Toaster richColors/>
           </ThemeProviders>
         </body>
       </AppProvider>

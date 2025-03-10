@@ -30,7 +30,7 @@
       background-color: hsl(var(--primary-btn-foreground)) !important;
     }
     //.rbc-addons-dnd-resize-ns-anchor
-    .rbc-addons-dnd-resize-ew-anchor{
+    .rbc-addons-dnd-resize-ew-anchor,.rbc-addons-dnd-resize-ns-anchor{
       display:none;
     }
   }

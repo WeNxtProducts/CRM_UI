@@ -30,16 +30,12 @@ const SentMessage = ({ messageOpen, messageClose, activeIcon, leadSource, leadDe
 		fetchSentMessage()
 	}
 
-	useEffect(() => {
-		console.log('leadSource : ', leadSource)
-	}, [leadSource])
-
 	const fetchSentMessage = async () => {
 		console.log('fetchSentMessage')
 		const payload = {
 			leadSource: leadSource,
 			leadDescription: messageText,
-			leadSeqNo :id
+			leadSeqNo: id
 		}
 		try {
 			const response = await messageSent(payload)
@@ -61,10 +57,15 @@ const SentMessage = ({ messageOpen, messageClose, activeIcon, leadSource, leadDe
 		<Dialog
 			open={messageOpen}
 			onOpenChange={messageClose}>
-			<DialogContent>
+			<DialogContent aria-describedby='dialog-description'>
 				<DialogHeader>
 					<DialogTitle>Send Message</DialogTitle>
 				</DialogHeader>
+
+				{/* ✅ Add DialogDescription for better accessibility */}
+				<DialogDescription id='dialog-description'>
+					Choose your preferred message channel and provide a description.
+				</DialogDescription>
 
 				<div className='flex flex-row gap-x-2'>
 					<Image

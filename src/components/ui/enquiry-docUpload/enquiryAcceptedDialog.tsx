@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
 	Dialog,
 	DialogClose,
@@ -14,11 +14,24 @@ import illustration from '@/Images/illustration.png'
 import { Textarea } from '../textarea'
 import { Button } from '../button'
 
-const EnquiryAcceptedDialog = ({enquiryAccepted , enquiryAcceptedClose}:any) => {
+
+interface EnquiryAcceptedDialogProps {
+	enquiryAccepted: boolean;
+	enquiryAcceptedClose: (open: boolean) => void; 
+	closedDialaog: () => void; 
+}
+
+const EnquiryAcceptedDialog = ({enquiryAccepted , enquiryAcceptedClose , closedDialaog }:EnquiryAcceptedDialogProps) => {
+
+	useEffect(()=>{
+console.log("enquiryenquiryenquiry")
+	},[])
+	
 	return (
 		<Dialog 
             open={enquiryAccepted}
             onOpenChange={enquiryAcceptedClose}
+
         > 
 			<DialogContent aria-describedby="dialog-description">
 				<DialogHeader>
@@ -43,20 +56,21 @@ const EnquiryAcceptedDialog = ({enquiryAccepted , enquiryAcceptedClose}:any) => 
 					</p>
 				</div>
 
-                <div className='mt-2'>
+                {/* <div className='mt-2'>
 					<Textarea
 						label='Description'
 						id='description'
 						placeholder='Add some description of the task.'
 						className='w-full mb-1 block text-sm font-medium text-gray-700'
 					/>
-				</div>
+				</div> */}
 
                 <DialogFooter className='sm:justify-center'>
 					<DialogClose asChild>
 						<Button
 							variant='default'
-							type='button'>
+							type='button'
+							onClick={closedDialaog}>
 							Close
 						</Button>
 					</DialogClose>

@@ -12,13 +12,15 @@ import FixAppoinment from './fixAppoinment'
 import moment from 'moment'
 import SentMessage from './sentMessage'
 
-const LeadtableListing = ({ leads = []  }: any) => {
+const LeadtableListing = ({ leads = [] }: any) => {
 	const router = useRouter()
 	const [openDialog, setOpenDialog] = useState(false)
 	const [messageDialog, setMessageDialog] = useState(false)
-	const [selectedLead, setSelectedLead] = useState<{ leadSource: string; leadDesc: string, id:any } | null>(
-		null
-	)
+	const [selectedLead, setSelectedLead] = useState<{
+		leadSource: string
+		leadDesc: string
+		id: any
+	} | null>(null)
 	const [activeIcon, setActiveIcon] = useState<string | null>(null)
 	const handleClose = () => {
 		setOpenDialog(false)
@@ -31,7 +33,7 @@ const LeadtableListing = ({ leads = []  }: any) => {
 		setSelectedLead({
 			leadSource: icon,
 			leadDesc: lead.leadDescription || '',
-			id  : lead.leadSeqNo
+			id: lead.leadSeqNo
 		})
 	}
 
@@ -41,8 +43,7 @@ const LeadtableListing = ({ leads = []  }: any) => {
 				leads?.map((lead: any, index: any) => (
 					<div
 						key={index}
-						className='grid grid-cols-8 items-center gap-3 rounded-lg bg-white p-4 shadow-md'
-					>
+						className='grid grid-cols-8 items-center gap-3 rounded-lg bg-white p-4 shadow-md'>
 						<div className='col-span-2 flex flex-col'>
 							<div className='text-sm text-gray-500'>{lead.leadSeqNo}</div>
 							<div className='text-base font-medium'>{lead.leadName}</div>
@@ -125,7 +126,7 @@ const LeadtableListing = ({ leads = []  }: any) => {
 								width={30}
 								height={30}
 								alt='Mobile Icon'
-								className='rounded-full border bg-[#E6EDF5] p-1 cursor-pointer'
+								className='cursor-pointer rounded-full border bg-[#E6EDF5] p-1'
 								onClick={() => router.push('/enquiry')}
 							/>
 							<Image
@@ -139,16 +140,6 @@ const LeadtableListing = ({ leads = []  }: any) => {
 								}}
 								className='cursor-pointer'
 							/>
-							{messageDialog && selectedLead &&(
-								<SentMessage
-									messageOpen={messageDialog}
-									messageClose={() => setMessageDialog(false)}
-									activeIcon={activeIcon}
-									leadSource={selectedLead.leadSource}
-									leadDesc={selectedLead.leadDesc}
-									id = {selectedLead.id}
-								/>
-							)}
 
 							<Image
 								src={mail}
@@ -161,19 +152,30 @@ const LeadtableListing = ({ leads = []  }: any) => {
 									handleIconClick('mail', lead)
 								}}
 							/>
-							{messageDialog && selectedLead && (
-								<SentMessage
-									messageOpen={messageDialog}
-									messageClose={() => setMessageDialog(false)}
-									activeIcon={activeIcon}
-									leadSource={selectedLead.leadSource}
-									leadDesc={selectedLead.leadDesc}
-									id={selectedLead.id}
-								/>
-							)}
 						</div>
 					</div>
 				))}
+			{/* {messageDialog && selectedLead && (
+				<SentMessage
+					messageOpen={messageDialog}
+					messageClose={() => setMessageDialog(false)}
+					activeIcon={activeIcon}
+					leadSource={selectedLead.leadSource}
+					leadDesc={selectedLead.leadDesc}
+					id={selectedLead.id}
+				/>
+			)} */}
+
+			{messageDialog && selectedLead && (
+				<SentMessage
+					messageOpen={messageDialog}
+					messageClose={() => setMessageDialog(false)}
+					activeIcon={activeIcon}
+					leadSource={selectedLead.leadSource}
+					leadDesc={selectedLead.leadDesc}
+					id={selectedLead.id}
+				/>
+			)}
 		</div>
 	)
 }

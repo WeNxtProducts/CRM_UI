@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/select'
 import Loader from '@/components/ui/Loader'
 import { useDispatch } from 'react-redux'
+import { log } from 'console'
 
 const Enquirylist = () => {
 	// const enquiryList: any = useApiRequests('enquiryList', 'GET')
@@ -38,6 +39,11 @@ const Enquirylist = () => {
 	const [loader, setLoader] = useState(false)
 	const [enqData, setEnqData] = useState([])
 
+	// const refreshData =(data:any)=>{
+	// 	console.log(data,'iiiiiiiiiiii');
+	// 	fetchData()
+		
+	// }
 	const fetchData = async (status = 'pending', offset = 1) => {
 		setLoader(true)
 		const queryParams = { status, page: offset - 1, size: 10 }
@@ -192,6 +198,7 @@ const Enquirylist = () => {
 									total={totalRecords}
 									pageSize={10}
 									onPageChange={(page) => fetchData(activeTab, page)}
+									
 								/>
 							</div>
 						)}
@@ -201,6 +208,8 @@ const Enquirylist = () => {
 							<EnquiryListTable
 								tableData={enqData}
 								activetabs={activeTab}
+								refreshData = {fetchData}
+								
 							/>
 						</div>
 					) : (

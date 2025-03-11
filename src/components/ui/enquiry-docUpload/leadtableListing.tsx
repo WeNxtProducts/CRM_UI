@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { ArrowUp, Smartphone } from 'lucide-react'
+import { ArrowUp, MessageSquareMore, Smartphone } from 'lucide-react'
 import whatsapp from '@/Images/icons8-whatsapp.svg'
 import mail from '@/Images/mail-image.svg'
 import mobile from '@/Images/mobile-image.svg'
@@ -11,9 +11,12 @@ import { Button } from '../button'
 import FixAppoinment from './fixAppoinment'
 import moment from 'moment'
 import SentMessage from './sentMessage'
+import { useDispatch } from 'react-redux'
+import { setLeadId } from '@/redux/slices'
 
 const LeadtableListing = ({ leads = [] }: any) => {
 	const router = useRouter()
+	const dispatch = useDispatch()
 	const [openDialog, setOpenDialog] = useState(false)
 	const [messageDialog, setMessageDialog] = useState(false)
 	const [selectedLead, setSelectedLead] = useState<{
@@ -112,23 +115,28 @@ const LeadtableListing = ({ leads = [] }: any) => {
 												? 'Fix Appointment'
 												: 'Unknown Status'}
 							</Button>
-							{openDialog && (
-								<FixAppoinment
-									open={openDialog}
-									handleClose={handleClose}
-								/>
-							)}
 						</div>
 
 						<div className='col-span-1 flex gap-1'>
-							<Image
+							<MessageSquareMore
+								className='h-7 w-7 cursor-pointer rounded-full border bg-[#E6EDF5] p-1'
+								onClick={(e) => {
+									e.stopPropagation()
+									handleIconClick('phone', lead)
+									// dispatch(setLeadId(lead.leadSeqNo))
+									// router.push('/enquiry')
+
+								}}
+							/>
+
+							{/* <Image
 								src={mobile}
 								width={30}
 								height={30}
 								alt='Mobile Icon'
 								className='cursor-pointer rounded-full border bg-[#E6EDF5] p-1'
 								onClick={() => router.push('/enquiry')}
-							/>
+							/> */}
 							<Image
 								src={whatsapp}
 								width={30}
@@ -174,6 +182,12 @@ const LeadtableListing = ({ leads = [] }: any) => {
 					leadSource={selectedLead.leadSource}
 					leadDesc={selectedLead.leadDesc}
 					id={selectedLead.id}
+				/>
+			)}
+			{openDialog && (
+				<FixAppoinment
+					open={openDialog}
+					handleClose={handleClose}
 				/>
 			)}
 		</div>

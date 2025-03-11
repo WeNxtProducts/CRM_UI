@@ -11,7 +11,7 @@ import CustomToolbar from "./CustomToolbar";
 import EventDialog from "./EventDialog";
 import Loader from "../ui/Loader";
 import useApiRequests from "@/services/useApiRequests";
-import { transformEvent ,eventStyleGetter} from "./calenderHelper";
+import { transformEvent, eventStyleGetter } from "./calenderHelper";
 import './big-calender.scss';
 
 const localizer = momentLocalizer(moment);
@@ -27,16 +27,23 @@ const CalendarComponent = () => {
   const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   const [view, setView] = useState<View>("month");
 
-  const handleClose = (finalData: any) => {
-    console.log("finalData : ", finalData)
+  const handleCloseDialog = () => {
     setModalVisible(false)
-    if(finalData){
-      handleSave(finalData)
-    } else if(!finalData){
-      console.log("Deleted")
-    }
-    
   }
+
+  const handleClose = (finalData: any) => {
+    setModalVisible(false)
+    if (finalData) {
+      handleSave(finalData)
+    } else if (!finalData) {
+      handleDelete(currentEvent.id);
+    }
+  }
+
+  const handleDelete = (eventId: any) => {
+    setEventData((prevEvents) => prevEvents.filter((e) => e.id !== eventId));
+    setCurrentEvent(null)
+  };
 
   const handleEventList = async () => {
     setLoader(true)
@@ -119,6 +126,7 @@ const CalendarComponent = () => {
         <EventDialog
           open={modalVisible}
           handleClose={handleClose}
+          handleCloseDialog={handleCloseDialog}
           currentEvent={currentEvent}
           startDate={startDate}
           endDate={endDate}

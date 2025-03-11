@@ -18,12 +18,12 @@ import { Input } from '../input'
 import { DatePickerDemo } from '../datePicker'
 import { Textarea } from '../textarea'
 import AppoinmentFixed from './appoinmentFixed'
-import  TimePicker  from '../timePicker'
-
+import { TimePicker } from '../timePicker'
 
 const FixAppoinment = ({ open, handleClose }: any) => {
 	const [openDialog, setOpenDialog] = useState(false)
 	const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
+	const [selectedTime, setSelectedTime] = useState<any>('12:00')
 	// const [selectedTime, setSelectedTime] = useState<string | undefined>(undefined)
 
 	const dialogClose = () => {
@@ -92,7 +92,13 @@ const FixAppoinment = ({ open, handleClose }: any) => {
 						/>
 					</div>
 					<div>
-						<TimePicker/>
+						<TimePicker
+							value={selectedTime}
+							onChange={(val) => {
+								setSelectedTime(val.target.value)
+							}}
+							label='Time'
+						/>
 					</div>
 				</div>
 
@@ -101,7 +107,7 @@ const FixAppoinment = ({ open, handleClose }: any) => {
 						label='Description'
 						id='description'
 						placeholder='Add some description of the task.'
-						className='w-full mb-1 block text-sm font-medium text-gray-700'
+						className='mb-1 block w-full text-sm font-medium text-gray-700'
 					/>
 				</div>
 
@@ -109,10 +115,9 @@ const FixAppoinment = ({ open, handleClose }: any) => {
 					<Button
 						variant='default'
 						size='sm'
-						onClick={()=>{
+						onClick={() => {
 							setOpenDialog(true)
-						}}
-						>
+						}}>
 						Save Appoinment
 					</Button>
 					{openDialog && (

@@ -31,12 +31,14 @@ interface EnquiryListTableProps {
 	tableData: Enquiry[]
 	activetabs: string
 	refreshData: () => void
+	leadId: any
 }
 
 const EnquiryListTable: React.FC<EnquiryListTableProps> = ({
 	tableData,
 	activetabs,
-	refreshData
+	refreshData,
+	leadId
 }: EnquiryListTableProps) => {
 	const statusUpdate: any = useApiRequests('enqinfoUpdate', 'PUT')
 
@@ -68,12 +70,17 @@ const EnquiryListTable: React.FC<EnquiryListTableProps> = ({
 
 	const closedDialaog2 = (enqId: any) => {
 		refreshData()
+		setMessageAccepted(false)
 	}
 
 	const status = async (enq: any, status: any) => {
 		console.log('enqId : ', enq)
+		const payload = {
+			status,
+			enqDescription: 'Test'
+		}
 		try {
-			const response = await statusUpdate('', { status }, { id: enq?.enqSeqNo })
+			const response = await statusUpdate(payload, {}, { id: enq?.enqSeqNo })
 			if (response?.status === 'error') {
 				console.log('error:', response)
 			} else {
@@ -95,12 +102,10 @@ const EnquiryListTable: React.FC<EnquiryListTableProps> = ({
 						<TableHead className='text-center'>Product</TableHead>
 						<TableHead className='text-center'>Enquiry Date</TableHead>
 						<TableHead className='text-center'>Updated Date</TableHead>
-						{/* <TableHead className='text-center'>Actions</TableHead> */}
 					</TableRow>
 				</TableHeader>
 				<TableBody>
 					{tableData?.map((enquiry: any, index: any) => {
-						// Find the corresponding label for the product value
 						const productLabel =
 							Product.find((item: any) => item.value === enquiry.enqProdName)?.label ||
 							enquiry.enqProdName
@@ -172,16 +177,16 @@ const EnquiryListTable: React.FC<EnquiryListTableProps> = ({
 												onClick={() => handleClick(enquiry)}
 												className={`cursor-pointer rounded-full border bg-[#06771F] p-1 text-[#FFFFFF]`}
 											/>
-											{messageAccepted && (
-												<EnquiryAcceptedDialog
-													enquiryAccepted={messageAccepted}
-													enquiryAcceptedClose={setMessageAccepted}
-													closedDialaog={() => closedDialaog2(enquiry)}
-												/>
-											)}
 
 											{/* <Ellipsis /> */}
 										</div>
+									)}
+									{messageAccepted && (
+										<EnquiryAcceptedDialog
+											enquiryAccepted={messageAccepted}
+											enquiryAcceptedClose={setMessageAccepted}
+											closedDialaog={() => closedDialaog2(enquiry)}
+										/>
 									)}
 								</TableCell>
 							</TableRow>

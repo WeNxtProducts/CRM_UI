@@ -14,31 +14,30 @@ import illustration from '@/Images/illustration.png'
 import { Textarea } from '../textarea'
 import { Button } from '../button'
 
-
 interface EnquiryAcceptedDialogProps {
-	enquiryAccepted: boolean;
-	enquiryAcceptedClose: (open: boolean) => void; 
-	closedDialaog: () => void; 
+	enquiryAccepted: boolean
+	enquiryAcceptedClose: (open: boolean) => void
+	closedDialaog: () => void
 }
 
-const EnquiryAcceptedDialog = ({enquiryAccepted , enquiryAcceptedClose , closedDialaog }:EnquiryAcceptedDialogProps) => {
+const EnquiryAcceptedDialog = ({
+	enquiryAccepted,
+	enquiryAcceptedClose,
+	closedDialaog
+}: EnquiryAcceptedDialogProps) => {
+	useEffect(() => {
+		console.log('enquiryenquiryenquiry')
+	}, [])
 
-	useEffect(()=>{
-console.log("enquiryenquiryenquiry")
-	},[])
-	
 	return (
-		<Dialog 
-            open={enquiryAccepted}
-            onOpenChange={enquiryAcceptedClose}
-
-        > 
-			<DialogContent aria-describedby="dialog-description">
+		<Dialog
+			open={enquiryAccepted}
+			onOpenChange={enquiryAcceptedClose}>
+			<DialogContent aria-describedby='dialog-description'>
 				<DialogHeader>
 					<DialogTitle>Enquiry Accepted Sucessfully</DialogTitle>
 				</DialogHeader>
 
-                
 				<div className='flex justify-center'>
 					<Image
 						src={illustration}
@@ -49,23 +48,22 @@ console.log("enquiryenquiryenquiry")
 					/>
 				</div>
 
-                
 				<div className='flex justify-center'>
 					<p className='text-sm'>
 						The task moved to in review section and will be closed within 30 days if unattended.
 					</p>
 				</div>
 
-                <div className='mt-2'>
+				<div className='mt-2'>
 					<Textarea
 						label='Description'
 						id='description'
 						placeholder='Add some description of the task.'
-						className='w-full mb-1 block text-sm font-medium text-gray-700'
+						className='mb-1 block w-full text-sm font-medium text-gray-700'
 					/>
 				</div>
 
-                <DialogFooter className='sm:justify-center'>
+				<DialogFooter className='sm:justify-center'>
 					<DialogClose asChild>
 						<Button
 							variant='default'

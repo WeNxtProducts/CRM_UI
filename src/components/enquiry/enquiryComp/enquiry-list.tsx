@@ -208,8 +208,8 @@ const Enquirylist = () => {
 							<EnquiryListTable
 								tableData={enqData}
 								activetabs={activeTab}
-								refreshData = {fetchData}
-								
+								refreshData={fetchData}
+
 							/>
 						</div>
 					) : (

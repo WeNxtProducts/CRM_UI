@@ -38,6 +38,7 @@ const getDefaultInitialState = () => {
 interface EventDialogProps {
   open: boolean;
   handleClose: (data?: any) => void;
+  handleCloseDialog: () => void;
   startDate?: any;
   endDate?: any;
   currentEvent?: {
@@ -52,7 +53,7 @@ interface EventDialogProps {
   };
 }
 
-const EventDialog: React.FC<EventDialogProps> = ({ open, handleClose, currentEvent, startDate, endDate }) => {
+const EventDialog: React.FC<EventDialogProps> = ({ open, handleClose, currentEvent, startDate, endDate, handleCloseDialog }) => {
   const creatEvent: any = useApiRequests('createEditEvents', 'POST')
   const editEvent: any = useApiRequests('createEditEvents', 'PUT')
   const deleteEvent: any = useApiRequests('createEditEvents', 'DELETE')
@@ -102,10 +103,20 @@ const EventDialog: React.FC<EventDialogProps> = ({ open, handleClose, currentEve
     }
   }
 
+  function parseTime(timeString: string, referenceDate = new Date()) {
+    const formats = ['HH:mm:ss', 'HH:mm'];
+    for (const format of formats) {
+      const parsedDate: any = parse(timeString, format, referenceDate);
+      if (!isNaN(parsedDate)) {
+        return parsedDate;
+      }
+    }
+    throw new Error(`Invalid time format: ${timeString}`);
+  }
+
   const onSubmit = (data: any) => {
-    const now = new Date();
-    const startTimeDate = parse(data.eventStartTime, "HH:mm", now);
-    const endTimeDate = parse(data.eventEndTime, "HH:mm", now);
+    const startTimeDate = parseTime(data.eventStartTime);
+    const endTimeDate = parseTime(data.eventEndTime);
 
     const finalData = {
       ...data,
@@ -114,7 +125,7 @@ const EventDialog: React.FC<EventDialogProps> = ({ open, handleClose, currentEve
       eventEndTime: format(endTimeDate, "HH:mm:ss")
     };
 
-    console.log("finalData:", finalData);
+    // console.log("finalData:", finalData);
     handleCreateEvent(finalData, currentEvent ? editEvent : creatEvent)
   };
 
@@ -133,7 +144,7 @@ const EventDialog: React.FC<EventDialogProps> = ({ open, handleClose, currentEve
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
+    <Dialog open={open} onOpenChange={handleCloseDialog}>
       <DialogContent className="max-w-lg p-0">
         <div className="flex flex-col h-[88vh] custom-scrollbar-lead-dashoard">
           <div className="flex-shrink-0 p-4 border-b">
@@ -205,7 +216,7 @@ const EventDialog: React.FC<EventDialogProps> = ({ open, handleClose, currentEve
 
           <div className="flex-shrink-0 p-4 border-t">
             <div className="flex justify-end space-x-2">
-              <Button variant="outline" size="sm" type="button" onClick={() => handleClose()}>Cancel</Button>
+              <Button variant="outline" size="sm" type="button" onClick={() => handleCloseDialog()}>Cancel</Button>
               <Button size="sm" type="submit" form="eventForm">Save</Button>
             </div>
           </div>

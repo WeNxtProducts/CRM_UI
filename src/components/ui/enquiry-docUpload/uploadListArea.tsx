@@ -1,16 +1,50 @@
-import { FilePlus2, Trash2 } from 'lucide-react'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+'use client'
+
+import React, { useCallback, useEffect, useState } from 'react'
+import { Eye, FilePlus2, Save, Trash2 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
-import React, { useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import 'swiper/css'
 import { Navigation } from 'swiper/modules'
+import { getFileFormat, handleFileDownloadOrView, readFileAsBase64 } from '@/lib/mediaHelper'
 import 'swiper/css/navigation'
+import 'swiper/css'
 
 const UploadListArea = () => {
+	const fileData = {
+		module: 'enquiry',
+		TranId: '1',
+		DocType: 'enquiry',
+		replaceFlag: 'N',
+		dms_status: 'N',
+		uploadscrn: 'enquiry',
+		screenName: 'DMS',
+	};
+	const [files, setFiles] = useState<any>([])
+
 	const onDrop = useCallback(async (acceptedFiles: any) => {
-		console.log('acceptedFiles  : ', acceptedFiles)
-	}, [])
+		const filesBase64: any = [];
+		for (const file of acceptedFiles) {
+			const base64String = await readFileAsBase64(file);
+			filesBase64.push({
+				filename: file.name,
+				base64String: base64String,
+				genType: getFileFormat(file),
+				description: '',
+				...fileData,
+			});
+		}
+
+		setFiles((prevFiles: any) => {
+			const validPrevFiles = Array.isArray(prevFiles) ? prevFiles : [];
+			return [...validPrevFiles, ...filesBase64];
+		});
+	}, []);
+
+	useEffect(() => {
+		console.log("files : ", files)
+	}, [files])
 
 	const { getRootProps, getInputProps, isDragActive } = useDropzone({
 		onDrop,
@@ -29,14 +63,22 @@ const UploadListArea = () => {
 		}
 	})
 
-	const documents = [
-		{ id: 1, name: 'phoneix-document.pdf', status: 'Upload complete' },
-		{ id: 2, name: 'report.pdf', status: 'Upload complete' },
-		{ id: 3, name: 'design-mockup.png', status: 'Upload complete' },
-		// { id: 4, name: 'presentation.pptx', status: 'Upload complete' },
-		// { id: 5, name: 'report.pdf', status: 'Upload complete' },
-		// { id: 6, name: 'report.pdf', status: 'Upload complete' }
-	]
+	const handleChangeVal = (index: any) => (e: any) => {
+		const newDescription = e.target.value;
+		setFiles((prevFiles: any) =>
+			prevFiles.map((file: any, i: any) =>
+				i === index ? { ...file, description: newDescription } : file
+			)
+		);
+	}
+
+	const handleViewFile = (index: any) => {
+		if (Object.prototype.hasOwnProperty.call(files[index], 'base64String')) {
+			handleFileDownloadOrView(files[index]);
+		} else {
+			console.log(files[index]);
+		}
+	};
 
 	return (
 		<div className='mt-4'>
@@ -67,7 +109,7 @@ const UploadListArea = () => {
 				</div>
 			</div>
 
-			<div className='relative mb-10'>
+			<div className='relative mb-10 mt-3'>
 				<Swiper
 					modules={[Navigation]}
 					spaceBetween={10}
@@ -77,29 +119,36 @@ const UploadListArea = () => {
 					className='custom-swiper'
 					style={{
 						// '--swiper-navigation-color': '#ffff',
-						'--swiper-navigation-size':'20px',
-					}}
+						'--swiper-navigation-size': '20px',
+					} as React.CSSProperties}
 				>
-					{documents.map((doc) => (
-						<SwiperSlide key={doc.id}>
-							<div className='mt-3'>
+					{files.map((doc: any, index: any) => (
+						<SwiperSlide key={`${doc.filename}-${index}`}>
+							<div className=''>
 								<div className='flex flex-col gap-y-2 rounded-md border bg-[#E5E9F2] p-3'>
 									<div className='flex flex-row justify-between pr-1'>
-										<p className='text-sm font-bold'>{doc.name}</p>
-										<Trash2 className='h-5 w-5 cursor-pointer text-red-500' />
+										<p className='text-sm font-bold'>{doc.filename}</p>
+										<div>
+											<Trash2 className='h-5 w-5 cursor-pointer text-red-500' />
+											<Eye
+												onClick={() => handleViewFile(index)}
+												className='h-5 w-5 cursor-pointer text-blue-500' />
+											<Save className='h-5 w-5 cursor-pointer text-green-500' />
+										</div>
 									</div>
-									<p className='text-sm font-semibold text-[#002280]'>{doc.status}</p>
+									<p className='text-sm font-semibold text-[#002280]'>{doc.genType}</p>
 									<Input
 										label='Enter Description'
 										type='text'
+										value={doc?.description}
+										className='w-full'
+										onChange={handleChangeVal(index)}
 									/>
 								</div>
 							</div>
 						</SwiperSlide>
 					))}
 				</Swiper>
-
-				
 			</div>
 		</div>
 	)

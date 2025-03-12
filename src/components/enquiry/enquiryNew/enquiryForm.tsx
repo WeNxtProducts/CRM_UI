@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import React, { useState } from 'react'
@@ -10,7 +11,7 @@ import {
 	SelectContent,
 	SelectGroup,
 	SelectItem,
-	SelectLabel,
+	// SelectLabel,
 	SelectTrigger,
 	SelectValue,
 	SelectWrapper
@@ -27,18 +28,18 @@ import { useSelector } from 'react-redux'
 
 const EnquiryForm = () => {
 	const router = useRouter()
-	const [date, setDate] = React.useState<Date>()
+	// const [date, setDate] = React.useState<Date>()
 	const [enquirySaved, setEnquirySaved] = useState(false)
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
-		getValues,
+		// formState: { errors },
+		// getValues,
 		control
 	} = useForm({})
 
-	const leadId = useSelector((state:any)=>state.apps.leadId)
-	console.log('leadId:',leadId)
+	const leadId = useSelector((state: any) => state.apps.leadId)
+	console.log('leadId:', leadId)
 
 	const newEnquiry: any = useApiRequests('enquiryCreate', 'POST')
 
@@ -312,7 +313,7 @@ const EnquiryForm = () => {
 						<UploadListArea />
 
 						<div className='flex justify-center gap-x-3'>
-							<Button>Back</Button>
+							<Button variant='outline'>Back</Button>
 
 							<Button onClick={() => setEnquirySaved(true)}>Sumbit</Button>
 						</div>
@@ -327,7 +328,7 @@ const EnquiryForm = () => {
 					)}
 				</div>
 				<div className='col-span-2'>
-					<EnquiryRightBar leadId={leadId}/>
+					<EnquiryRightBar leadId={leadId} />
 				</div>
 			</div>
 		</div>

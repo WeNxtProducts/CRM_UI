@@ -2,7 +2,8 @@ import {Separator} from '../../../components/ui/separator'
 import { ChevronDown } from 'lucide-react'
 import React from 'react'
 
-const EnquiryRightBar = () => {
+const EnquiryRightBar = ({leadId}:any) => {
+	console.log('leadId:',leadId)
 	return (
 		<>
 			<div className='rounded-xl border'>

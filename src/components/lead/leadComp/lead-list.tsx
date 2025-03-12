@@ -56,7 +56,7 @@ const LeadList = () => {
 				<div className='col-span-8 pl-3 pr-2'>
 					<div className='flex flex-row justify-between pr-2'>
 						<h3 className='font-semibold'>Tasks</h3>
-						<Filter className='h-8 w-10 rounded-lg border p-2' />
+						{/* <Filter className='h-8 w-10 rounded-lg border p-2' /> */}
 					</div>
 
 					<div className='mt-3 flex justify-center rounded-full border bg-[#E6EDF5] p-1'>

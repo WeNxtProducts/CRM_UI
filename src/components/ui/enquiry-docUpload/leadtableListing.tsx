@@ -25,7 +25,7 @@ import {
 const LeadtableListing = ({ leads = [] }: any) => {
 	const router = useRouter()
 	const dispatch = useDispatch()
-	const [openDialog, setOpenDialog] = useState(false)
+	// const [openDialog, setOpenDialog] = useState(false)
 	const [messageDialog, setMessageDialog] = useState(false)
 	const [selectedLead, setSelectedLead] = useState<{
 		leadSource: string
@@ -34,7 +34,7 @@ const LeadtableListing = ({ leads = [] }: any) => {
 	} | null>(null)
 	const [activeIcon, setActiveIcon] = useState<string | null>(null)
 	const handleClose = () => {
-		setOpenDialog(false)
+		// setOpenDialog(false)
 		setMessageDialog(false)
 	}
 
@@ -111,10 +111,10 @@ const LeadtableListing = ({ leads = [] }: any) => {
 					  variant="default"
 					  size="sm"
 					  onClick={() => {
-						if (lead.leadStatus === "Todo") {
-						  setOpenDialog(true);
-						}
-
+						// if (lead.leadStatus === "Todo") {
+						//   setOpenDialog(true);
+						// }
+						dispatch(setLeadId(lead.leadSeqNo))
 						router.push('/enquiryCreate')
 					  }}
 					>
@@ -178,7 +178,7 @@ const LeadtableListing = ({ leads = [] }: any) => {
 		  />
 		)}
 	  
-		{openDialog && <FixAppoinment open={openDialog} handleClose={handleClose} />}
+		{/* {openDialog && <FixAppoinment open={openDialog} handleClose={handleClose} />} */}
 	  </div>
 	  
 	)

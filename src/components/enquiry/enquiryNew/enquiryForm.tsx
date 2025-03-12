@@ -72,7 +72,7 @@ const EnquiryForm = () => {
 			<div className='mt-2 flex items-center gap-2 pl-3 md:pl-2 lg:pl-4'>
 				<div>
 					<button onClick={() => router.push('/enquiry')}>
-						<ArrowLeft className='h-6 w-8' />
+						<ArrowLeft className='h-5 w-8 mt-2' />
 					</button>
 				</div>
 
@@ -91,12 +91,12 @@ const EnquiryForm = () => {
 								name='enqLobName'
 								control={control}
 								render={({ field }) => (
-									<SelectWrapper label='LOB'>
+									<SelectWrapper label='Lob'>
 										<Select
 											onValueChange={field.onChange}
 											value={field.value}>
 											<SelectTrigger className='w-full'>
-												<SelectValue placeholder='Select LOB' />
+												<SelectValue placeholder='Select Lob' />
 											</SelectTrigger>
 											<SelectContent>
 												<SelectGroup>
@@ -122,7 +122,7 @@ const EnquiryForm = () => {
 										<Select
 											onValueChange={field.onChange}
 											value={field.value}>
-											<SelectTrigger className='w-full'>
+											<SelectTrigger className='w-full '>
 												<SelectValue placeholder='Select Product' />
 											</SelectTrigger>
 											<SelectContent>
@@ -195,6 +195,7 @@ const EnquiryForm = () => {
 
 							<Input
 								label='Sum Insured'
+								placeholder='Enter sum insured'
 								type='text'
 								className='w-full'
 								{...register('enqSumInsured')}
@@ -202,12 +203,14 @@ const EnquiryForm = () => {
 
 							<Input
 								label='Suggested Premium'
+								placeholder='Enter suggested premium'
 								type='text'
 								className='w-full'
 								{...register('enqSuggestedPrem')}
 							/>
 							<Input
 								label='Suggested Rate'
+								placeholder='Enter suggested rate'
 								type='text'
 								className='w-full'
 								{...register('enqSuggestedRate')}
@@ -222,7 +225,7 @@ const EnquiryForm = () => {
 											onValueChange={field.onChange}
 											value={field.value}
 											disabled={true}>
-											<SelectTrigger className='w-full'>
+											<SelectTrigger className='w-full '>
 												<SelectValue placeholder='Name' />
 											</SelectTrigger>
 											<SelectContent>
@@ -249,7 +252,7 @@ const EnquiryForm = () => {
 										<Select
 											onValueChange={field.onChange}
 											value={field.value}>
-											<SelectTrigger className='w-full'>
+											<SelectTrigger className='w-full '>
 												<SelectValue placeholder='Select Name' />
 											</SelectTrigger>
 											<SelectContent>

@@ -82,7 +82,7 @@ const UploadListArea = () => {
 
 	return (
 		<div className='mt-4'>
-			<h3 className='text-lg font-semibold'>Enquiry Documents (3)</h3>
+			<h3 className='text-md font-semibold'>Enquiry Documents (3)</h3>
 
 			<div
 				className='file-drop-zone mt-2'
@@ -94,18 +94,18 @@ const UploadListArea = () => {
 					) : (
 						<div className='flex flex-col items-center justify-center gap-y-1 rounded-md border px-4 py-7'>
 							<FilePlus2 className='text-[#3276E8]' />
-							<p className='text-sm'>Click or drag to upload files</p>
+							<p className='text-xs'>Click or drag to upload files</p>
 						</div>
 					)}
 				</div>
 			</div>
 
 			<div className='mt-2 flex gap-x-2'>
-				<p className='flex items-center rounded-md border bg-gray-200 px-2 text-xs'>PDF</p>
-				<p className='flex items-center rounded-md border bg-gray-200 px-2 text-xs'>DOCS</p>
-				<p className='flex items-center rounded-md border bg-gray-200 px-2 text-xs'>TXT</p>
+				<p className='flex items-center rounded-md border bg-gray-200 px-2 text-xxs'>PDF</p>
+				<p className='flex items-center rounded-md border bg-gray-200 px-2 text-xxs'>DOCS</p>
+				<p className='flex items-center rounded-md border bg-gray-200 px-2 text-xxs'>TXT</p>
 				<div className='flex items-center rounded-md border px-2'>
-					<p className='text-xs'>{'>'}10MB</p>
+					<p className='text-xxs'>{'>'}10MB</p>
 				</div>
 			</div>
 

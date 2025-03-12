@@ -56,6 +56,7 @@ const config = {
 					800: '#818181', // mediumGray
 					850: '#908E8E',
 					900: '#AFAFAF',
+					950: '#91929E'
 				},
 				blue: {
 					100: '#D8E4FC', // lightBlue
@@ -116,6 +117,10 @@ const config = {
 				},
 				inforeq_btn:{
 					DEFAULT: 'hsl(var(--info-btn))',
+					foreground: 'hsl(var(--secondary-foreground))'
+				},
+				topbar:{
+					DEFAULT: 'hsl(var(--topbar-label))',
 					foreground: 'hsl(var(--secondary-foreground))'
 				},
 				secondary: {
@@ -192,9 +197,12 @@ const config = {
 				dmsan: ['var(--font-dmsan)']
 			},
 			fontSize: {
-				'T-size': 'var(--title-size)',
+				'T-size': '22px',
 				btnFontSizeMd: 'var(--btn-font-size-md)',
-				xxs: '30px'
+				xxs: '11px',
+				xs: '13px',
+				s: '15px',
+				md:'17px',
 			},
 			lineHeight: {
 				'11': '2.75rem',

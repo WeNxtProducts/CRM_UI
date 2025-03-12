@@ -16,6 +16,7 @@ import whatsapp from '@/Images/icons8-whatsapp.svg'
 import mail from '@/Images/mail-image.svg'
 import SentMessageSuccesfully from './sentMessageSuccesfully'
 import useApiRequests from '@/services/useApiRequests'
+import { MessageSquareMore } from 'lucide-react'
 
 const SentMessage = ({ messageOpen, messageClose, activeIcon, leadSource, leadDesc, id }: any) => {
 	const messageSent: any = useApiRequests('sendMessage', 'POST')
@@ -68,6 +69,13 @@ const SentMessage = ({ messageOpen, messageClose, activeIcon, leadSource, leadDe
 				</DialogDescription>
 
 				<div className='flex flex-row gap-x-2'>
+
+					<MessageSquareMore 
+						className={`rounded-full border p-1 ${
+							activeIcon === 'phone' ? 'ring-2 ring-red-500' : ''
+						}`}
+					/>
+
 					<Image
 						src={mail}
 						width={30}

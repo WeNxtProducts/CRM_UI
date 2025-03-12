@@ -13,6 +13,14 @@ import moment from 'moment'
 import SentMessage from './sentMessage'
 import { useDispatch } from 'react-redux'
 import { setLeadId } from '@/redux/slices'
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow
+} from '@/components/ui/table'
 
 const LeadtableListing = ({ leads = [] }: any) => {
 	const router = useRouter()
@@ -41,156 +49,138 @@ const LeadtableListing = ({ leads = [] }: any) => {
 	}
 
 	return (
-		<div className='space-y-4'>
-			{leads?.length > 0 &&
-				leads?.map((lead: any, index: any) => (
+		<div className="mt-8">
+		<Table>
+		  <TableHeader>
+			<TableRow>
+			  <TableHead className="text-center">Lead Number</TableHead>
+			  <TableHead className="text-center">Lead Name</TableHead>
+			  <TableHead className="text-center">Date</TableHead>
+			  <TableHead className="text-center">Reminders Sent</TableHead>
+			  <TableHead className="text-center">Priority</TableHead>
+			  <TableHead className="text-center">Status</TableHead>
+			  <TableHead className="text-center">Actions</TableHead>
+			  <TableHead className="text-center">Contact</TableHead>
+			</TableRow>
+		  </TableHeader>
+		  <TableBody>
+			{leads?.map((lead: any, index: number) => {
+			  return (
+				<TableRow key={index}>
+				  <TableCell className="text-center">{lead.leadSeqNo}</TableCell>
+				  <TableCell className="text-center font-medium">{lead.leadName}</TableCell>
+				  <TableCell className="text-center">
+					{moment(lead.leadCreatedDate).format("YYYY-MM-DD")}
+				  </TableCell>
+				  <TableCell className="text-center">{lead.remainderCount}</TableCell>
+				  <TableCell className="text-center">
 					<div
-						key={index}
-						className='grid grid-cols-8 items-center gap-3 rounded-lg bg-white p-4 shadow-md'>
-						<div className='col-span-2 flex flex-col'>
-							<div className='text-sm text-gray-500'>{lead.leadSeqNo}</div>
-							<div className='text-base font-medium'>{lead.leadName}</div>
-						</div>
-
-						<div className='col-span-1 flex flex-col text-sm text-gray-600'>
-							<div className='text-sm text-gray-500'>Date</div>
-							<div className='mt-1'>{moment(lead.leadCreatedDate).format('YYYY-MM-DD ')}</div>
-						</div>
-
-						<div className='col-span-1 flex flex-col text-sm text-gray-600'>
-							<div className='text-sm text-gray-500'>Reminders Sent</div>
-							<div className='mt-1'>{lead.remainderCount}</div>
-						</div>
-
-						<div className='col-span-1 flex flex-col text-sm'>
-							<div className='text-sm text-gray-500'>Priority</div>
-							<div
-								className={`mt-1 flex items-center gap-x-1 p-1 ${
-									lead.leadPriority === 'High'
-										? 'text-green-500'
-										: lead.leadPriority === 'Medium'
-											? 'text-[#FFBD21]'
-											: lead.leadPriority === 'Low'
-												? 'text-red-500'
-												: 'text-gray-400'
-								}`}>
-								<ArrowUp className='h-5 w-4' />
-								{lead.leadPriority}
-							</div>
-						</div>
-
-						<div className='col-span-1 flex items-center'>
-							<div
-								className={`rounded-md px-3 py-1 text-sm ${
-									lead.leadStatus === 'Done'
-										? 'bg-[#E0F9F2] text-[#00D097]'
-										: lead.leadStatus === 'Inreview'
-											? 'bg-[#F5E0F9] text-[#CA31E8]'
-											: lead.leadStatus === 'Inprogress'
-												? 'bg-[#E0EBFF] text-[#3F8CFF]'
-												: lead.leadStatus === 'Todo'
-													? 'bg-[#E7E9EB] text-[#7D8592]'
-													: ''
-								}`}>
-								{lead.leadStatus}
-							</div>
-						</div>
-
-						<div className='col-span-1 flex items-center'>
-							<Button
-								variant='default'
-								size='sm'
-								onClick={() => {
-									if (lead.leadStatus === 'Todo') {
-										setOpenDialog(true)
-									}
-								}}>
-								{lead.leadStatus === 'Done'
-									? 'Review Prospect'
-									: lead.leadStatus === 'Inreview'
-										? 'Proceed Enquiry'
-										: lead.leadStatus === 'Inprogress'
-											? 'Review Prospect'
-											: lead.leadStatus === 'Todo'
-												? 'Fix Appointment'
-												: 'Unknown Status'}
-							</Button>
-						</div>
-
-						<div className='col-span-1 flex gap-1'>
-							<MessageSquareMore
-								className='h-7 w-7 cursor-pointer rounded-full border bg-[#E6EDF5] p-1'
-								onClick={(e) => {
-									e.stopPropagation()
-									handleIconClick('phone', lead)
-									// dispatch(setLeadId(lead.leadSeqNo))
-									// router.push('/enquiry')
-
-								}}
-							/>
-
-							{/* <Image
-								src={mobile}
-								width={30}
-								height={30}
-								alt='Mobile Icon'
-								className='cursor-pointer rounded-full border bg-[#E6EDF5] p-1'
-								onClick={() => router.push('/enquiry')}
-							/> */}
-							<Image
-								src={whatsapp}
-								width={30}
-								height={30}
-								alt='WhatsApp Icon'
-								onClick={(e) => {
-									e.stopPropagation()
-									handleIconClick('whatsapp', lead)
-								}}
-								className='cursor-pointer'
-							/>
-
-							<Image
-								src={mail}
-								width={30}
-								height={30}
-								alt='Mail Icon'
-								className='cursor-pointer rounded-full border bg-[#E6EDF5] p-1'
-								onClick={(e) => {
-									e.stopPropagation()
-									handleIconClick('mail', lead)
-								}}
-							/>
-						</div>
+					  className={`inline-flex items-center gap-x-1 p-1 ${
+						lead.leadPriority === "High"
+						  ? "text-green-500"
+						  : lead.leadPriority === "Medium"
+						  ? "text-[#FFBD21]"
+						  : lead.leadPriority === "Low"
+						  ? "text-red-500"
+						  : "text-gray-400"
+					  }`}
+					>
+					  <ArrowUp className="h-5 w-4" />
+					  {lead.leadPriority}
 					</div>
-				))}
-			{/* {messageDialog && selectedLead && (
-				<SentMessage
-					messageOpen={messageDialog}
-					messageClose={() => setMessageDialog(false)}
-					activeIcon={activeIcon}
-					leadSource={selectedLead.leadSource}
-					leadDesc={selectedLead.leadDesc}
-					id={selectedLead.id}
-				/>
-			)} */}
+				  </TableCell>
+				  <TableCell className="text-center">
+					<div
+					  className={`rounded-md px-3 py-1 text-sm ${
+						lead.leadStatus === "Done"
+						  ? "bg-[#E0F9F2] text-[#00D097]"
+						  : lead.leadStatus === "Inreview"
+						  ? "bg-[#F5E0F9] text-[#CA31E8]"
+						  : lead.leadStatus === "Inprogress"
+						  ? "bg-[#E0EBFF] text-[#3F8CFF]"
+						  : lead.leadStatus === "Todo"
+						  ? "bg-[#E7E9EB] text-[#7D8592]"
+						  : ""
+					  }`}
+					>
+					  {lead.leadStatus}
+					</div>
+				  </TableCell>
+				  <TableCell className="text-center">
+					<Button
+					  variant="default"
+					  size="sm"
+					  onClick={() => {
+						if (lead.leadStatus === "Todo") {
+						  setOpenDialog(true);
+						}
 
-			{messageDialog && selectedLead && (
-				<SentMessage
-					messageOpen={messageDialog}
-					messageClose={() => setMessageDialog(false)}
-					activeIcon={activeIcon}
-					leadSource={selectedLead.leadSource}
-					leadDesc={selectedLead.leadDesc}
-					id={selectedLead.id}
-				/>
-			)}
-			{openDialog && (
-				<FixAppoinment
-					open={openDialog}
-					handleClose={handleClose}
-				/>
-			)}
-		</div>
+						router.push('/enquiryCreate')
+					  }}
+					>
+					  {/* {lead.leadStatus === "Done"
+						? "Review Prospect"
+						: lead.leadStatus === "Inreview"
+						? "Proceed Enquiry"
+						: lead.leadStatus === "Inprogress"
+						? "Review Prospect"
+						: lead.leadStatus === "Todo"
+						? "Fix Appointment"
+						: "Unknown Status"} */}
+						Enquiry
+					</Button>
+				  </TableCell>
+				  <TableCell className="flex justify-center gap-2">
+					<MessageSquareMore
+					  className="h-7 w-7 cursor-pointer rounded-full border bg-[#E6EDF5] p-1"
+					  onClick={(e) => {
+						e.stopPropagation();
+						handleIconClick("phone", lead);
+					  }}
+					/>
+					<Image
+					  src={whatsapp}
+					  width={30}
+					  height={30}
+					  alt="WhatsApp Icon"
+					  onClick={(e) => {
+						e.stopPropagation();
+						handleIconClick("whatsapp", lead);
+					  }}
+					  className="cursor-pointer"
+					/>
+					<Image
+					  src={mail}
+					  width={30}
+					  height={30}
+					  alt="Mail Icon"
+					  className="cursor-pointer rounded-full border bg-[#E6EDF5] p-1"
+					  onClick={(e) => {
+						e.stopPropagation();
+						handleIconClick("mail", lead);
+					  }}
+					/>
+				  </TableCell>
+				</TableRow>
+			  );
+			})}
+		  </TableBody>
+		</Table>
+	  
+		{messageDialog && selectedLead && (
+		  <SentMessage
+			messageOpen={messageDialog}
+			messageClose={() => setMessageDialog(false)}
+			activeIcon={activeIcon}
+			leadSource={selectedLead.leadSource}
+			leadDesc={selectedLead.leadDesc}
+			id={selectedLead.id}
+		  />
+		)}
+	  
+		{openDialog && <FixAppoinment open={openDialog} handleClose={handleClose} />}
+	  </div>
+	  
 	)
 }
 

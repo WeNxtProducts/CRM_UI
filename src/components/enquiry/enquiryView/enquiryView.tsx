@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button'
 import EnquiryRightBar from '@/components/ui/enquiry-docUpload/enquiryRightBar'
 import { Separator } from '@/components/ui/separator'
-import { ArrowLeft, Check, ChevronRight, Pencil, Trash2 } from 'lucide-react'
+import { ArrowLeft, CalendarDays, Check, ChevronRight, Pencil, Trash2 } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { enquiries } from '@/lib/constant'
 import { useForm } from 'react-hook-form'
@@ -17,6 +17,7 @@ import useApiRequests from '@/services/useApiRequests'
 import { useSelector } from 'react-redux'
 import moment from 'moment'
 import { useRouter } from 'next/navigation'
+import FixAppoinment from '@/components/ui/enquiry-docUpload/fixAppoinment'
 
 const documents = [
 	{ id: 1, name: 'phoneix-document.pdf', status: 'Upload complete' },
@@ -34,6 +35,7 @@ const EnquiryView = () => {
 	const enqId = useSelector((state: any) => state?.apps?.enqId)
 	const [loader, setLoader] = useState(false)
 	const [getEnqData, setGetEnqData] = useState<any>()
+	const [openDialog, setOpenDialog] = useState(false)
 
 	const fetchData = async () => {
 		setLoader(true)
@@ -65,6 +67,10 @@ const EnquiryView = () => {
 		getValues,
 		control
 	} = useForm()
+
+	const handleClose =()=>{
+		setOpenDialog(false)
+	}
 	return (
 		<div>
 			<div className='mt-2 flex items-center gap-2 pl-1 md:pl-2 lg:pl-4'>
@@ -92,11 +98,18 @@ const EnquiryView = () => {
 							<p>Branch</p>
 							<p className='font-semibold'>Chennai, India</p>
 						</div>
-						<div className='flex flex-row items-center gap-x-10'>
+						<div className='flex flex-row items-center gap-x-5'>
 							<Button>proceed to quote</Button>
-							<Trash2 className='rounded-full border p-1' />
-							<Pencil className='rounded-full border p-1' />
+							<Trash2 className='rounded-full border h-7 w-7 p-1 cursor-pointer' />
+							<Pencil className='rounded-full border p-1 h-7 w-7 cursor-pointer' />
+							<CalendarDays 
+							className='rounded-full border p-1 h-7 w-7 cursor-pointer' 
+							onClick={()=>{
+								setOpenDialog(true	)
+							}}
+							/>
 						</div>
+						{openDialog && <FixAppoinment open={openDialog} handleClose={handleClose} />}
 					</div>
 
 					<Separator />
@@ -139,7 +152,7 @@ const EnquiryView = () => {
 
 							</div>
 
-							<div>
+							<div className='col-span-2'>
 								<p className='text-xs text-[#91929E]'>Description</p>
 								<p>
 									At risus viverra adipiscing at in tellus. Blandit massa enim nec dui nunc mattis.

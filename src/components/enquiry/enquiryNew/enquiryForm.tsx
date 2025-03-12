@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import React, { useState } from 'react'
@@ -10,7 +11,7 @@ import {
 	SelectContent,
 	SelectGroup,
 	SelectItem,
-	SelectLabel,
+	// SelectLabel,
 	SelectTrigger,
 	SelectValue,
 	SelectWrapper
@@ -23,18 +24,22 @@ import { Button } from '@/components/ui/button'
 import { DatePickerDemo } from '@/components/ui/datePicker'
 import EnquiryRightBar from '@/components/ui/enquiry-docUpload/enquiryRightBar'
 import EnquirySavedDialog from '@/components/ui/enquiry-docUpload/enquirySavedDialog'
+import { useSelector } from 'react-redux'
 
 const EnquiryForm = () => {
 	const router = useRouter()
-	const [date, setDate] = React.useState<Date>()
+	// const [date, setDate] = React.useState<Date>()
 	const [enquirySaved, setEnquirySaved] = useState(false)
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
-		getValues,
+		// formState: { errors },
+		// getValues,
 		control
 	} = useForm({})
+
+	const leadId = useSelector((state: any) => state.apps.leadId)
+	console.log('leadId:', leadId)
 
 	const newEnquiry: any = useApiRequests('enquiryCreate', 'POST')
 
@@ -67,7 +72,7 @@ const EnquiryForm = () => {
 			<div className='mt-2 flex items-center gap-2 pl-3 md:pl-2 lg:pl-4'>
 				<div>
 					<button onClick={() => router.push('/enquiry')}>
-						<ArrowLeft className='h-6 w-8' />
+						<ArrowLeft className='h-5 w-8 mt-2' />
 					</button>
 				</div>
 
@@ -86,12 +91,12 @@ const EnquiryForm = () => {
 								name='enqLobName'
 								control={control}
 								render={({ field }) => (
-									<SelectWrapper label='LOB'>
+									<SelectWrapper label='Lob'>
 										<Select
 											onValueChange={field.onChange}
 											value={field.value}>
 											<SelectTrigger className='w-full'>
-												<SelectValue placeholder='Select LOB' />
+												<SelectValue placeholder='Select Lob' />
 											</SelectTrigger>
 											<SelectContent>
 												<SelectGroup>
@@ -117,7 +122,7 @@ const EnquiryForm = () => {
 										<Select
 											onValueChange={field.onChange}
 											value={field.value}>
-											<SelectTrigger className='w-full'>
+											<SelectTrigger className='w-full '>
 												<SelectValue placeholder='Select Product' />
 											</SelectTrigger>
 											<SelectContent>
@@ -190,6 +195,7 @@ const EnquiryForm = () => {
 
 							<Input
 								label='Sum Insured'
+								placeholder='Enter sum insured'
 								type='text'
 								className='w-full'
 								{...register('enqSumInsured')}
@@ -197,12 +203,14 @@ const EnquiryForm = () => {
 
 							<Input
 								label='Suggested Premium'
+								placeholder='Enter suggested premium'
 								type='text'
 								className='w-full'
 								{...register('enqSuggestedPrem')}
 							/>
 							<Input
 								label='Suggested Rate'
+								placeholder='Enter suggested rate'
 								type='text'
 								className='w-full'
 								{...register('enqSuggestedRate')}
@@ -217,7 +225,7 @@ const EnquiryForm = () => {
 											onValueChange={field.onChange}
 											value={field.value}
 											disabled={true}>
-											<SelectTrigger className='w-full'>
+											<SelectTrigger className='w-full '>
 												<SelectValue placeholder='Name' />
 											</SelectTrigger>
 											<SelectContent>
@@ -244,7 +252,7 @@ const EnquiryForm = () => {
 										<Select
 											onValueChange={field.onChange}
 											value={field.value}>
-											<SelectTrigger className='w-full'>
+											<SelectTrigger className='w-full '>
 												<SelectValue placeholder='Select Name' />
 											</SelectTrigger>
 											<SelectContent>
@@ -293,13 +301,13 @@ const EnquiryForm = () => {
 
 						<div className='mt-4 grid gap-y-6'>
 							<Input
-								label='Description of Risk'
+								label='Enquiry Details'
 								type='text'
 								className='w-full'
 							/>
 
 							<Input
-								label='Description of Risk'
+								label='Remarks'
 								type='text'
 								className='w-full'
 							/>
@@ -308,7 +316,7 @@ const EnquiryForm = () => {
 						<UploadListArea />
 
 						<div className='flex justify-center gap-x-3'>
-							<Button>Back</Button>
+							<Button variant='outline'>Back</Button>
 
 							<Button onClick={() => setEnquirySaved(true)}>Sumbit</Button>
 						</div>
@@ -323,7 +331,7 @@ const EnquiryForm = () => {
 					)}
 				</div>
 				<div className='col-span-2'>
-					<EnquiryRightBar />
+					<EnquiryRightBar leadId={leadId} />
 				</div>
 			</div>
 		</div>

@@ -114,12 +114,12 @@ const EnquiryListTable: React.FC<EnquiryListTableProps> = ({
 							Lob.find((item: any) => item.value === enquiry?.enqLobName)?.label ||
 							(enquiry?.enqLobName ? enquiry.enqLobName : 'Invalid')
 						return (
-							<TableRow key={index}>
-								<TableCell className='text-center'>{enquiry.enqSeqNo}</TableCell>
-								<TableCell className='text-center'>{enquiry.enqName}</TableCell>
-								<TableCell className='text-center'>{lobLabel}</TableCell>
-								<TableCell className='text-center'>{productLabel}</TableCell>
-								<TableCell className='text-center'>
+							<TableRow key={index} >
+								<TableCell className='text-center text-xs p-0'>{enquiry.enqSeqNo}</TableCell>
+								<TableCell className='text-center text-xs p-0'>{enquiry.enqName}</TableCell>
+								<TableCell className='text-center text-xs p-0'>{lobLabel}</TableCell>
+								<TableCell className='text-center text-xs p-0'>{productLabel}</TableCell>
+								<TableCell className='text-center p-0'>
 									<div className='flex flex-col items-center gap-y-1'>
 										{enquiry.enqDate ? (
 											<>
@@ -135,7 +135,7 @@ const EnquiryListTable: React.FC<EnquiryListTableProps> = ({
 										)}
 									</div>
 								</TableCell>
-								<TableCell className='text-center'>
+								<TableCell className='text-center p-0'>
 									<div className='flex flex-col items-center gap-y-1'>
 										{enquiry.enqUpdatedDate ? (
 											<>

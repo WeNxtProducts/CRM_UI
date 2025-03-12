@@ -23,6 +23,7 @@ import { Button } from '@/components/ui/button'
 import { DatePickerDemo } from '@/components/ui/datePicker'
 import EnquiryRightBar from '@/components/ui/enquiry-docUpload/enquiryRightBar'
 import EnquirySavedDialog from '@/components/ui/enquiry-docUpload/enquirySavedDialog'
+import { useSelector } from 'react-redux'
 
 const EnquiryForm = () => {
 	const router = useRouter()
@@ -35,6 +36,9 @@ const EnquiryForm = () => {
 		getValues,
 		control
 	} = useForm({})
+
+	const leadId = useSelector((state:any)=>state.apps.leadId)
+	console.log('leadId:',leadId)
 
 	const newEnquiry: any = useApiRequests('enquiryCreate', 'POST')
 
@@ -293,13 +297,13 @@ const EnquiryForm = () => {
 
 						<div className='mt-4 grid gap-y-6'>
 							<Input
-								label='Description of Risk'
+								label='Enquiry Details'
 								type='text'
 								className='w-full'
 							/>
 
 							<Input
-								label='Description of Risk'
+								label='Remarks'
 								type='text'
 								className='w-full'
 							/>
@@ -323,7 +327,7 @@ const EnquiryForm = () => {
 					)}
 				</div>
 				<div className='col-span-2'>
-					<EnquiryRightBar />
+					<EnquiryRightBar leadId={leadId}/>
 				</div>
 			</div>
 		</div>

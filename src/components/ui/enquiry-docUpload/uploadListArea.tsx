@@ -40,7 +40,7 @@ const UploadListArea = () => {
 
 	return (
 		<div className='mt-4'>
-			<h3 className='text-lg font-semibold'>Enquiry Documents (3)</h3>
+			<h3 className='text-md font-semibold'>Enquiry Documents (3)</h3>
 
 			<div
 				className='file-drop-zone mt-2'
@@ -52,18 +52,18 @@ const UploadListArea = () => {
 					) : (
 						<div className='flex flex-col items-center justify-center gap-y-1 rounded-md border px-4 py-7'>
 							<FilePlus2 className='text-[#3276E8]' />
-							<p className='text-sm'>Click or drag to upload files</p>
+							<p className='text-xs'>Click or drag to upload files</p>
 						</div>
 					)}
 				</div>
 			</div>
 
 			<div className='mt-2 flex gap-x-2'>
-				<p className='flex items-center rounded-md border bg-gray-200 px-2 text-xs'>PDF</p>
-				<p className='flex items-center rounded-md border bg-gray-200 px-2 text-xs'>DOCS</p>
-				<p className='flex items-center rounded-md border bg-gray-200 px-2 text-xs'>TXT</p>
+				<p className='flex items-center rounded-md border bg-gray-200 px-2 text-xxs'>PDF</p>
+				<p className='flex items-center rounded-md border bg-gray-200 px-2 text-xxs'>DOCS</p>
+				<p className='flex items-center rounded-md border bg-gray-200 px-2 text-xxs'>TXT</p>
 				<div className='flex items-center rounded-md border px-2'>
-					<p className='text-xs'>{'>'}10MB</p>
+					<p className='text-xxs'>{'>'}10MB</p>
 				</div>
 			</div>
 
@@ -85,10 +85,10 @@ const UploadListArea = () => {
 							<div className='mt-3'>
 								<div className='flex flex-col gap-y-2 rounded-md border bg-[#E5E9F2] p-3'>
 									<div className='flex flex-row justify-between pr-1'>
-										<p className='text-sm font-bold'>{doc.name}</p>
+										<p className='text-xs font-medium'>{doc.name}</p>
 										<Trash2 className='h-5 w-5 cursor-pointer text-red-500' />
 									</div>
-									<p className='text-sm font-semibold text-[#002280]'>{doc.status}</p>
+									<p className='text-xs font-medium text-[#002280]'>{doc.status}</p>
 									<Input
 										label='Enter Description'
 										type='text'

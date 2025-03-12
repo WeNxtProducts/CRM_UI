@@ -32,12 +32,12 @@ export function TimePicker({
           value={value}
           onChange={onChange}
           aria-label={`Choose ${label.toLowerCase()}`}
-          className="w-full" // extra padding for the icon
+          className="w-full h-10" // extra padding for the icon
           {...props}
         />
         
         <div className="absolute top-[17px] right-0 flex items-center pr-3 pointer-events-none cursor-pointer">
-          <ClockIcon className="w-5 h-5" />
+          {/* <ClockIcon className="w-5 h-5" /> */}
         </div>
         
       </div>

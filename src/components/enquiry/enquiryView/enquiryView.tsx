@@ -152,7 +152,7 @@ const EnquiryView = () => {
 
 							</div>
 
-							<div>
+							<div className='col-span-2'>
 								<p className='text-xs text-[#91929E]'>Description</p>
 								<p>
 									At risus viverra adipiscing at in tellus. Blandit massa enim nec dui nunc mattis.

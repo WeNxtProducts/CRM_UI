@@ -19,26 +19,39 @@ import { DatePickerDemo } from '../datePicker'
 import { Textarea } from '../textarea'
 import AppoinmentFixed from './appoinmentFixed'
 import { TimePicker } from '../timePicker'
+import { Controller, useForm } from 'react-hook-form'
 
 const FixAppoinment = ({ open, handleClose }: any) => {
 	const [openDialog, setOpenDialog] = useState(false)
-	const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
-	const [selectedTime, setSelectedTime] = useState<any>('12:00')
+	// const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
+	// const [selectedTime, setSelectedTime] = useState<any>('12:00')
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+		getValues,
+		control
+	} = useForm({})
 	// const [selectedTime, setSelectedTime] = useState<string | undefined>(undefined)
 
-	const dialogClose = () => {
-		setOpenDialog(false)
+	// const dialogClose = () => {
+	// 	setOpenDialog(false)
+	// }
+
+	const onSubmit = (data: any) => {
+		console.log('form data:', data)
 	}
+
 	return (
 		<Dialog
 			open={open}
-			onOpenChange={dialogClose}>
+			onOpenChange={handleClose}>
 			<DialogContent className='sm:max-w-md'>
 				<DialogHeader>
 					<DialogTitle>Fix Appoinment</DialogTitle>
 				</DialogHeader>
 
-				<div className='relative mt-2'>
+				{/* <div>
 					<div className='relative top-3 z-10 rounded-md border bg-[#E5E9F2] p-2'>
 						<div className='flex flex-row items-center gap-x-5'>
 							<div>
@@ -55,7 +68,7 @@ const FixAppoinment = ({ open, handleClose }: any) => {
 							</div>
 						</div>
 					</div>
-					{/* <div className='absolute bottom-0 left-[-15px]'>
+					<div className='absolute bottom-0 left-[-15px]'>
 						<Image
 							src={group3}
 							height={30}
@@ -71,62 +84,77 @@ const FixAppoinment = ({ open, handleClose }: any) => {
 							width={30}
 							alt='image'
 						/>
-					</div> */}
-				</div>
-
-				<div className='mt-4'>
-					<Input
-						label='Probability percentage of sales'
-						type='text'
-						className='w-full'
-						placeholder='Proobability'
-					/>
-				</div>
-
-				<div className='grid grid-cols-2 gap-x-3'>
-					<div>
-						<DatePickerDemo
-							label='Date'
-							date={selectedDate}
-							setDate={setSelectedDate}
-						/>
 					</div>
-					<div>
-						<TimePicker
-							value={selectedTime}
-							onChange={(val) => {
-								setSelectedTime(val.target.value)
-							}}
-							label='Time'
-						/>
-					</div>
-				</div>
+				</div> */}
+					<form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+						<div className='mt-2'>
+							<Input
+								label='Probability percentage of sales'
+								type='text'
+								className='w-full'
+								placeholder='probability'
+								{...register('probability')}
+							/>
+						</div>
 
-				<div>
-					<Textarea
-						label='Description'
-						id='description'
-						placeholder='Add some description of the task.'
-						className='mb-1 block w-full text-sm font-medium text-gray-700'
+						<div className='grid grid-cols-2 gap-x-3'>
+							<div>
+								<Controller
+									name='date'
+									control={control}
+									defaultValue={new Date()}
+									render={({ field }) => (
+										<DatePickerDemo
+											label='Date'
+											date={field.value}
+											setDate={field.onChange}
+										/>
+									)}
+								/>
+							</div>
+							<div>
+								<Controller
+									name='time'
+									control={control}
+									defaultValue="12:00"
+									render={({ field }) => (
+										<TimePicker
+											label='Time'
+											value={field.value}
+											onChange={field.onChange}
+										/>
+									)}
+								/>
+							</div>
+						</div>
+
+						<div>
+							<Textarea
+								label='Description'
+								id='description'
+								placeholder='Add some description of the task.'
+								className='mb-1 block w-full text-sm font-medium text-gray-700'
+								{...register('description')}
+							/>
+						</div>
+
+						<div className='flex justify-end'>
+							<Button
+								variant='default'
+								size='sm'
+								onClick={() => {
+									setOpenDialog(true)
+								}}>
+								Save Appoinment
+							</Button>
+						</div>
+					</form>
+				{openDialog && (
+					<AppoinmentFixed
+						appoinmentFixedOpen={openDialog}
+						appoinmentHandleClose={handleClose}
 					/>
-				</div>
-
-				<div className='flex justify-end'>
-					<Button
-						variant='default'
-						size='sm'
-						onClick={() => {
-							setOpenDialog(true)
-						}}>
-						Save Appoinment
-					</Button>
-					{openDialog && (
-						<AppoinmentFixed
-							appoinmentFixedOpen={openDialog}
-							appoinmentHandleClose={handleClose}
-						/>
-					)}
-				</div>
+				)}
 			</DialogContent>
 		</Dialog>
 	)

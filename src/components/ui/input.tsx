@@ -12,7 +12,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className='w-full'>
         {/* Label outside the field */}
-        <label className='block text-sm font-medium text-gray-700 mb-2'>
+        <label className='block text-xs font-medium text-topbar mb-2'>
           {label}
         </label>
         
@@ -20,7 +20,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           type={type}
           className={cn(
-            'h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-base focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
+            'h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-base placeholder:text-gray-400 placeholder:text-xxs focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
             className
           )}
           ref={ref}

@@ -72,10 +72,10 @@ export function DatePickerDemo({ date, setDate, label = 'Select Date' }: any) {
 				/>
 				<Popover
 					open={open}
-          key={`popover-${label}`}
+					key={`popover-${label}`}
 					onOpenChange={setOpen}>
 					<PopoverTrigger asChild>
-						<div className='absolute bottom-[2px] right-3 cursor-pointer'>
+						<div className='absolute bottom-[10px] right-3 cursor-pointer'>
 							<CalendarIcon
 								className='h-4 w-4 text-muted-foreground'
 								onClick={() => setOpen(true)}
@@ -84,7 +84,6 @@ export function DatePickerDemo({ date, setDate, label = 'Select Date' }: any) {
 					</PopoverTrigger>
 					<PopoverContent
 						className='w-auto p-0'
-						// Prevent the popover from stealing focus when opened.
 						onOpenAutoFocus={(e) => e.preventDefault()}>
 						<Calendar
 							key={calendarKey}

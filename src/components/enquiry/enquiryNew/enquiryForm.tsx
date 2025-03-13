@@ -182,7 +182,7 @@ const EnquiryForm = () => {
 							/>
 
 							<Controller
-								name='enqDate'
+								name='busdate'
 								control={control}
 								render={({ field }) => (
 									<DatePickerDemo

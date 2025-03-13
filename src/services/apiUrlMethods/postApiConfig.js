@@ -27,6 +27,9 @@ const POST_API_URL = {
         url: '/dms/editFiles',
         baseURL: 'http://192.168.1.181:8097/',
     },
+    appoinments:{
+        url:"api/activities"
+    }
 };
 
 export default POST_API_URL;

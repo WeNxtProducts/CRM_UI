@@ -38,18 +38,22 @@ const EnquiryForm = () => {
 		control
 	} = useForm({})
 
-	const leadId = useSelector((state: any) => state.apps.leadId)
-	console.log('leadId:', leadId)
+	const lead = useSelector((state: any) => state.apps.lead)
+	console.log('leadId:', lead)
 
 	const newEnquiry: any = useApiRequests('enquiryCreate', 'POST')
 
 	const newData = async (data: any) => {
 		const formattedData = {
 			...data,
-			enqDate: data.enqDate ? new Date(data.enqDate).toISOString() : null
+			enqDate: data.enqDate ? new Date(data.enqDate).toISOString() : null,
+			lead: {
+				leadSeqNo: lead?.leadSeqNo,
+				leadName: lead?.leadName
+			}
 		}
 		try {
-			const response = await newEnquiry(data, formattedData)
+			const response = await newEnquiry(formattedData)
 			if (response?.status === 'error') {
 				console.log('error : ', response)
 			} else if (response?.status === 'success') {
@@ -72,7 +76,7 @@ const EnquiryForm = () => {
 			<div className='mt-2 flex items-center gap-2 pl-3 md:pl-2 lg:pl-4'>
 				<div>
 					<button onClick={() => router.push('/enquiry')}>
-						<ArrowLeft className='h-5 w-8 mt-2' />
+						<ArrowLeft className='mt-2 h-5 w-8' />
 					</button>
 				</div>
 
@@ -122,7 +126,7 @@ const EnquiryForm = () => {
 										<Select
 											onValueChange={field.onChange}
 											value={field.value}>
-											<SelectTrigger className='w-full '>
+											<SelectTrigger className='w-full'>
 												<SelectValue placeholder='Select Product' />
 											</SelectTrigger>
 											<SelectContent>
@@ -225,7 +229,7 @@ const EnquiryForm = () => {
 											onValueChange={field.onChange}
 											value={field.value}
 											disabled={true}>
-											<SelectTrigger className='w-full '>
+											<SelectTrigger className='w-full'>
 												<SelectValue placeholder='Name' />
 											</SelectTrigger>
 											<SelectContent>
@@ -252,7 +256,7 @@ const EnquiryForm = () => {
 										<Select
 											onValueChange={field.onChange}
 											value={field.value}>
-											<SelectTrigger className='w-full '>
+											<SelectTrigger className='w-full'>
 												<SelectValue placeholder='Select Name' />
 											</SelectTrigger>
 											<SelectContent>
@@ -331,7 +335,7 @@ const EnquiryForm = () => {
 					)}
 				</div>
 				<div className='col-span-2'>
-					<EnquiryRightBar leadId={leadId} />
+					<EnquiryRightBar lead={lead} />
 				</div>
 			</div>
 		</div>

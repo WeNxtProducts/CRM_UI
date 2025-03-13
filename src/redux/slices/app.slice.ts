@@ -3,13 +3,15 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 export type AppDetails = {
 	token: string
 	enqId: any
-	leadId: any
+	lead: any
+	
 }
 
 const initialState: AppDetails = {
 	token: '',
-	enqId: '',	
-	leadId:''
+	enqId: '',
+	lead: null,
+	
 }
 
 export const appSlice = createSlice({
@@ -22,10 +24,11 @@ export const appSlice = createSlice({
 		setEnqId(state: AppDetails, action: PayloadAction<any>) {
 			state.enqId = action.payload
 		},
-		setLeadId(state: AppDetails, action: PayloadAction<any>) {
-			state.leadId = action.payload
-		}
+		setLead(state: AppDetails, action: PayloadAction<any>) {
+			state.lead = action.payload
+		},
+		
 	}
-})	
+})
 
-export const { setToken, setEnqId, setLeadId } = appSlice.actions
+export const { setToken, setEnqId, setLead} = appSlice.actions

@@ -25,10 +25,6 @@ const documents = [
 	{ id: 3, name: 'design-mockup.png', status: 'Upload complete' }
 ]
 
-// interface GetEnqData{
-// 	enqLobName:string;
-// }
-
 const EnquiryView = () => {
 	const router = useRouter()
 	const fetchEnquiries: any = useApiRequests('enquiryById', 'GET')
@@ -76,7 +72,7 @@ const EnquiryView = () => {
 			<div className='mt-2 flex items-center gap-2 pl-1 md:pl-2 lg:pl-4'>
 				<div>
 					<button onClick={() => router.push('/enquiry')}>
-						<ArrowLeft className='h-6 w-8' />
+						<ArrowLeft className='h-5 w-8 mt-2' />
 					</button>
 				</div>
 
@@ -91,12 +87,12 @@ const EnquiryView = () => {
 				<div className='col-span-8'>
 					<div className='ml-2 grid grid-cols-3 gap-2'>
 						<div>
-							<p>Sales</p>
-							<p className='font-semibold'>NA</p>
+							<p className='text-topbar text-xs'>Sales</p>
+							<p className='font-normal text-s'>NA</p>
 						</div>
 						<div>
-							<p>Branch</p>
-							<p className='font-semibold'>Chennai, India</p>
+							<p className='text-topbar text-xs'>Branch</p>
+							<p className='font-normal text-s'>Chennai, India</p>
 						</div>
 						<div className='flex flex-row items-center gap-x-5'>
 							<Button>proceed to quote</Button>
@@ -105,11 +101,11 @@ const EnquiryView = () => {
 							<CalendarDays 
 							className='rounded-full border p-1 h-7 w-7 cursor-pointer' 
 							onClick={()=>{
-								setOpenDialog(true	)
+								setOpenDialog(true)
 							}}
 							/>
 						</div>
-						{openDialog && <FixAppoinment open={openDialog} handleClose={handleClose} />}
+						{openDialog && <FixAppoinment open={openDialog} handleClose={handleClose} enqId={enqId}/>}
 					</div>
 
 					<Separator />
@@ -118,45 +114,44 @@ const EnquiryView = () => {
 						<div className='col-span-2 grid grid-cols-2 gap-4'>
 							<div>
 								<p className='text-xs text-[#91929E]'>LOB</p>
-								<p className='font-semibold'>{getEnqData?.enqLobName}</p>
+								<p className='text-s'>{getEnqData?.enqLobName}</p>
 							</div>
 							<div>
 								<p className='text-xs text-[#91929E]'>Product</p>
-								<p className='font-semibold'>{getEnqData?.enqProdName}</p>
+								<p className='text-s'>{getEnqData?.enqProdName}</p>
 							</div>
 							<div>
 								<p className='text-xs text-[#91929E]'>Date of Receipt Enquiry</p>
-								<p className='font-semibold'>{moment(getEnqData?.enqDate).format('YYYY-MM-DD HH:mm')}</p>
+								<p className='text-s'>{moment(getEnqData?.enqDate).format('YYYY-MM-DD HH:mm')}</p>
 							</div>
 							<div>
 								<p className='text-xs text-[#91929E]'>Expected Date for Business</p>
-								<p className='font-semibold'>{moment(getEnqData?.enqExpDate).format('YYYY-MM-DD HH:mm')}</p>
+								<p className='text-s'>{moment(getEnqData?.enqExpDate).format('YYYY-MM-DD HH:mm')}</p>
 							</div>
 							<div>
 								<p className='text-xs text-[#91929E]'>Sum Insured</p>
-								<p className='font-semibold'>{getEnqData?.enqSumInsured}</p>
+								<p className='text-s'>{getEnqData?.enqSumInsured}</p>
 							</div>
 							<div>
 								<p className='text-xs text-[#91929E]'>Premium</p>
-								<p className='font-semibold'>{getEnqData?.enqSuggestedPrem}</p>
+								<p className='text-s'>{getEnqData?.enqSuggestedPrem}</p>
 							</div>
 
 							<div>
 								<p className='text-xs text-[#91929E]'>Buisness type</p>
-								<p className='font-semibold'>{getEnqData?.enqBusType}</p>
+								<p className='text-s'>{getEnqData?.enqBusType}</p>
 							</div>
 
 							<div>
 								<p className='text-xs text-[#91929E]'>Intermediary Name</p>
-								<p className='font-semibold'>{getEnqData?.enqIntermedName}</p>
+								<p className='text-s'>{getEnqData?.enqIntermedName}</p>
 
 							</div>
 
 							<div className='col-span-2'>
 								<p className='text-xs text-[#91929E]'>Description</p>
-								<p>
-									At risus viverra adipiscing at in tellus. Blandit massa enim nec dui nunc mattis.
-									Lacus vel facilisis volutpat est velit.
+								<p className='text-s'>
+									{getEnqData?.enqDescription}
 								</p>
 							</div>
 						</div>

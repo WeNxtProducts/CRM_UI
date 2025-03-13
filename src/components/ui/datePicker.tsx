@@ -4,8 +4,6 @@
 import * as React from 'react'
 import { format, parse, isValid } from 'date-fns'
 import { Calendar as CalendarIcon } from 'lucide-react'
-
-import { cn } from '@/lib/utils'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Input } from '@/components/ui/input'

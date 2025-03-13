@@ -12,7 +12,7 @@ import FixAppoinment from './fixAppoinment'
 import moment from 'moment'
 import SentMessage from './sentMessage'
 import { useDispatch } from 'react-redux'
-import { setLeadId } from '@/redux/slices'
+import { setLead } from '@/redux/slices'
 import {
 	Table,
 	TableBody,
@@ -114,7 +114,7 @@ const LeadtableListing = ({ leads = [] }: any) => {
 						// if (lead.leadStatus === "Todo") {
 						//   setOpenDialog(true);
 						// }
-						dispatch(setLeadId(lead.leadSeqNo))
+						dispatch(setLead(lead))
 						router.push('/enquiryCreate')
 					  }}
 					>

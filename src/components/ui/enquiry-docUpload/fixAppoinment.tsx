@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
 	Dialog,
 	DialogClose,
@@ -20,11 +20,13 @@ import { Textarea } from '../textarea'
 import AppoinmentFixed from './appoinmentFixed'
 import { TimePicker } from '../timePicker'
 import { Controller, useForm } from 'react-hook-form'
+import moment from 'moment'
+import useApiRequests from '@/services/useApiRequests'
+import { log } from 'console'
 
-const FixAppoinment = ({ open, handleClose }: any) => {
+const FixAppoinment = ({ open, handleClose, enqId }: any) => {
+	
 	const [openDialog, setOpenDialog] = useState(false)
-	// const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
-	// const [selectedTime, setSelectedTime] = useState<any>('12:00')
 	const {
 		register,
 		handleSubmit,
@@ -32,14 +34,37 @@ const FixAppoinment = ({ open, handleClose }: any) => {
 		getValues,
 		control
 	} = useForm({})
-	// const [selectedTime, setSelectedTime] = useState<string | undefined>(undefined)
 
-	// const dialogClose = () => {
-	// 	setOpenDialog(false)
-	// }
+	const fixAppoinmnet: any = useApiRequests('appoinments','POST')
+
+	const appoinmentData = async(data:any)=>{
+		const formData = {
+			...data,
+			date: moment(data.date).toISOString(),
+
+			enqId:{
+				enqSeqNo : enqId?.enqSeqNo
+			}
+		}
+		try {
+			const response = await fixAppoinmnet(formData)
+			if (response?.status === 'error') {
+				console.log('error : ', response)
+			} else if (response?.status === 'success') {
+				console.log('success : ', response)
+			}
+		} catch (error) {
+			console.log('err : ', error)
+		}
+	}
+
+	
+	
 
 	const onSubmit = (data: any) => {
 		console.log('form data:', data)
+		console.log('enqId:',enqId)
+		appoinmentData(data)
 	}
 
 	return (

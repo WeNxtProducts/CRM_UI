@@ -11,6 +11,9 @@ const POST_API_URL = {
     createEditEvents:{
         url:'/api/saleslead/dashboard/events'
     },
+    appoinments:{
+        url:"api/activities"
+    }
 };
 
 export default POST_API_URL;

@@ -8,7 +8,7 @@ const useCustomAxios = () => {
 		const requestInterceptor = axios.interceptors.request.use(
 			(config) => {
 				config.headers['Accept'] = '*/*'
-				config.headers['Authorization'] = `Bearer CRM`
+				config.headers['Authorization'] = `Bearer eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQURNIiwiRGVwYXJ0bWVudCI6IlRFU1QiLCJDb21wYW55IjoiVEVTVCIsIkxhbmd1YWdlIjoiRU5HIiwiQ3VycmVuY3kiOiJURVNUIiwiRGl2aXNpb24iOiJURVNUIiwic3ViIjoiQ0xKTyIsImlhdCI6MTc0MTg2Mzg1NiwiZXhwIjoxNzQxODkyNjU2fQ.fOP3MMBcMnujR_lY8se840mHUJVFsIQ1NhGrzEY-Q7M`
 				return config
 			},
 			(error) => {

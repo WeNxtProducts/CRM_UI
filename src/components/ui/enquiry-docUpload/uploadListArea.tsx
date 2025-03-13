@@ -10,6 +10,8 @@ import { Navigation } from 'swiper/modules'
 import { getFileFormat, handleFileDownloadOrView, readFileAsBase64 } from '@/lib/mediaHelper'
 import 'swiper/css/navigation'
 import 'swiper/css'
+import useApiRequests from '@/services/useApiRequests'
+import toast from '../toast'
 
 const UploadListArea = () => {
 	const fileData = {
@@ -21,7 +23,74 @@ const UploadListArea = () => {
 		uploadscrn: 'enquiry',
 		screenName: 'DMS',
 	};
+	const DMSFileUpload = useApiRequests('DMSFileUpload', 'POST');
+	const DMSFileDescriptionUpdate = useApiRequests('DMSDescUpdate', 'POST');
+	const DMSFileDelete = useApiRequests('DMSDelete', 'POST');
+	const DMSFileView = useApiRequests('DMSView', 'POST');
 	const [files, setFiles] = useState<any>([])
+
+
+	const updateFileKeyAtIndex = (index: any, newValue: any) => {
+		setFiles((prevFiles: any) => {
+			const updatedFiles = [...prevFiles];
+			const updatedFile = { ...updatedFiles[index], ...newValue };
+			updatedFiles[index] = updatedFile;
+			return updatedFiles;
+		});
+	};
+
+	const handleUpdateDescription = async (files: any) => {
+		const payload: any = {
+			doc_sys_id: files?.doc_sys_id,
+			param_add1: files?.param_add1
+		}
+		try {
+			const response = await DMSFileDescriptionUpdate(payload);
+			if (response?.status === 'FAILURE')
+				toast.error('Description Not Updated!');
+			if (response?.status === 'SUCCESS') {
+				toast.success(response?.status_msg);
+			}
+		} catch {
+			toast.warning('Description Not Updated!');
+		}
+	};
+
+
+	const handleUpload = async (files: any, index: any) => {
+		const payload: any = [files]
+		try {
+			const response = await DMSFileUpload(payload);
+			if (response?.Overall[0]?.status === 'FAILURE')
+				toast.error('File Not Uploaded!');
+			if (response?.Overall[0]?.status === 'SUCCESS') {
+				updateFileKeyAtIndex(index, response?.Overall[0]?.Data);
+				toast.success(`${files?.filename} Uploaded Successfully`);
+			}
+		} catch {
+			toast.warning('File Not Uploaded!');
+		}
+	};
+
+	const deleteByIndex = (index: number) => {
+		setFiles((prevFiles: any[]) => prevFiles.filter((_, i) => i !== index));
+	}
+
+	const handleDelete = async (payload: any, index: any) => {
+		const { doc_sys_id } = payload
+		const deleteId: any = { doc_sys_id: [doc_sys_id] };
+		try {
+			const response = await DMSFileDelete(deleteId);
+			if (response?.status === 'SUCCESS') {
+				deleteByIndex(index)
+				toast.success(`${payload?.filename} Deleted Successfully`);
+			} else if (response?.status === 'FAILURE') {
+				toast.error('File Not Deleted!');
+			}
+		} catch {
+			toast.warning('File Not Deleted!');
+		}
+	};
 
 	const onDrop = useCallback(async (acceptedFiles: any) => {
 		const filesBase64: any = [];
@@ -31,7 +100,8 @@ const UploadListArea = () => {
 				filename: file.name,
 				base64String: base64String,
 				genType: getFileFormat(file),
-				description: '',
+				param_add1: '',
+				param_add2: '',
 				...fileData,
 			});
 		}
@@ -67,16 +137,30 @@ const UploadListArea = () => {
 		const newDescription = e.target.value;
 		setFiles((prevFiles: any) =>
 			prevFiles.map((file: any, i: any) =>
-				i === index ? { ...file, description: newDescription } : file
+				i === index ? { ...file, param_add1: newDescription } : file
 			)
 		);
 	}
+
+	const handleGetAndView = async (item: any) => {
+		const payload: any = [{ path: item?.filePath }];
+		try {
+			const response = await DMSFileView(payload);
+			if (response?.status === 'FAILURE') console.log(response?.status_msg);
+			if (response?.status === 'SUCCESS') {
+				const updatedItem = { ...item, base64String: response?.base64Strings[0] };
+				handleFileDownloadOrView(updatedItem);
+			}
+		} catch (err: any) {
+			console.log("err : ", err)
+		}
+	};
 
 	const handleViewFile = (index: any) => {
 		if (Object.prototype.hasOwnProperty.call(files[index], 'base64String')) {
 			handleFileDownloadOrView(files[index]);
 		} else {
-			console.log(files[index]);
+			handleGetAndView(files[index]);
 		}
 	};
 
@@ -85,14 +169,14 @@ const UploadListArea = () => {
 			<h3 className='text-md font-semibold'>Enquiry Documents (3)</h3>
 
 			<div
-				className='file-drop-zone mt-2'
+				className='file-drop-zone mt-2 cursor-pointer'
 				{...getRootProps()}>
 				<div className='inner-drop'>
 					<input {...getInputProps()} />
 					{isDragActive ? (
 						<p>Drop the files here ...</p>
 					) : (
-						<div className='flex flex-col items-center justify-center gap-y-1 rounded-md border px-4 py-7'>
+						<div className='flex flex-col items-center justify-center gap-y-1 rounded-md border px-3 py-3'>
 							<FilePlus2 className='text-[#3276E8]' />
 							<p className='text-xs'>Click or drag to upload files</p>
 						</div>
@@ -124,28 +208,48 @@ const UploadListArea = () => {
 				>
 					{files.map((doc: any, index: any) => (
 						<SwiperSlide key={`${doc.filename}-${index}`}>
-							<div className=''>
-								<div className='flex flex-col gap-y-2 rounded-md border bg-[#E5E9F2] p-3'>
-									<div className='flex flex-row justify-between pr-1'>
-										<p className='text-sm font-bold'>{doc.filename}</p>
-										<div>
-											<Trash2 className='h-5 w-5 cursor-pointer text-red-500' />
-											<Eye
-												onClick={() => handleViewFile(index)}
-												className='h-5 w-5 cursor-pointer text-blue-500' />
-											<Save className='h-5 w-5 cursor-pointer text-green-500' />
-										</div>
+							<div className="rounded-md border bg-[#E5E9F2] p-3">
+								<div className="flex justify-between items-center">
+									<p
+										className="text-sm font-bold whitespace-nowrap overflow-hidden text-ellipsis cursor-pointer flex-1 mr-2"
+										title={doc.filename}>
+										{doc.filename}
+									</p>
+									<div className="flex space-x-2">
+										<Save
+											onClick={() => {
+												if (doc?.doc_sys_id) handleUpdateDescription(doc);
+												else if (!doc?.doc_sys_id) handleUpload(doc, index);
+											}}
+											className="h-5 w-5 cursor-pointer text-green-500"
+										/>
+										<Eye
+											onClick={() => handleViewFile(index)}
+											className="h-5 w-5 cursor-pointer text-blue-500"
+										/>
+										<Trash2
+											onClick={() => {
+												if (doc?.doc_sys_id) handleDelete(doc, index)
+												else if (!doc?.doc_sys_id) deleteByIndex(index)
+											}}
+											className="h-5 w-5 cursor-pointer text-red-500"
+										/>
 									</div>
-									<p className='text-sm font-semibold text-[#002280]'>{doc.genType}</p>
+								</div>
+								<div className="mt-2">
+									<p className="text-sm font-semibold text-[#002280]">{doc.genType}</p>
+								</div>
+								<div className="mt-2">
 									<Input
-										label='Enter Description'
-										type='text'
-										value={doc?.description}
-										className='w-full'
+										label="Enter Description"
+										type="text"
+										value={doc?.param_add1}
+										className="w-full"
 										onChange={handleChangeVal(index)}
 									/>
 								</div>
 							</div>
+
 						</SwiperSlide>
 					))}
 				</Swiper>

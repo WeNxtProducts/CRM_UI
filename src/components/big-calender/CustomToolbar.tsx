@@ -7,8 +7,13 @@ import { startOfWeek, startOfMonth, startOfDay } from "date-fns";
 import { MonthPicker } from "@/components/ui/monthPicker";
 import { Calendar } from "../ui/calendar";
 import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 const CustomToolbar: React.FC<ToolbarProps> = ({ label, onNavigate, onView, view }) => {
+  const router = useRouter()
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [open, setOpen] = React.useState(false)
 
@@ -35,27 +40,31 @@ const CustomToolbar: React.FC<ToolbarProps> = ({ label, onNavigate, onView, view
 
   return (
     <div className="rbc-toolbar">
-      
-        <div className="flex items-center bg-[#E5E9F2] rounded-lg border border-primary h-[35px]">
-          <div
-            onClick={() => onNavigate("PREV")}
-            className="h-full px-4 border border-r-primary text-sm cursor-pointer rounded-l-lg flex items-center justify-center hover:bg-primary hover:text-white"
-          >
-            Back
-          </div>
-          <div
-            onClick={() => onNavigate("TODAY")}
-            className="h-full px-4 text-sm cursor-pointer flex items-center justify-center hover:bg-primary hover:text-white"
-          >
-            Today
-          </div>
-          <div
-            onClick={() => onNavigate("NEXT")}
-            className="h-full px-4 border border-l-primary text-sm cursor-pointer rounded-r-lg flex items-center justify-center hover:bg-primary hover:text-white"
-          >
-            Next
-          </div>
+
+      <Link href="/leadDashboard" className="flex items-center mr-3 text-sm text-blue-500 hover:text-blue-700 hover:underline">
+        <ArrowLeft className="w-4 h-4 mr-1" />
+        Back
+      </Link>
+      <div className="flex items-center bg-[#E5E9F2] rounded-lg border border-primary h-[35px]">
+        <div
+          onClick={() => onNavigate("PREV")}
+          className="h-full px-4 border border-r-primary text-sm cursor-pointer rounded-l-lg flex items-center justify-center hover:bg-primary hover:text-white"
+        >
+          Back
         </div>
+        <div
+          onClick={() => onNavigate("TODAY")}
+          className="h-full px-4 text-sm cursor-pointer flex items-center justify-center hover:bg-primary hover:text-white"
+        >
+          Today
+        </div>
+        <div
+          onClick={() => onNavigate("NEXT")}
+          className="h-full px-4 border border-l-primary text-sm cursor-pointer rounded-r-lg flex items-center justify-center hover:bg-primary hover:text-white"
+        >
+          Next
+        </div>
+      </div>
 
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>

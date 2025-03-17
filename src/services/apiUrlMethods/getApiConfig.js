@@ -23,7 +23,9 @@ const GET_API_URL = {
     enquiryById: {
         url: 'api/enquiries/get'
     },
-
+    calenderEventActivityList: {
+        url: '/api/activities'
+    },
     leadList: {
         url: 'api/leads/getAll'
     }

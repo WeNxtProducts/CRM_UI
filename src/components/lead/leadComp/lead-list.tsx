@@ -19,11 +19,12 @@ const LeadList = () => {
 	const fetchLeadData = async () => {
 		try {
 			const response = await fetchLeads()
+			// console.log(response,"lead")
 			if (response?.status === 'error') {
 				console.log('error : ', response)
-			} else if (response?.status === 'success') {
+			} else if (response?.status === 'SUCCESS') {
 				console.log('success : ', response)
-				setLeads(response?.data)
+				setLeads(response?.Data)
 			}
 		} catch (error) {
 			console.log('err :', error)

@@ -52,11 +52,11 @@ const Enquirylist = () => {
 			const response = await fetchEnquiries('', queryParams)
 			if (response?.status === 'error') {
 				console.log('error:', response)
-				setEnqData(response?.data)
+				setEnqData(response?.Data)
 			} else {
 				response?.status === 'success'
 				console.log('success : ', response)
-				setEnqData(response?.data)
+				setEnqData(response?.Data)
 				setTotalRecords(response?.pagination?.totalRecords || 0)
 			}
 		} catch (err) {

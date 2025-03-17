@@ -13,32 +13,33 @@ import Image from 'next/image'
 import illustration from '@/Images/illustration.png'
 import { Button } from '../button'
 
-const AppoinmentFixed = ({appoinmentFixedOpen,appoinmentHandleClose}: any) => {
-  return (
-    <Dialog 
-	open={appoinmentFixedOpen}
-	onOpenChange={appoinmentHandleClose}
-	>
-		<DialogContent>
-			<DialogHeader>
-				<DialogTitle>Appoinment fixed successfully</DialogTitle>
-			</DialogHeader>
+const AppoinmentFixed = ({ appoinmentFixedOpen, appoinmentHandleClose }: any) => {
+	return (
+		<Dialog
+			open={appoinmentFixedOpen}
+			onOpenChange={appoinmentHandleClose}>
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>Appoinment fixed successfully</DialogTitle>
+				</DialogHeader>
 
-			<div className='flex justify-center'>
-				<Image
-				src={illustration}
-				height={150}
-				width={400}
-				alt='illustration'
-				className='mt-3'
-				/>
-			</div>
+				<div className='flex justify-center'>
+					<Image
+						src={illustration}
+						height={150}
+						width={400}
+						alt='illustration'
+						className='mt-3'
+					/>
+				</div>
 
-			<div>
-				<p className='text-sm'>The task moved to in review section and will be closed within 30 days if unattended.</p>
-			</div>
+				<div>
+					<p className='text-sm'>
+						The task moved to in review section and will be closed within 30 days if unattended.
+					</p>
+				</div>
 
-			<DialogFooter className='sm:justify-end'>
+				<DialogFooter className='sm:justify-end'>
 					<DialogClose asChild>
 						<Button
 							variant='default'
@@ -48,9 +49,9 @@ const AppoinmentFixed = ({appoinmentFixedOpen,appoinmentHandleClose}: any) => {
 						</Button>
 					</DialogClose>
 				</DialogFooter>
-		</DialogContent>
-	</Dialog>
-  ) 
+			</DialogContent>
+		</Dialog>
+	)
 }
 
 export default AppoinmentFixed

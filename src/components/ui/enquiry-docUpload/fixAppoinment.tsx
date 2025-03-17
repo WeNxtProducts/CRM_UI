@@ -25,7 +25,6 @@ import useApiRequests from '@/services/useApiRequests'
 import { format, addMinutes, parseISO, parse } from 'date-fns'
 
 const FixAppoinment = ({ open, handleClose, enqId }: any) => {
-	const [openDialog, setOpenDialog] = useState(false)
 	const {
 		register,
 		handleSubmit,
@@ -35,26 +34,43 @@ const FixAppoinment = ({ open, handleClose, enqId }: any) => {
 	} = useForm({})
 
 	const fixAppoinmnet: any = useApiRequests('appoinments', 'POST')
+	const [openApp, setOpenApp] = useState(true)
+	const [successDialog, setSuccessDialog] = useState(false)
 
-	const appoinmentData = async (data: any) => {
-		console.log('data: ', data)
-		// const formattedDate = format(new Date(data.activityStartDate), "yyyy-MM-dd");
+	useEffect(() => {
+		setOpenApp(open)
+	}, [enqId])
+
+	const closeDialogFix = () => {
+		setOpenApp(false)
+		setSuccessDialog(true)
+	}
+
+	const handleCloseSuccessDialog = () => {
+		setSuccessDialog(false)
+		handleClose()
+	}
+
+	const appoinmentData = async (Data: any) => {
+		closeDialogFix()
+
+		console.log('data: ', Data)
 		const selectedDate =
-			typeof data.activityStartDate === 'string'
-				? parseISO(data.activityStartDate)
-				: data.activityStartDate
+			typeof Data.activityStartDate === 'string'
+				? parseISO(Data.activityStartDate)
+				: Data.activityStartDate
 		const formattedDate = format(selectedDate, "yyyy-MM-dd'T'HH:mm")
-		
-		const activityStartedTime = moment(data.activityStartTime, "HH:mm");
-		console.log("activityStartedTime : ",activityStartedTime)
-		const activityEndTime = activityStartedTime.add(30, "minutes").format("HH:mm:ss");
+
+		const activityStartedTime = moment(Data.activityStartTime, 'HH:mm')
+		console.log('activityStartedTime : ', activityStartedTime)
+		const activityEndTime = activityStartedTime.add(30, 'minutes').format('HH:mm:ss')
 
 		const formData = {
-			...data,
+			...Data,
 			activityStartDate: formattedDate,
 			activityEndDate: formattedDate,
 			activityType: 'APPOINTMENT',
-			activityStartTime: activityStartedTime.format("HH:mm:ss"),
+			activityStartTime: activityStartedTime.format('HH:mm:ss'),
 			activityEndTime: activityEndTime,
 			enquiry: {
 				enqSeqNo: enqId
@@ -65,6 +81,7 @@ const FixAppoinment = ({ open, handleClose, enqId }: any) => {
 			if (response?.status === 'error') {
 				console.log('error : ', response)
 			} else if (response?.status === 'success') {
+				setSuccessDialog(true)
 				console.log('success : ', response)
 			}
 		} catch (error) {
@@ -72,129 +89,102 @@ const FixAppoinment = ({ open, handleClose, enqId }: any) => {
 		}
 	}
 
-	const onSubmit = (data: any) => {
-		console.log('form data:', data)
+	const onSubmit = (Data: any) => {
+		console.log('form data:', Data)
 		console.log('enqId:', enqId)
-		appoinmentData(data)
+		appoinmentData(Data)
 	}
 
 	return (
-		<Dialog
-			open={open}
-			onOpenChange={handleClose}>
-			<DialogContent className='sm:max-w-md'>
-				<DialogHeader>
-					<DialogTitle>Fix Appoinment</DialogTitle>
-				</DialogHeader>
+		<>
+			<Dialog
+				open={openApp}
+				onOpenChange={handleClose}>
+				<DialogContent className='sm:max-w-md'>
+					<DialogHeader>
+						<DialogTitle>Fix Appoinment</DialogTitle>
+					</DialogHeader>
+					<form
+						onSubmit={handleSubmit(onSubmit)}
+						className='space-y-4'>
+						<div className='mt-2'>
+							<Input
+								label='Probability percentage of sales'
+								type='text'
+								className='w-full'
+								placeholder='probability'
+								{...register('probabilityPercentage')}
+							/>
+						</div>
 
-				{/* <div>
-					<div className='relative top-3 z-10 rounded-md border bg-[#E5E9F2] p-2'>
-						<div className='flex flex-row items-center gap-x-5'>
+						<div className='mt-2'>
+							<Input
+								label='Appointment Name'
+								type='text'
+								className='w-full'
+								placeholder='Name'
+								{...register('activitySubject')}
+							/>
+						</div>
+
+						<div className='grid grid-cols-2 gap-x-3'>
 							<div>
-								<Image
-									src={progress}
-									height={30}
-									width={30}
-									alt='progress bar'
+								<Controller
+									name='activityStartDate'
+									control={control}
+									defaultValue={new Date()}
+									render={({ field }) => (
+										<DatePickerDemo
+											label='Date'
+											date={field.value}
+											setDate={field.onChange}
+										/>
+									)}
 								/>
 							</div>
-							<div className='flex flex-col gap-y-1'>
-								<p className='text-sm'>1d 3h 25m logged</p>
-								<p className='text-xs'>Original Estimate 3d 8h</p>
+							<div>
+								<Controller
+									name='activityStartTime'
+									control={control}
+									defaultValue='12:00'
+									render={({ field }) => (
+										<TimePicker
+											label='Time'
+											value={field.value}
+											onChange={field.onChange}
+										/>
+									)}
+								/>
 							</div>
 						</div>
-					</div>
-					<div className='absolute bottom-0 left-[-15px]'>
-						<Image
-							src={group3}
-							height={30}
-							width={30}
-							alt='image'
-						/>
-					</div>
 
-					<div className='absolute bottom-0 right-[-15px]'>
-						<Image
-							src={group2}
-							height={30}
-							width={30}
-							alt='image'
-						/>
-					</div>
-				</div> */}
-				<form
-					onSubmit={handleSubmit(onSubmit)}
-					className='space-y-4'>
-					<div className='mt-2'>
-						<Input
-							label='Probability percentage of sales'
-							type='text'
-							className='w-full'
-							placeholder='probability'
-							{...register('probabilityPercentage')}
-						/>
-					</div>
-
-					<div className='grid grid-cols-2 gap-x-3'>
 						<div>
-							<Controller
-								name='activityStartDate'
-								control={control}
-								defaultValue={new Date()}
-								render={({ field }) => (
-									<DatePickerDemo
-										label='Date'
-										date={field.value}
-										setDate={field.onChange}
-									/>
-								)}
+							<Textarea
+								label='Description'
+								id='description'
+								placeholder='Add some description of the task.'
+								className='mb-1 block w-full text-sm font-medium text-gray-700'
+								{...register('activityDescription')}
 							/>
 						</div>
-						<div>
-							<Controller
-								name='activityStartTime'
-								control={control}
-								defaultValue='12:00'
-								render={({ field }) => (
-									<TimePicker
-										label='Time'
-										value={field.value}
-										onChange={field.onChange}
-									/>
-								)}
-							/>
+
+						<div className='flex justify-end'>
+							<Button
+								variant='default'
+								size='sm'>
+								Save Appoinment
+							</Button>
 						</div>
-					</div>
-
-					<div>
-						<Textarea
-							label='Description'
-							id='description'
-							placeholder='Add some description of the task.'
-							className='mb-1 block w-full text-sm font-medium text-gray-700'
-							{...register('activityDescription')}
-						/>
-					</div>
-
-					<div className='flex justify-end'>
-						<Button
-							variant='default'
-							size='sm'
-							onClick={() => {
-								setOpenDialog(true)
-							}}>
-							Save Appoinment
-						</Button>
-					</div>
-				</form>
-				{openDialog && (
-					<AppoinmentFixed
-						appoinmentFixedOpen={openDialog}
-						appoinmentHandleClose={handleClose}
-					/>
-				)}
-			</DialogContent>
-		</Dialog>
+					</form>
+				</DialogContent>
+			</Dialog>
+			{successDialog && (
+				<AppoinmentFixed
+					appoinmentFixedOpen={successDialog}
+					appoinmentHandleClose={handleCloseSuccessDialog}
+				/>
+			)}
+		</>
 	)
 }
 

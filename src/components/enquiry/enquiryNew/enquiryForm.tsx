@@ -43,10 +43,10 @@ const EnquiryForm = () => {
 
 	const newEnquiry: any = useApiRequests('enquiryCreate', 'POST')
 
-	const newData = async (data: any) => {
+	const newData = async (Data: any) => {
 		const formattedData = {
-			...data,
-			enqDate: data.enqDate ? new Date(data.enqDate).toISOString() : null,
+			...Data,
+			enqDate: Data.enqDate ? new Date(Data.enqDate).toISOString() : null,
 			lead: {
 				leadSeqNo: lead?.leadSeqNo,
 				leadName: lead?.leadName
@@ -66,9 +66,9 @@ const EnquiryForm = () => {
 		}
 	}
 
-	const onSubmit = (data: any) => {
-		console.log('form data:', data)
-		newData(data)
+	const onSubmit = (Data: any) => {
+		console.log('form data:', Data)
+		newData(Data)
 	}
 
 	return (

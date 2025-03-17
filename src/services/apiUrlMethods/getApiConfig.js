@@ -30,7 +30,11 @@ const GET_API_URL = {
 
     leadById:{
         url:"api/leads/get"
+    },
+    appoinmentHistory:{
+        url:"api/activities/enquiry"
     }
+
 
 };
 

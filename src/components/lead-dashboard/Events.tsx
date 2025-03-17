@@ -8,7 +8,7 @@ import EventCards from './EventCards'
 import useApiRequests from '@/services/useApiRequests'
 
 const Events = ({ setRightExpanded, rightExpanded }: any) => {
-    const eventList: any = useApiRequests('eventList', 'GET')
+    const eventList: any = useApiRequests('calenderEventActivityList', 'GET')
     const [eventData, setEventData] = useState([])
 
 
@@ -17,9 +17,8 @@ const Events = ({ setRightExpanded, rightExpanded }: any) => {
             const response = await eventList()
             if (response?.status === 'error') {
                 console.log('error : ', response)
-            } else if (response?.status === 'success') {
-                console.log('success : ', response)
-                setEventData(response?.data)
+            } else if (response?.status === 'SUCCESS') {
+                setEventData(response?.Data)
             }
         } catch (err) {
             console.log('err : ', err)
@@ -47,7 +46,7 @@ const Events = ({ setRightExpanded, rightExpanded }: any) => {
                 <div className="space-y-4 mt-2">
                     {eventData?.map((card: any) => {
                         return (
-                            <EventCards key={card.id} card={card} />
+                            <EventCards key={card.activitySeqNo} card={card} />
                         )
                     })}
                 </div>

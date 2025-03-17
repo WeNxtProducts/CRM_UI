@@ -47,9 +47,7 @@ const EnquiryListTable: React.FC<EnquiryListTableProps> = ({
 	const [isDisabled, setIsDisabled] = useState(false)
 	const [messageAccepted, setMessageAccepted] = useState(false)
 
-	// const enquiryName = useSelector((state:any)=>state.apps.enquiryName)
-	// console.log('Captured Enquiry Name:', enquiryName)
-
+	
 	const handleClick = (enqId: any) => {
 		if (!isDisabled) {
 			setIsDisabled(true)

@@ -2,6 +2,10 @@ const PUT_API_URL = {
     
     enqinfoUpdate:{
         url:'/api/enquiries/updateStatus'
+    },
+
+    enquiryUpdate:{
+        url:'api/enquiries/edit'
     }
 };
 

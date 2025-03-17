@@ -34,7 +34,7 @@ const EnquiryView = () => {
 	const fetchLeads: any = useApiRequests('leadById', 'GET')
 	const fetchEnquiries: any = useApiRequests('enquiryById', 'GET')
 	const deleteEnquiry: any = useApiRequests('enquiryDelete', 'DELETE')
-	const editEnquiry: any = useApiRequests('enquiryUpdate', 'PUT') 
+	const editEnquiry: any = useApiRequests('enquiryUpdate', 'PUT')
 	const [loader, setLoader] = useState(false)
 	const [getEnqData, setGetEnqData] = useState<any>()
 	const [openDialog, setOpenDialog] = useState(false)
@@ -79,7 +79,6 @@ const EnquiryView = () => {
 		}
 	}
 	useEffect(() => {
-		console.log('enqId : ', enqId)
 		fetchData()
 	}, [enqId])
 
@@ -107,20 +106,25 @@ const EnquiryView = () => {
 		}
 	}
 
-	const editData = async () =>{
+	const editData = async () => {
 		try {
-			const response = await editEnquiry('',{},{enqId})
+			const response = await editEnquiry('', {}, { enqId })
 			if (response?.status === 'error') {
 				console.log('Error:', response)
+			} else if (response?.status === 'SUCCESS') {
+				console.log('went to updated page')
 			}
 		} catch (error) {
-			
+			console.log('err : ', error)
 		}
 	}
 
 	const handleClose = () => {
-		console.log('trigered')
 		setOpenDialog(false)
+	}
+
+	const handleEditNavigate = () => {
+		router.push('/enquiryCreate')
 	}
 
 	return (
@@ -158,7 +162,12 @@ const EnquiryView = () => {
 									handleDeleteEnquiry()
 								}}
 							/>
-							<Pencil className='h-7 w-7 cursor-pointer rounded-full border bg-[#E6EDF5] p-2' />
+							<Pencil
+								onClick={() => {
+									handleEditNavigate()
+								}}
+								className='h-7 w-7 cursor-pointer rounded-full border bg-[#E6EDF5] p-2'
+							/>
 							<CalendarDays
 								className='h-7 w-7 cursor-pointer rounded-full border bg-[#E6EDF5] p-2'
 								onClick={() => {
@@ -173,7 +182,6 @@ const EnquiryView = () => {
 								enqId={enqId}
 							/>
 						)}
-						{/* {openDialog && <FixAppoinment open={openDialog} handleClose={handleClose} enqId={enqId}/>} */}
 					</div>
 
 					<Separator />
@@ -302,10 +310,12 @@ const EnquiryView = () => {
 									navigation={true}
 									cssMode={true}
 									className='custom-swiper'
-									style={{
-										// '--swiper-navigation-color': '#ffff',
-										'--swiper-navigation-size': '20px'
-									}}>
+									style={
+										{
+											// '--swiper-navigation-color': '#ffff',
+											'--swiper-navigation-size': '20px'
+										} as React.CSSProperties
+									}>
 									{documents.map((doc) => (
 										<SwiperSlide key={doc.id}>
 											<div className='mt-3'>

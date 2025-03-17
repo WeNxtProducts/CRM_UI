@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { ArrowLeft } from 'lucide-react'
@@ -29,6 +29,7 @@ import { useSelector } from 'react-redux'
 const EnquiryForm = () => {
 	const router = useRouter()
 	// const [date, setDate] = React.useState<Date>()
+	const enqId = useSelector((state: any) => state?.apps?.enqId)
 	const [enquirySaved, setEnquirySaved] = useState(false)
 	const {
 		register,
@@ -39,8 +40,6 @@ const EnquiryForm = () => {
 	} = useForm({})
 
 	const lead = useSelector((state: any) => state.apps.lead)
-	console.log('leadId:', lead)
-
 	const newEnquiry: any = useApiRequests('enquiryCreate', 'POST')
 
 	const newData = async (Data: any) => {
@@ -66,6 +65,10 @@ const EnquiryForm = () => {
 		}
 	}
 
+	useEffect(() => {
+		console.log('enqId : ', enqId)
+	}, [enqId])
+
 	const onSubmit = (Data: any) => {
 		console.log('form data:', Data)
 		newData(Data)
@@ -81,7 +84,7 @@ const EnquiryForm = () => {
 				</div>
 
 				<div>
-					<h2 className='text-T-size font-medium text-T-color'>New Enquiry</h2>
+					<h2 className='text-T-size font-medium text-T-color'>{`${enqId ? 'Edit' : 'New'} Enquiry`}</h2>
 				</div>
 			</div>
 
@@ -322,7 +325,8 @@ const EnquiryForm = () => {
 						<div className='flex justify-center gap-x-3'>
 							<Button variant='outline'>Back</Button>
 
-							<Button onClick={() => setEnquirySaved(true)}>Sumbit</Button>
+							<Button
+								onClick={() => setEnquirySaved(true)}>{`${enqId ? 'Update' : 'Submit'}`}</Button>
 						</div>
 					</form>
 					{enquirySaved && (

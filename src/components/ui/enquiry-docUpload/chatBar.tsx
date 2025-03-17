@@ -17,11 +17,11 @@ const ChatBar = () => {
           <div key={message.id} className="flex flex-col">
             {message.sender === "lead" && (
               <div className="flex items-center space-x-2">
-                <span className="text-sm font-semibold">{message.name}</span>
+                <span className="text-xxs font-semibold">{message.name}</span>
               </div>
             )}
             <div
-              className={`p-3 rounded-lg max-w-[80%] text-sm ${message.sender === "system" ? "bg-blue-900 text-white self-start" : "bg-blue-100 text-black self-end ml-auto"}`}
+              className={`p-3 rounded-lg max-w-[80%] text-xs ${message.sender === "system" ? "bg-blue-900 text-white self-start" : "bg-blue-100 text-black self-end ml-auto"}`}
             >
               {message.sender === "system" ? <strong>{message.text.split(" ")[0]}</strong> : null} {message.text}
             </div>

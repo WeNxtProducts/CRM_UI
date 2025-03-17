@@ -14,10 +14,11 @@ import { Navigation } from 'swiper/modules'
 import 'swiper/css/navigation'
 import ChatBar from '@/components/ui/enquiry-docUpload/chatBar'
 import useApiRequests from '@/services/useApiRequests'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import moment from 'moment'
 import { useRouter } from 'next/navigation'
 import FixAppoinment from '@/components/ui/enquiry-docUpload/fixAppoinment'
+import { setLead } from '@/redux/slices'
 
 const documents = [
 	{ id: 1, name: 'phoneix-document.pdf', status: 'Upload complete' },
@@ -28,7 +29,9 @@ const documents = [
 const EnquiryView = () => {
 	const router = useRouter()
 	const fetchEnquiries: any = useApiRequests('enquiryById', 'GET')
+	const fetchLeads : any = useApiRequests('leadById', 'GET') 
 	const enqId = useSelector((state: any) => state?.apps?.enqId)
+	const dispatch = useDispatch()
 	const [loader, setLoader] = useState(false)
 	const [getEnqData, setGetEnqData] = useState<any>()
 	const [openDialog, setOpenDialog] = useState(false)
@@ -36,18 +39,35 @@ const EnquiryView = () => {
 	const fetchData = async () => {
 		setLoader(true)
 		try {
-			const response = await fetchEnquiries('', {}, { enqId })
+			const response = await fetchEnquiries('', {}, { enqId });
+			
 			if (response?.status === 'error') {
-				console.log('error:', response)
+			  console.log('Error:', response);
 			} else {
-				response?.status === 'success'
-				console.log('success : ', response)
-				setGetEnqData(response.data)
-				console.log(response.data,'check')
+			  if (response?.status === 'success') {
+				console.log('Success:', response);
+				setGetEnqData(response.data);
+				console.log('Enquiry Data:', response.data);
+			  }
+		  
+			
+			//   const leadId = response?.data?.leadSeqNo;
+			//   if (leadId) {
+			// 	console.log('Found LeadId:', leadId);
+			// 	const leadResponse = await fetchLeads('', {}, { enqId });
+			// 	if (leadResponse?.status === 'success') {
+			// 	  dispatch(setLead(leadResponse.data));
+			// 	} else {
+			// 	  console.log('Error fetching lead details:', leadResponse);
+			// 	}
+			//   } else {
+			// 	console.log('LeadId is missing in enquiry response');
+			//   }
 			}
-		} catch (err) {
-			console.log('err : ', err)
-		} finally {
+		  } catch (err) {
+			console.log('Error:', err);
+		  }
+		   finally {
 			setLoader(false)
 		}
 	}
@@ -67,6 +87,7 @@ const EnquiryView = () => {
 	const handleClose =()=>{
 		setOpenDialog(false)
 	}
+
 	return (
 		<div>
 			<div className='mt-2 flex items-center gap-2 pl-1 md:pl-2 lg:pl-4'>
@@ -171,7 +192,7 @@ const EnquiryView = () => {
 												<div className='flex flex-row justify-between'>
 													<div>
 														<p className='text-xs text-[#91929E]'>{enquiry.id}</p>
-														<p className=''>
+														<p className='text-xs'>
 															{enquiry.code} - {enquiry.type}
 														</p>
 													</div>
@@ -188,12 +209,12 @@ const EnquiryView = () => {
 
 												<div>
 													<p className='text-xs text-[#91929E]'>Date</p>
-													<p>{enquiry.date}</p>
+													<p className='text-xs'>{enquiry.date}</p>
 												</div>
 
 												<div className='flex flex-row gap-x-1'>
-													<p className='text-[#002280]'>View more</p>
-													<ChevronRight className='h-6 w-5 text-[#002280]' />
+													<p className='text-[#002280] text-xs'>View more</p>
+													<ChevronRight className='h-5 w-3 text-[#002280]' />
 												</div>
 											</div>
 										)

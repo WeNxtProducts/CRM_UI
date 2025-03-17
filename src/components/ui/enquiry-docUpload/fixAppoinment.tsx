@@ -22,10 +22,9 @@ import { TimePicker } from '../timePicker'
 import { Controller, useForm } from 'react-hook-form'
 import moment from 'moment'
 import useApiRequests from '@/services/useApiRequests'
-import { log } from 'console'
+import { format, addMinutes, parseISO, parse } from 'date-fns'
 
 const FixAppoinment = ({ open, handleClose, enqId }: any) => {
-	
 	const [openDialog, setOpenDialog] = useState(false)
 	const {
 		register,
@@ -35,15 +34,30 @@ const FixAppoinment = ({ open, handleClose, enqId }: any) => {
 		control
 	} = useForm({})
 
-	const fixAppoinmnet: any = useApiRequests('appoinments','POST')
+	const fixAppoinmnet: any = useApiRequests('appoinments', 'POST')
 
-	const appoinmentData = async(data:any)=>{
+	const appoinmentData = async (data: any) => {
+		console.log('data: ', data)
+		// const formattedDate = format(new Date(data.activityStartDate), "yyyy-MM-dd");
+		const selectedDate =
+			typeof data.activityStartDate === 'string'
+				? parseISO(data.activityStartDate)
+				: data.activityStartDate
+		const formattedDate = format(selectedDate, "yyyy-MM-dd'T'HH:mm")
+		
+		const activityStartedTime = moment(data.activityStartTime, "HH:mm");
+		console.log("activityStartedTime : ",activityStartedTime)
+		const activityEndTime = activityStartedTime.add(30, "minutes").format("HH:mm:ss");
+
 		const formData = {
 			...data,
-			date: moment(data.date).toISOString(),
-
-			enqId:{
-				enqSeqNo : enqId?.enqSeqNo
+			activityStartDate: formattedDate,
+			activityEndDate: formattedDate,
+			activityType: 'APPOINTMENT',
+			activityStartTime: activityStartedTime.format("HH:mm:ss"),
+			activityEndTime: activityEndTime,
+			enquiry: {
+				enqSeqNo: enqId
 			}
 		}
 		try {
@@ -58,12 +72,9 @@ const FixAppoinment = ({ open, handleClose, enqId }: any) => {
 		}
 	}
 
-	
-	
-
 	const onSubmit = (data: any) => {
 		console.log('form data:', data)
-		console.log('enqId:',enqId)
+		console.log('enqId:', enqId)
 		appoinmentData(data)
 	}
 
@@ -111,69 +122,71 @@ const FixAppoinment = ({ open, handleClose, enqId }: any) => {
 						/>
 					</div>
 				</div> */}
-					<form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
-						<div className='mt-2'>
-							<Input
-								label='Probability percentage of sales'
-								type='text'
-								className='w-full'
-								placeholder='probability'
-								{...register('probability')}
-							/>
-						</div>
+				<form
+					onSubmit={handleSubmit(onSubmit)}
+					className='space-y-4'>
+					<div className='mt-2'>
+						<Input
+							label='Probability percentage of sales'
+							type='text'
+							className='w-full'
+							placeholder='probability'
+							{...register('probabilityPercentage')}
+						/>
+					</div>
 
-						<div className='grid grid-cols-2 gap-x-3'>
-							<div>
-								<Controller
-									name='date'
-									control={control}
-									defaultValue={new Date()}
-									render={({ field }) => (
-										<DatePickerDemo
-											label='Date'
-											date={field.value}
-											setDate={field.onChange}
-										/>
-									)}
-								/>
-							</div>
-							<div>
-								<Controller
-									name='time'
-									control={control}
-									defaultValue="12:00"
-									render={({ field }) => (
-										<TimePicker
-											label='Time'
-											value={field.value}
-											onChange={field.onChange}
-										/>
-									)}
-								/>
-							</div>
-						</div>
-
+					<div className='grid grid-cols-2 gap-x-3'>
 						<div>
-							<Textarea
-								label='Description'
-								id='description'
-								placeholder='Add some description of the task.'
-								className='mb-1 block w-full text-sm font-medium text-gray-700'
-								{...register('description')}
+							<Controller
+								name='activityStartDate'
+								control={control}
+								defaultValue={new Date()}
+								render={({ field }) => (
+									<DatePickerDemo
+										label='Date'
+										date={field.value}
+										setDate={field.onChange}
+									/>
+								)}
 							/>
 						</div>
-
-						<div className='flex justify-end'>
-							<Button
-								variant='default'
-								size='sm'
-								onClick={() => {
-									setOpenDialog(true)
-								}}>
-								Save Appoinment
-							</Button>
+						<div>
+							<Controller
+								name='activityStartTime'
+								control={control}
+								defaultValue='12:00'
+								render={({ field }) => (
+									<TimePicker
+										label='Time'
+										value={field.value}
+										onChange={field.onChange}
+									/>
+								)}
+							/>
 						</div>
-					</form>
+					</div>
+
+					<div>
+						<Textarea
+							label='Description'
+							id='description'
+							placeholder='Add some description of the task.'
+							className='mb-1 block w-full text-sm font-medium text-gray-700'
+							{...register('activityDescription')}
+						/>
+					</div>
+
+					<div className='flex justify-end'>
+						<Button
+							variant='default'
+							size='sm'
+							onClick={() => {
+								setOpenDialog(true)
+							}}>
+							Save Appoinment
+						</Button>
+					</div>
+				</form>
 				{openDialog && (
 					<AppoinmentFixed
 						appoinmentFixedOpen={openDialog}

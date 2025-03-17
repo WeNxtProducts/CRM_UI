@@ -24,9 +24,14 @@ const GET_API_URL = {
         url: 'api/enquiries/get'
     },
 
-    leadList: {
-        url: 'api/leads/getAll'
+    // leadList: {
+    //     url: 'api/leads/getAll'
+    // }
+
+    leadById:{
+        url:"api/leads/get"
     }
+
 };
 
 export default GET_API_URL;

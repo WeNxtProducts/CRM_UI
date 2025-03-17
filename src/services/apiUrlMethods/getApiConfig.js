@@ -28,11 +28,14 @@ const GET_API_URL = {
     //     url: 'api/leads/getAll'
     // }
 
-    leadById:{
-        url:"api/leads/get"
+    leadById: {
+        url: "api/leads/get"
     },
-    appoinmentHistory:{
-        url:"api/activities/enquiry"
+    appoinmentHistory: {
+        url: "api/activities/enquiry"
+    },
+    calenderEventActivityList: {
+        url: "/api/activities"
     }
 
 

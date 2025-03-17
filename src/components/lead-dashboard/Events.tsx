@@ -3,11 +3,13 @@
 
 import React, { useEffect, useState } from 'react'
 import { Button } from '../ui/button'
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, Plus } from 'lucide-react'
 import EventCards from './EventCards'
 import useApiRequests from '@/services/useApiRequests'
+import { useRouter } from 'next/navigation'
 
 const Events = ({ setRightExpanded, rightExpanded }: any) => {
+    const router = useRouter()
     const eventList: any = useApiRequests('calenderEventActivityList', 'GET')
     const [eventData, setEventData] = useState([])
 
@@ -32,7 +34,17 @@ const Events = ({ setRightExpanded, rightExpanded }: any) => {
     return (
         <div>
             <div className='flex justify-between item-center'>
-                <h2 className="text-md font-semibold">Nearest Events</h2>
+                <div className='flex items-center gap-x-3'>
+                    <h2 className="text-md font-semibold">Nearest Events</h2>
+                    <Button
+                        onClick={() => {
+                            router.push('/calender')
+                        }}
+                        size='sm'
+                        className='h-3 w-8'>
+                        <Plus />
+                    </Button>
+                </div>
                 <Button
                     variant='link'
                     onClick={() =>

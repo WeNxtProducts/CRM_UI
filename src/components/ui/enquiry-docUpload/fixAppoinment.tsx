@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
 	Dialog,
 	DialogClose,
@@ -20,11 +20,11 @@ import { Textarea } from '../textarea'
 import AppoinmentFixed from './appoinmentFixed'
 import { TimePicker } from '../timePicker'
 import { Controller, useForm } from 'react-hook-form'
+import moment from 'moment'
+import useApiRequests from '@/services/useApiRequests'
+import { format, addMinutes, parseISO, parse } from 'date-fns'
 
-const FixAppoinment = ({ open, handleClose }: any) => {
-	const [openDialog, setOpenDialog] = useState(false)
-	// const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
-	// const [selectedTime, setSelectedTime] = useState<any>('12:00')
+const FixAppoinment = ({ open, handleClose, enqId }: any) => {
 	const {
 		register,
 		handleSubmit,
@@ -32,75 +32,105 @@ const FixAppoinment = ({ open, handleClose }: any) => {
 		getValues,
 		control
 	} = useForm({})
-	// const [selectedTime, setSelectedTime] = useState<string | undefined>(undefined)
 
-	// const dialogClose = () => {
-	// 	setOpenDialog(false)
-	// }
+	const fixAppoinmnet: any = useApiRequests('appoinments', 'POST')
+	const [openApp, setOpenApp] = useState(true)
+	const [successDialog, setSuccessDialog] = useState(false)
 
-	const onSubmit = (data: any) => {
-		console.log('form data:', data)
+	useEffect(() => {
+		setOpenApp(open)
+	}, [enqId])
+
+	const closeDialogFix = () => {
+		setOpenApp(false)
+		setSuccessDialog(true)
+	}
+
+	const handleCloseSuccessDialog = () => {
+		setSuccessDialog(false)
+		handleClose()
+	}
+
+	const appoinmentData = async (Data: any) => {
+		closeDialogFix()
+
+		console.log('data: ', Data)
+		const selectedDate =
+			typeof Data.activityStartDate === 'string'
+				? parseISO(Data.activityStartDate)
+				: Data.activityStartDate
+		const formattedDate = format(selectedDate, "yyyy-MM-dd'T'HH:mm")
+
+		const activityStartedTime = moment(Data.activityStartTime, 'HH:mm')
+		console.log('activityStartedTime : ', activityStartedTime)
+		const activityEndTime = activityStartedTime.add(30, 'minutes').format('HH:mm:ss')
+
+		const formData = {
+			...Data,
+			activityStartDate: formattedDate,
+			activityEndDate: formattedDate,
+			activityType: 'APPOINTMENT',
+			activityStartTime: activityStartedTime.format('HH:mm:ss'),
+			activityEndTime: activityEndTime,
+			enquiry: {
+				enqSeqNo: enqId
+			}
+		}
+		try {
+			const response = await fixAppoinmnet(formData)
+			if (response?.status === 'error') {
+				console.log('error : ', response)
+			} else if (response?.status === 'success') {
+				setSuccessDialog(true)
+				console.log('success : ', response)
+			}
+		} catch (error) {
+			console.log('err : ', error)
+		}
+	}
+
+	const onSubmit = (Data: any) => {
+		console.log('form data:', Data)
+		console.log('enqId:', enqId)
+		appoinmentData(Data)
 	}
 
 	return (
-		<Dialog
-			open={open}
-			onOpenChange={handleClose}>
-			<DialogContent className='sm:max-w-md'>
-				<DialogHeader>
-					<DialogTitle>Fix Appoinment</DialogTitle>
-				</DialogHeader>
-
-				{/* <div>
-					<div className='relative top-3 z-10 rounded-md border bg-[#E5E9F2] p-2'>
-						<div className='flex flex-row items-center gap-x-5'>
-							<div>
-								<Image
-									src={progress}
-									height={30}
-									width={30}
-									alt='progress bar'
-								/>
-							</div>
-							<div className='flex flex-col gap-y-1'>
-								<p className='text-sm'>1d 3h 25m logged</p>
-								<p className='text-xs'>Original Estimate 3d 8h</p>
-							</div>
-						</div>
-					</div>
-					<div className='absolute bottom-0 left-[-15px]'>
-						<Image
-							src={group3}
-							height={30}
-							width={30}
-							alt='image'
-						/>
-					</div>
-
-					<div className='absolute bottom-0 right-[-15px]'>
-						<Image
-							src={group2}
-							height={30}
-							width={30}
-							alt='image'
-						/>
-					</div>
-				</div> */}
-					<form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+		<>
+			<Dialog
+				open={openApp}
+				onOpenChange={handleClose}>
+				<DialogContent className='sm:max-w-md'>
+					<DialogHeader>
+						<DialogTitle>Fix Appoinment</DialogTitle>
+					</DialogHeader>
+					<form
+						onSubmit={handleSubmit(onSubmit)}
+						className='space-y-4'>
 						<div className='mt-2'>
 							<Input
 								label='Probability percentage of sales'
 								type='text'
 								className='w-full'
 								placeholder='probability'
-								{...register('probability')}
+								{...register('probabilityPercentage')}
+							/>
+						</div>
+
+						<div className='mt-2'>
+							<Input
+								label='Appointment Name'
+								type='text'
+								className='w-full'
+								placeholder='Name'
+								{...register('activitySubject')}
 							/>
 						</div>
 
 						<div className='grid grid-cols-2 gap-x-3'>
 							<div>
 								<Controller
-									name='date'
+									name='activityStartDate'
 									control={control}
 									defaultValue={new Date()}
 									render={({ field }) => (
@@ -114,9 +144,9 @@ const FixAppoinment = ({ open, handleClose }: any) => {
 							</div>
 							<div>
 								<Controller
-									name='time'
+									name='activityStartTime'
 									control={control}
-									defaultValue="12:00"
+									defaultValue='12:00'
 									render={({ field }) => (
 										<TimePicker
 											label='Time'
@@ -134,29 +164,27 @@ const FixAppoinment = ({ open, handleClose }: any) => {
 								id='description'
 								placeholder='Add some description of the task.'
 								className='mb-1 block w-full text-sm font-medium text-gray-700'
-								{...register('description')}
+								{...register('activityDescription')}
 							/>
 						</div>
 
 						<div className='flex justify-end'>
 							<Button
 								variant='default'
-								size='sm'
-								onClick={() => {
-									setOpenDialog(true)
-								}}>
+								size='sm'>
 								Save Appoinment
 							</Button>
 						</div>
 					</form>
-				{openDialog && (
-					<AppoinmentFixed
-						appoinmentFixedOpen={openDialog}
-						appoinmentHandleClose={handleClose}
-					/>
-				)}
-			</DialogContent>
-		</Dialog>
+				</DialogContent>
+			</Dialog>
+			{successDialog && (
+				<AppoinmentFixed
+					appoinmentFixedOpen={successDialog}
+					appoinmentHandleClose={handleCloseSuccessDialog}
+				/>
+			)}
+		</>
 	)
 }
 

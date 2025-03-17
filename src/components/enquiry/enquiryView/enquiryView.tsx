@@ -14,10 +14,12 @@ import { Navigation } from 'swiper/modules'
 import 'swiper/css/navigation'
 import ChatBar from '@/components/ui/enquiry-docUpload/chatBar'
 import useApiRequests from '@/services/useApiRequests'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import moment from 'moment'
 import { useRouter } from 'next/navigation'
 import FixAppoinment from '@/components/ui/enquiry-docUpload/fixAppoinment'
+import { setLead } from '@/redux/slices'
+import AppoinmnetTableDialog from '@/components/ui/enquiry-docUpload/appoinmnetTable'
 
 const documents = [
 	{ id: 1, name: 'phoneix-document.pdf', status: 'Upload complete' },
@@ -25,41 +27,17 @@ const documents = [
 	{ id: 3, name: 'design-mockup.png', status: 'Upload complete' }
 ]
 
-// interface GetEnqData{
-// 	enqLobName:string;
-// }
-
 const EnquiryView = () => {
+	const dispatch = useDispatch()
 	const router = useRouter()
-	const fetchEnquiries: any = useApiRequests('enquiryById', 'GET')
 	const enqId = useSelector((state: any) => state?.apps?.enqId)
+	const fetchLeads: any = useApiRequests('leadById', 'GET')
+	const fetchEnquiries: any = useApiRequests('enquiryById', 'GET')
+	const deleteEnquiry: any = useApiRequests('enquiryDelete', 'DELETE')
+	const editEnquiry: any = useApiRequests('enquiryUpdate', 'PUT')
 	const [loader, setLoader] = useState(false)
 	const [getEnqData, setGetEnqData] = useState<any>()
 	const [openDialog, setOpenDialog] = useState(false)
-
-	const fetchData = async () => {
-		setLoader(true)
-		try {
-			const response = await fetchEnquiries('', {}, { enqId })
-			if (response?.status === 'error') {
-				console.log('error:', response)
-			} else {
-				response?.status === 'success'
-				console.log('success : ', response)
-				setGetEnqData(response.data)
-				console.log(response.data,'check')
-			}
-		} catch (err) {
-			console.log('err : ', err)
-		} finally {
-			setLoader(false)
-		}
-	}
-	useEffect(() => {
-		console.log('enqId : ', enqId)
-		fetchData()
-	}, [enqId])
-
 	const {
 		register,
 		handleSubmit,
@@ -67,16 +45,94 @@ const EnquiryView = () => {
 		getValues,
 		control
 	} = useForm()
+	const fetchData = async () => {
+		setLoader(true)
+		try {
+			const response = await fetchEnquiries('', {}, { enqId })
 
-	const handleClose =()=>{
+			if (response?.status === 'error') {
+				console.log('Error:', response)
+			} else {
+				if (response?.status === 'success') {
+					console.log('Success:', response)
+					setGetEnqData(response.Data)
+					console.log('Enquiry Data:', response.Data)
+				}
+
+				//   const leadId = response?.Data?.leadSeqNo;
+				//   if (leadId) {
+				// 	console.log('Found LeadId:', leadId);
+				// 	const leadResponse = await fetchLeads('', {}, { enqId });
+				// 	if (leadResponse?.status === 'success') {
+				// 	  dispatch(setLead(leadResponse.Data));
+				// 	} else {
+				// 	  console.log('Error fetching lead details:', leadResponse);
+				// 	}
+				//   } else {
+				// 	console.log('LeadId is missing in enquiry response');
+				//   }
+			}
+		} catch (err) {
+			console.log('Error:', err)
+		} finally {
+			setLoader(false)
+		}
+	}
+	useEffect(() => {
+		fetchData()
+	}, [enqId])
+
+	const handleDeleteEnquiry = () => {
+		const userConfirmed = window.confirm('Are you sure you want to delete this enquiry?')
+
+		if (userConfirmed) {
+			deleteData()
+		} else {
+			console.log('Enquiry deletion canceled')
+		}
+	}
+
+	const deleteData = async () => {
+		try {
+			const response = await deleteEnquiry('', {}, { enqId })
+			if (response?.status === 'error') {
+				console.log('Error:', response)
+			} else if (response?.status === 'SUCCESS') {
+				console.log('Enquiry deleted successfully')
+				router.push('/enquiry')
+			}
+		} catch (error) {
+			console.log('err : ', error)
+		}
+	}
+
+	const editData = async () => {
+		try {
+			const response = await editEnquiry('', {}, { enqId })
+			if (response?.status === 'error') {
+				console.log('Error:', response)
+			} else if (response?.status === 'SUCCESS') {
+				console.log('went to updated page')
+			}
+		} catch (error) {
+			console.log('err : ', error)
+		}
+	}
+
+	const handleClose = () => {
 		setOpenDialog(false)
 	}
+
+	const handleEditNavigate = () => {
+		router.push('/enquiryCreate')
+	}
+
 	return (
 		<div>
 			<div className='mt-2 flex items-center gap-2 pl-1 md:pl-2 lg:pl-4'>
 				<div>
 					<button onClick={() => router.push('/enquiry')}>
-						<ArrowLeft className='h-6 w-8' />
+						<ArrowLeft className='mt-2 h-5 w-8' />
 					</button>
 				</div>
 
@@ -91,25 +147,41 @@ const EnquiryView = () => {
 				<div className='col-span-8'>
 					<div className='ml-2 grid grid-cols-3 gap-2'>
 						<div>
-							<p>Sales</p>
-							<p className='font-semibold'>NA</p>
+							<p className='text-xs text-topbar'>Sales</p>
+							<p className='text-s font-normal'>NA</p>
 						</div>
 						<div>
-							<p>Branch</p>
-							<p className='font-semibold'>Chennai, India</p>
+							<p className='text-xs text-topbar'>Branch</p>
+							<p className='text-s font-normal'>Chennai, India</p>
 						</div>
 						<div className='flex flex-row items-center gap-x-5'>
 							<Button>proceed to quote</Button>
-							<Trash2 className='rounded-full border h-7 w-7 p-1 cursor-pointer' />
-							<Pencil className='rounded-full border p-1 h-7 w-7 cursor-pointer' />
-							<CalendarDays 
-							className='rounded-full border p-1 h-7 w-7 cursor-pointer' 
-							onClick={()=>{
-								setOpenDialog(true	)
-							}}
+							<Trash2
+								className='h-7 w-7 cursor-pointer rounded-full border bg-[#E6EDF5] p-2'
+								onClick={() => {
+									handleDeleteEnquiry()
+								}}
+							/>
+							<Pencil
+								onClick={() => {
+									handleEditNavigate()
+								}}
+								className='h-7 w-7 cursor-pointer rounded-full border bg-[#E6EDF5] p-2'
+							/>
+							<CalendarDays
+								className='h-7 w-7 cursor-pointer rounded-full border bg-[#E6EDF5] p-2'
+								onClick={() => {
+									setOpenDialog(true)
+								}}
 							/>
 						</div>
-						{openDialog && <FixAppoinment open={openDialog} handleClose={handleClose} />}
+						{openDialog && (
+							<AppoinmnetTableDialog
+								open={openDialog}
+								handleCloseAppTable={handleClose}
+								enqId={enqId}
+							/>
+						)}
 					</div>
 
 					<Separator />
@@ -118,46 +190,44 @@ const EnquiryView = () => {
 						<div className='col-span-2 grid grid-cols-2 gap-4'>
 							<div>
 								<p className='text-xs text-[#91929E]'>LOB</p>
-								<p className='font-semibold'>{getEnqData?.enqLobName}</p>
+								<p className='text-s'>{getEnqData?.enqLobName}</p>
 							</div>
 							<div>
 								<p className='text-xs text-[#91929E]'>Product</p>
-								<p className='font-semibold'>{getEnqData?.enqProdName}</p>
+								<p className='text-s'>{getEnqData?.enqProdName}</p>
 							</div>
 							<div>
 								<p className='text-xs text-[#91929E]'>Date of Receipt Enquiry</p>
-								<p className='font-semibold'>{moment(getEnqData?.enqDate).format('YYYY-MM-DD HH:mm')}</p>
+								<p className='text-s'>{moment(getEnqData?.enqDate).format('YYYY-MM-DD HH:mm')}</p>
 							</div>
 							<div>
 								<p className='text-xs text-[#91929E]'>Expected Date for Business</p>
-								<p className='font-semibold'>{moment(getEnqData?.enqExpDate).format('YYYY-MM-DD HH:mm')}</p>
+								<p className='text-s'>
+									{moment(getEnqData?.enqExpDate).format('YYYY-MM-DD HH:mm')}
+								</p>
 							</div>
 							<div>
 								<p className='text-xs text-[#91929E]'>Sum Insured</p>
-								<p className='font-semibold'>{getEnqData?.enqSumInsured}</p>
+								<p className='text-s'>{getEnqData?.enqSumInsured}</p>
 							</div>
 							<div>
 								<p className='text-xs text-[#91929E]'>Premium</p>
-								<p className='font-semibold'>{getEnqData?.enqSuggestedPrem}</p>
+								<p className='text-s'>{getEnqData?.enqSuggestedPrem}</p>
 							</div>
 
 							<div>
 								<p className='text-xs text-[#91929E]'>Buisness type</p>
-								<p className='font-semibold'>{getEnqData?.enqBusType}</p>
+								<p className='text-s'>{getEnqData?.enqBusType}</p>
 							</div>
 
 							<div>
 								<p className='text-xs text-[#91929E]'>Intermediary Name</p>
-								<p className='font-semibold'>{getEnqData?.enqIntermedName}</p>
-
+								<p className='text-s'>{getEnqData?.enqIntermedName}</p>
 							</div>
 
 							<div className='col-span-2'>
 								<p className='text-xs text-[#91929E]'>Description</p>
-								<p>
-									At risus viverra adipiscing at in tellus. Blandit massa enim nec dui nunc mattis.
-									Lacus vel facilisis volutpat est velit.
-								</p>
+								<p className='text-s'>{getEnqData?.enqDescription}</p>
 							</div>
 						</div>
 
@@ -176,7 +246,7 @@ const EnquiryView = () => {
 												<div className='flex flex-row justify-between'>
 													<div>
 														<p className='text-xs text-[#91929E]'>{enquiry.id}</p>
-														<p className=''>
+														<p className='text-xs'>
 															{enquiry.code} - {enquiry.type}
 														</p>
 													</div>
@@ -193,12 +263,12 @@ const EnquiryView = () => {
 
 												<div>
 													<p className='text-xs text-[#91929E]'>Date</p>
-													<p>{enquiry.date}</p>
+													<p className='text-xs'>{enquiry.date}</p>
 												</div>
 
 												<div className='flex flex-row gap-x-1'>
-													<p className='text-[#002280]'>View more</p>
-													<ChevronRight className='h-6 w-5 text-[#002280]' />
+													<p className='text-xs text-[#002280]'>View more</p>
+													<ChevronRight className='h-5 w-3 text-[#002280]' />
 												</div>
 											</div>
 										)
@@ -240,10 +310,12 @@ const EnquiryView = () => {
 									navigation={true}
 									cssMode={true}
 									className='custom-swiper'
-									style={{
-										// '--swiper-navigation-color': '#ffff',
-										'--swiper-navigation-size': '20px'
-									}}>
+									style={
+										{
+											// '--swiper-navigation-color': '#ffff',
+											'--swiper-navigation-size': '20px'
+										} as React.CSSProperties
+									}>
 									{documents.map((doc) => (
 										<SwiperSlide key={doc.id}>
 											<div className='mt-3'>

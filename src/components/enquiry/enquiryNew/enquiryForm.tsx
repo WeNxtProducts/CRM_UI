@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { ArrowLeft } from 'lucide-react'
@@ -29,6 +29,7 @@ import { useSelector } from 'react-redux'
 const EnquiryForm = () => {
 	const router = useRouter()
 	// const [date, setDate] = React.useState<Date>()
+	const enqId = useSelector((state: any) => state?.apps?.enqId)
 	const [enquirySaved, setEnquirySaved] = useState(false)
 	const {
 		register,
@@ -38,18 +39,20 @@ const EnquiryForm = () => {
 		control
 	} = useForm({})
 
-	const leadId = useSelector((state: any) => state.apps.leadId)
-	console.log('leadId:', leadId)
-
+	const lead = useSelector((state: any) => state.apps.lead)
 	const newEnquiry: any = useApiRequests('enquiryCreate', 'POST')
 
-	const newData = async (data: any) => {
+	const newData = async (Data: any) => {
 		const formattedData = {
-			...data,
-			enqDate: data.enqDate ? new Date(data.enqDate).toISOString() : null
+			...Data,
+			enqDate: Data.enqDate ? new Date(Data.enqDate).toISOString() : null,
+			lead: {
+				leadSeqNo: lead?.leadSeqNo,
+				leadName: lead?.leadName
+			}
 		}
 		try {
-			const response = await newEnquiry(data, formattedData)
+			const response = await newEnquiry(formattedData)
 			if (response?.status === 'error') {
 				console.log('error : ', response)
 			} else if (response?.status === 'success') {
@@ -62,9 +65,13 @@ const EnquiryForm = () => {
 		}
 	}
 
-	const onSubmit = (data: any) => {
-		console.log('form data:', data)
-		newData(data)
+	useEffect(() => {
+		console.log('enqId : ', enqId)
+	}, [enqId])
+
+	const onSubmit = (Data: any) => {
+		console.log('form data:', Data)
+		newData(Data)
 	}
 
 	return (
@@ -72,12 +79,12 @@ const EnquiryForm = () => {
 			<div className='mt-2 flex items-center gap-2 pl-3 md:pl-2 lg:pl-4'>
 				<div>
 					<button onClick={() => router.push('/enquiry')}>
-						<ArrowLeft className='h-5 w-8 mt-2' />
+						<ArrowLeft className='mt-2 h-5 w-8' />
 					</button>
 				</div>
 
 				<div>
-					<h2 className='text-T-size font-medium text-T-color'>New Enquiry</h2>
+					<h2 className='text-T-size font-medium text-T-color'>{`${enqId ? 'Edit' : 'New'} Enquiry`}</h2>
 				</div>
 			</div>
 
@@ -122,7 +129,7 @@ const EnquiryForm = () => {
 										<Select
 											onValueChange={field.onChange}
 											value={field.value}>
-											<SelectTrigger className='w-full '>
+											<SelectTrigger className='w-full'>
 												<SelectValue placeholder='Select Product' />
 											</SelectTrigger>
 											<SelectContent>
@@ -225,7 +232,7 @@ const EnquiryForm = () => {
 											onValueChange={field.onChange}
 											value={field.value}
 											disabled={true}>
-											<SelectTrigger className='w-full '>
+											<SelectTrigger className='w-full'>
 												<SelectValue placeholder='Name' />
 											</SelectTrigger>
 											<SelectContent>
@@ -252,7 +259,7 @@ const EnquiryForm = () => {
 										<Select
 											onValueChange={field.onChange}
 											value={field.value}>
-											<SelectTrigger className='w-full '>
+											<SelectTrigger className='w-full'>
 												<SelectValue placeholder='Select Name' />
 											</SelectTrigger>
 											<SelectContent>
@@ -318,7 +325,8 @@ const EnquiryForm = () => {
 						<div className='flex justify-center gap-x-3'>
 							<Button variant='outline'>Back</Button>
 
-							<Button onClick={() => setEnquirySaved(true)}>Sumbit</Button>
+							<Button
+								onClick={() => setEnquirySaved(true)}>{`${enqId ? 'Update' : 'Submit'}`}</Button>
 						</div>
 					</form>
 					{enquirySaved && (
@@ -331,7 +339,7 @@ const EnquiryForm = () => {
 					)}
 				</div>
 				<div className='col-span-2'>
-					<EnquiryRightBar leadId={leadId} />
+					<EnquiryRightBar lead={lead} />
 				</div>
 			</div>
 		</div>

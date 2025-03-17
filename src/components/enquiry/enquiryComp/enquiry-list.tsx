@@ -33,7 +33,7 @@ const Enquirylist = () => {
 	const fetchEnquiries: any = useApiRequests('enquiryList', 'GET')
 
 	const router = useRouter()
-	const leadId = useSelector((state: any) => state.apps.leadId)
+	const lead = useSelector((state: any) => state.apps.lead)
 
 	const [activeTab, setActiveTab] = useState<string>('pending')
 	const [totalRecords, setTotalRecords] = useState(0)
@@ -45,19 +45,18 @@ const Enquirylist = () => {
 	// 	fetchData()
 
 	// }
-	const fetchData = async (status = 'pending', offset = 1) => {
+	const fetchData = async (status = activeTab, offset = 1) => {
 		setLoader(true)
 		const queryParams = { status, page: offset - 1, size: 10 }
-		// const queryParams = { status, offset: page == 1 ? 0 : (page-1) * 10, limit: 10 }
 		try {
 			const response = await fetchEnquiries('', queryParams)
 			if (response?.status === 'error') {
 				console.log('error:', response)
-				setEnqData(response?.data)
+				setEnqData(response?.Data)
 			} else {
 				response?.status === 'success'
 				console.log('success : ', response)
-				setEnqData(response?.data)
+				setEnqData(response?.Data)
 				setTotalRecords(response?.pagination?.totalRecords || 0)
 			}
 		} catch (err) {
@@ -206,7 +205,7 @@ const Enquirylist = () => {
 					{enqData && enqData?.length > 0 ? (
 						<div className='mt-10'>
 							<EnquiryListTable
-								leadId={leadId}
+								leadId={lead}
 								tableData={enqData}
 								activetabs={activeTab}
 								refreshData={fetchData}

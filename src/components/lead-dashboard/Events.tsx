@@ -3,12 +3,14 @@
 
 import React, { useEffect, useState } from 'react'
 import { Button } from '../ui/button'
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, Plus } from 'lucide-react'
 import EventCards from './EventCards'
 import useApiRequests from '@/services/useApiRequests'
+import { useRouter } from 'next/navigation'
 
 const Events = ({ setRightExpanded, rightExpanded }: any) => {
-    const eventList: any = useApiRequests('eventList', 'GET')
+    const router = useRouter()
+    const eventList: any = useApiRequests('calenderEventActivityList', 'GET')
     const [eventData, setEventData] = useState([])
 
 
@@ -17,9 +19,8 @@ const Events = ({ setRightExpanded, rightExpanded }: any) => {
             const response = await eventList()
             if (response?.status === 'error') {
                 console.log('error : ', response)
-            } else if (response?.status === 'success') {
-                console.log('success : ', response)
-                setEventData(response?.data)
+            } else if (response?.status === 'SUCCESS') {
+                setEventData(response?.Data)
             }
         } catch (err) {
             console.log('err : ', err)
@@ -33,7 +34,17 @@ const Events = ({ setRightExpanded, rightExpanded }: any) => {
     return (
         <div>
             <div className='flex justify-between item-center'>
-                <h2 className="text-md font-semibold">Nearest Events</h2>
+                <div className='flex items-center gap-x-3'>
+                    <h2 className="text-md font-semibold">Nearest Events</h2>
+                    <Button
+                        onClick={() => {
+                            router.push('/calender')
+                        }}
+                        size='sm'
+                        className='h-3 w-8'>
+                        <Plus />
+                    </Button>
+                </div>
                 <Button
                     variant='link'
                     onClick={() =>
@@ -47,7 +58,7 @@ const Events = ({ setRightExpanded, rightExpanded }: any) => {
                 <div className="space-y-4 mt-2">
                     {eventData?.map((card: any) => {
                         return (
-                            <EventCards key={card.id} card={card} />
+                            <EventCards key={card.activitySeqNo} card={card} />
                         )
                     })}
                 </div>

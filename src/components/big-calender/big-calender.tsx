@@ -18,7 +18,7 @@ const localizer = momentLocalizer(moment);
 // const DnDCalendar = withDragAndDrop(BigCalendar);
 
 const CalendarComponent = () => {
-  const eventList: any = useApiRequests('eventList', 'GET')
+  const eventList: any = useApiRequests('calenderEventActivityList', 'GET')
   const [eventData, setEventData] = useState<any[]>([])
   const [loader, setLoader] = useState(false)
   const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -36,12 +36,12 @@ const CalendarComponent = () => {
     if (finalData) {
       handleSave(finalData)
     } else if (!finalData) {
-      handleDelete(currentEvent.id);
+      handleDelete(currentEvent.activitySeqNo);
     }
   }
 
   const handleDelete = (eventId: any) => {
-    setEventData((prevEvents) => prevEvents.filter((e) => e.id !== eventId));
+    setEventData((prevEvents) => prevEvents.filter((e) => e.activitySeqNo !== eventId));
     setCurrentEvent(null)
   };
 
@@ -49,10 +49,10 @@ const CalendarComponent = () => {
     setLoader(true)
     try {
       const response = await eventList()
-      if (response?.status === 'error') {
+      if (response?.status === 'FAILURE') {
         console.log('error : ', response)
-      } else if (response?.status === 'success') {
-        const events = Array.isArray(response.data) ? response.data : [];
+      } else if (response?.status === 'SUCCESS') {
+        const events = Array.isArray(response.Data) ? response.Data : [];
         const transformedEvents = events.map((event: any) => transformEvent({ ...event }));
         setEventData(transformedEvents)
       }
@@ -82,7 +82,7 @@ const CalendarComponent = () => {
   const handleSave = (newEvent: any) => {
     setEventData((prevEvents: any) => {
       if (currentEvent) {
-        return prevEvents.map((e: any) => (e?.id === currentEvent.id ? newEvent : e));
+        return prevEvents.map((e: any) => (e?.activitySeqNo === currentEvent.activitySeqNo ? newEvent : e));
       } else {
         return [...prevEvents, newEvent];
       }
@@ -95,12 +95,12 @@ const CalendarComponent = () => {
       {loader && <Loader />}
       {eventData?.length > 0 &&
         <BigCalendar
-          titleAccessor={(event: any) => event.eventName || 'No Name'}
+          titleAccessor={(event: any) => event.activitySubject || 'No Name'}
           startAccessor={(event: any) =>
-            moment(`${event.eventDate} ${event.eventStartTime}`, "YYYY-MM-DD hh:mm").toDate()
+            moment(`${event.activityStartDate} ${event.activityStartTime}`, "YYYY-MM-DD hh:mm").toDate()
           }
           endAccessor={(event: any) =>
-            moment(`${event.eventEndDate} ${event.eventEndTime}`, "YYYY-MM-DD hh:mm").toDate()
+            moment(`${event.activityEndDate} ${event.activityEndTime}`, "YYYY-MM-DD hh:mm").toDate()
           }
 
           localizer={localizer}

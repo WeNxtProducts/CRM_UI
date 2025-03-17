@@ -19,19 +19,21 @@ import { TimePicker } from "../ui/timePicker";
 import useApiRequests from "@/services/useApiRequests";
 import toast from "../ui/toast";
 import { Trash2 } from 'lucide-react';
+import Loader from "../ui/Loader";
 // import { Switch } from "@/components/ui/switch";
 
 const getDefaultInitialState = () => {
   const now = new Date();
 
   return {
-    eventName: "",
-    eventDescription: "",
-    eventPriority: "high",
-    eventDate: format(now, "yyyy-MM-dd"),
-    eventStartTime: format(now, "HH:mm"),
-    eventEndTime: format(addMinutes(now, 30), "HH:mm"),
-    eventEndDate: format(now, "yyyy-MM-dd"),
+    activitySubject: "",
+    activityDescription: "",
+    activityPriority: "high",
+    activityStartDate: format(now, "yyyy-MM-dd"),
+    activityStartTime: format(now, "HH:mm"),
+    activityEndTime: format(addMinutes(now, 30), "HH:mm"),
+    activityEndDate: format(now, "yyyy-MM-dd"),
+    activityType: 'EVENT'
   };
 };
 
@@ -42,21 +44,22 @@ interface EventDialogProps {
   startDate?: any;
   endDate?: any;
   currentEvent?: {
-    id?: any;
-    eventPriority: string;
-    eventDescription: string;
-    eventName: string;
-    eventDate: string;
-    eventStartTime: string;
-    eventEndTime: string;
-    eventEndDate?: string;
+    activitySeqNo?: any;
+    activityPriority: string;
+    activityDescription: string;
+    activitySubject: string;
+    activityStartDate: string;
+    activityStartTime: string;
+    activityEndTime: string;
+    activityEndDate?: string;
   };
 }
 
 const EventDialog: React.FC<EventDialogProps> = ({ open, handleClose, currentEvent, startDate, endDate, handleCloseDialog }) => {
-  const creatEvent: any = useApiRequests('createEditEvents', 'POST')
-  const editEvent: any = useApiRequests('createEditEvents', 'PUT')
-  const deleteEvent: any = useApiRequests('createEditEvents', 'DELETE')
+  const [loader, setLoader] = useState(false)
+  const creatEvent: any = useApiRequests('calenderEventActivityList', 'POST')
+  const editEvent: any = useApiRequests('calenderEventActivityList', 'PUT')
+  const deleteEvent: any = useApiRequests('calenderEventActivityList', 'DELETE')
   const [initialState, setInitialState] = useState<any>(null);
   const [isDateRange, setIsDateRange] = useState(false);
 
@@ -68,18 +71,18 @@ const EventDialog: React.FC<EventDialogProps> = ({ open, handleClose, currentEve
     if (currentEvent) {
       setInitialState(currentEvent);
       reset(currentEvent);
-      setIsDateRange(!!currentEvent.eventEndDate && currentEvent.eventEndDate !== currentEvent.eventDate);
+      setIsDateRange(!!currentEvent.activityEndDate && currentEvent.activityEndDate !== currentEvent.activityStartDate);
     } else {
       const defaultState: any = getDefaultInitialState();
       if (startDate) {
-        defaultState.eventDate = format(startDate, "yyyy-MM-dd");
-        defaultState.eventEndDate = format(startDate, "yyyy-MM-dd");
-        defaultState.eventStartTime = format(startDate, "HH:mm");
-        defaultState.eventEndTime = format(endDate, "HH:mm");
-        if (defaultState.eventStartTime === "00:00" && defaultState.eventEndTime === "00:00") {
+        defaultState.activityStartDate = format(startDate, "yyyy-MM-dd");
+        defaultState.activityEndDate = format(startDate, "yyyy-MM-dd");
+        defaultState.activityStartTime = format(startDate, "HH:mm");
+        defaultState.activityEndTime = format(endDate, "HH:mm");
+        if (defaultState.activityStartTime === "00:00" && defaultState.activityEndTime === "00:00") {
           const now = new Date();
-          defaultState.eventStartTime = format(now, "HH:mm");
-          defaultState.eventEndTime = format(add(now, { hours: 1 }), "HH:mm");
+          defaultState.activityStartTime = format(now, "HH:mm");
+          defaultState.activityEndTime = format(add(now, { hours: 1 }), "HH:mm");
         }
       }
       setInitialState(defaultState);
@@ -88,15 +91,18 @@ const EventDialog: React.FC<EventDialogProps> = ({ open, handleClose, currentEve
   }, [currentEvent, startDate, endDate, reset]);
 
   const handleCreateEvent = async (event: any, apiCalls: any) => {
+    setLoader(true)
     try {
-      const response = await apiCalls(event, {}, currentEvent ? { id: currentEvent?.id } : {})
-      if (response?.status === 'error') {
-        console.log('error : ', response)
+      const response = await apiCalls(event, {}, currentEvent ? { activitySeqNo: currentEvent?.activitySeqNo } : {})
+      if (response?.status === 'FAILURE') {
+        setLoader(false)
+        console.log('FAILURE : ', response)
         toast.error('Event Not Created');
-      } else if (response?.status === 'success') {
+      } else if (response?.status === 'SUCCESS') {
+        setLoader(false)
         toast.success('Event Created Successfully');
         console.log("success : ", response)
-        handleClose(response?.data);
+        handleClose(response?.Data);
       }
     } catch (err) {
       console.log('err : ', err)
@@ -115,14 +121,14 @@ const EventDialog: React.FC<EventDialogProps> = ({ open, handleClose, currentEve
   }
 
   const onSubmit = (data: any) => {
-    const startTimeDate = parseTime(data.eventStartTime);
-    const endTimeDate = parseTime(data.eventEndTime);
+    const startTimeDate = parseTime(data.activityStartTime);
+    const endTimeDate = parseTime(data.activityEndTime);
 
     const finalData = {
       ...data,
-      eventEndDate: isDateRange ? data.eventEndDate : data.eventDate,
-      eventStartTime: format(startTimeDate, "HH:mm:ss"),
-      eventEndTime: format(endTimeDate, "HH:mm:ss")
+      activityEndDate: isDateRange ? data.activityEndDate : data.activityStartDate,
+      activityStartTime: format(startTimeDate, "HH:mm:ss"),
+      activityEndTime: format(endTimeDate, "HH:mm:ss")
     };
 
     // console.log("finalData:", finalData);
@@ -130,11 +136,14 @@ const EventDialog: React.FC<EventDialogProps> = ({ open, handleClose, currentEve
   };
 
   const handleDeleteEvent = async (event: any) => {
+    setLoader(true)
     try {
-      const response = await deleteEvent('', {}, { id: event?.id })
-      if (response?.status === 'error') {
+      const response = await deleteEvent('', {}, { activitySeqNo: event?.activitySeqNo })
+      if (response?.status === 'FAILURE') {
+        setLoader(false)
         toast.error('Event Not Deleted');
-      } else if (response?.status === 'success') {
+      } else if (response?.status === 'SUCCESS') {
+        setLoader(false)
         toast.success('Event Deleted Successfully');
         handleClose(false)
       }
@@ -146,6 +155,7 @@ const EventDialog: React.FC<EventDialogProps> = ({ open, handleClose, currentEve
   return (
     <Dialog open={open} onOpenChange={handleCloseDialog}>
       <DialogContent className="max-w-lg p-0">
+        {loader && <Loader />}
         <div className="flex flex-col h-[88vh] custom-scrollbar-lead-dashoard">
           <div className="flex-shrink-0 p-4 border-b">
             <DialogHeader>
@@ -167,8 +177,8 @@ const EventDialog: React.FC<EventDialogProps> = ({ open, handleClose, currentEve
           <div className="flex-1 overflow-y-auto p-4">
             <form id="eventForm" onSubmit={handleSubmit(onSubmit)}>
               <div className="space-y-4">
-                <Input label="Event Name" {...register("eventName", { required: true })} />
-                <Textarea label="Event Description" {...register("eventDescription")} />
+                <Input label="Event Name" {...register("activitySubject", { required: true })} />
+                <Textarea label="Event Description" {...register("activityDescription")} />
 
                 {/* <div className="flex items-center space-x-3">
                   <span className="text-sm font-medium text-gray-700">Once</span>
@@ -176,27 +186,27 @@ const EventDialog: React.FC<EventDialogProps> = ({ open, handleClose, currentEve
                   <span className="text-sm font-medium text-gray-700">Date Range</span>
                 </div> */}
 
-                <Controller control={control} name="eventDate" render={({ field }) => (
+                <Controller control={control} name="activityStartDate" render={({ field }) => (
                   <DatePickerDemo label={`Event ${isDateRange ? 'Start' : ''} date`} date={field.value} setDate={field.onChange} />
                 )} />
 
-                {/* Show eventEndDate only if Date Range is selected */}
+                {/* Show activityEndDate only if Date Range is selected */}
                 {isDateRange && (
-                  <Controller control={control} name="eventEndDate" render={({ field }) => (
+                  <Controller control={control} name="activityEndDate" render={({ field }) => (
                     <DatePickerDemo label="Event End date" date={field.value} setDate={field.onChange} />
                   )} />
                 )}
 
                 <div className="grid grid-cols-2 gap-4">
-                  <Controller control={control} name="eventStartTime" render={({ field }) => (
+                  <Controller control={control} name="activityStartTime" render={({ field }) => (
                     <TimePicker value={field.value} onChange={field.onChange} label="Start Time" />
                   )} />
-                  <Controller control={control} name="eventEndTime" render={({ field }) => (
+                  <Controller control={control} name="activityEndTime" render={({ field }) => (
                     <TimePicker value={field.value} onChange={field.onChange} label="End Time" />
                   )} />
                 </div>
 
-                <Controller control={control} name="eventPriority" render={({ field }) => (
+                <Controller control={control} name="activityPriority" render={({ field }) => (
                   <SelectWrapper label="Priority">
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger>

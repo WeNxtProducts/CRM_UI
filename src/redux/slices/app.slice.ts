@@ -1,17 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 export type AppDetails = {
 	token: string
 	enqId: any
 	lead: any
-	
+
 }
 
 const initialState: AppDetails = {
 	token: '',
 	enqId: '',
 	lead: null,
-	
+
 }
 
 export const appSlice = createSlice({
@@ -27,8 +28,8 @@ export const appSlice = createSlice({
 		setLead(state: AppDetails, action: PayloadAction<any>) {
 			state.lead = action.payload
 		},
-		
+
 	}
 })
 
-export const { setToken, setEnqId, setLead} = appSlice.actions
+export const { setToken, setEnqId, setLead } = appSlice.actions

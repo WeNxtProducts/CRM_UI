@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { EnqId, type EnquiryGetId, type EnquiryList } from '@/services/enquiry.services'
+// import { EnqId, type EnquiryGetId, type EnquiryList } from '@/services/enquiry.services'
 import type { Action, PayloadAction } from '@reduxjs/toolkit'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { HYDRATE } from 'next-redux-wrapper'
@@ -22,7 +22,7 @@ export const enquiryApi = createApi({
 		}
 	},
 	endpoints: (build) => ({
-		getEnquiryList: build.query<EnquiryList, void>({
+		getEnquiryList: build.query({
 			query: (): {
 				url: string
 				method: string
@@ -33,13 +33,13 @@ export const enquiryApi = createApi({
 				headers: { Authorization: `Bearer sampleToken` }
 			})
 		}),
-		getByEnquiryId: build.query<EnquiryGetId, EnqId>({
+		getByEnquiryId: build.query({
 			query: (
 				data
 			): {
 				url: string
 				method: string
-				body: EnqId
+				body: any
 				headers: { Authorization: string }
 			} => ({
 				url: 'get_enquiry_by_id',

@@ -1,4 +1,4 @@
-import { type LoginToken } from '@/services/auth.services'
+// import { type LoginToken } from '@/services/auth.services'
 import type { Action, PayloadAction } from '@reduxjs/toolkit'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { HYDRATE } from 'next-redux-wrapper'
@@ -22,7 +22,7 @@ export const authApi = createApi({
         }
     },
     endpoints: (build) => ({
-        getLogin: build.query<LoginToken, void>({
+        getLogin: build.query({
             query: (): {
                 url: string
                 method: string

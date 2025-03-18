@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { Button } from '@/components/ui/button'
@@ -14,12 +15,11 @@ import { Navigation } from 'swiper/modules'
 import 'swiper/css/navigation'
 import ChatBar from '@/components/ui/enquiry-docUpload/chatBar'
 import useApiRequests from '@/services/useApiRequests'
-import { useDispatch, useSelector } from 'react-redux'
 import moment from 'moment'
 import { useRouter } from 'next/navigation'
 import FixAppoinment from '@/components/ui/enquiry-docUpload/fixAppoinment'
-import { setLead } from '@/redux/slices'
 import AppoinmnetTableDialog from '@/components/ui/enquiry-docUpload/appoinmnetTable'
+import { useAppDispatch, useAppSelector } from '@/store'
 
 const documents = [
 	{ id: 1, name: 'phoneix-document.pdf', status: 'Upload complete' },
@@ -28,9 +28,9 @@ const documents = [
 ]
 
 const EnquiryView = () => {
-	const dispatch = useDispatch()
+	const dispatch = useAppDispatch()
 	const router = useRouter()
-	const enqId = useSelector((state: any) => state?.apps?.enqId)
+	const enqId = useAppSelector((state: any) => state?.apps?.enqId)
 	const fetchLeads: any = useApiRequests('leadById', 'GET')
 	const fetchEnquiries: any = useApiRequests('enquiryById', 'GET')
 	const deleteEnquiry: any = useApiRequests('enquiryDelete', 'DELETE')

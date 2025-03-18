@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { useRouter } from 'next/navigation'
@@ -11,8 +12,6 @@ import { Button } from '../button'
 import FixAppoinment from './fixAppoinment'
 import moment from 'moment'
 import SentMessage from './sentMessage'
-import { useDispatch } from 'react-redux'
-import { setLead } from '@/redux/slices'
 import {
 	Table,
 	TableBody,
@@ -21,10 +20,12 @@ import {
 	TableHeader,
 	TableRow
 } from '@/components/ui/table'
+import { useAppDispatch } from '@/store'
+import { setLead } from '@/store/slices/app.slice'
 
 const LeadtableListing = ({ leads = [] }: any) => {
 	const router = useRouter()
-	const dispatch = useDispatch()
+	const dispatch = useAppDispatch()
 	// const [openDialog, setOpenDialog] = useState(false)
 	const [messageDialog, setMessageDialog] = useState(false)
 	const [selectedLead, setSelectedLead] = useState<{

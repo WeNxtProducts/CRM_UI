@@ -40,14 +40,9 @@ const Enquirylist = () => {
 	const [loader, setLoader] = useState(false)
 	const [enqData, setEnqData] = useState([])
 
-	// const refreshData =(data:any)=>{
-	// 	console.log(data,'iiiiiiiiiiii');
-	// 	fetchData()
-
-	// }
 	const fetchData = async (status = activeTab, offset = 1) => {
 		setLoader(true)
-		const queryParams = { status, page: offset - 1, size: 10 }
+		const queryParams = { status, page: offset - 1, size: 10, userId:'S0002' }
 		try {
 			const response = await fetchEnquiries('', queryParams)
 			if (response?.status === 'error') {

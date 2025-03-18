@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useEffect } from 'react'
 
-axios.defaults.baseURL = 'http://192.168.1.62:8080'
+axios.defaults.baseURL = 'http://192.168.1.181:8080'
 
 const useCustomAxios = () => {
 	useEffect(() => {

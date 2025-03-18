@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { ThemeProviders } from "./theme-providers";
-import { AppProvider } from "./app-provider";
 import { fonts } from "@/lib/font";
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
 import "./globals.css";
+import ReduxProvider from "@/store/redux-provider";
 
 const fontVariables = [...fonts.map((f) => f.variable), 'font-custom'];
 
@@ -20,16 +20,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <AppProvider>
-        <body
-          className={cn(fontVariables, 'bg-background')}
-        >
+      <body
+        className={cn(fontVariables, 'bg-background')}
+      >
+        <ReduxProvider>
           <ThemeProviders>
             {children}
-            <Toaster richColors/>
+            <Toaster richColors />
           </ThemeProviders>
-        </body>
-      </AppProvider>
+        </ReduxProvider>
+      </body>
     </html>
   );
 }

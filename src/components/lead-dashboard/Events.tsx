@@ -19,8 +19,8 @@ const Events = ({ setRightExpanded, rightExpanded }: any) => {
             const response = await eventList()
             if (response?.status === 'error') {
                 console.log('error : ', response)
-            } else if (response?.status === 'SUCCESS') {
-                setEventData(response?.Data)
+            } else if (response?.status === 'success') {
+                setEventData(response?.data)
             }
         } catch (err) {
             console.log('err : ', err)

@@ -94,15 +94,15 @@ const EventDialog: React.FC<EventDialogProps> = ({ open, handleClose, currentEve
     setLoader(true)
     try {
       const response = await apiCalls(event, {}, currentEvent ? { activitySeqNo: currentEvent?.activitySeqNo } : {})
-      if (response?.status === 'FAILURE') {
+      if (response?.status === 'failure') {
         setLoader(false)
         console.log('FAILURE : ', response)
         toast.error('Event Not Created');
-      } else if (response?.status === 'SUCCESS') {
+      } else if (response?.status === 'success') {
         setLoader(false)
         toast.success('Event Created Successfully');
         console.log("success : ", response)
-        handleClose(response?.Data);
+        handleClose(response?.data);
       }
     } catch (err) {
       console.log('err : ', err)
@@ -139,10 +139,10 @@ const EventDialog: React.FC<EventDialogProps> = ({ open, handleClose, currentEve
     setLoader(true)
     try {
       const response = await deleteEvent('', {}, { activitySeqNo: event?.activitySeqNo })
-      if (response?.status === 'FAILURE') {
+      if (response?.status === 'failure') {
         setLoader(false)
         toast.error('Event Not Deleted');
-      } else if (response?.status === 'SUCCESS') {
+      } else if (response?.status === 'success') {
         setLoader(false)
         toast.success('Event Deleted Successfully');
         handleClose(false)

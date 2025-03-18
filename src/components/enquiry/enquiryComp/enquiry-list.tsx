@@ -22,7 +22,6 @@ import {
 } from '@/components/ui/select'
 import Loader from '@/components/ui/Loader'
 import { useDispatch, useSelector } from 'react-redux'
-import { log } from 'console'
 
 const Enquirylist = () => {
 	// const enquiryList: any = useApiRequests('enquiryList', 'GET')
@@ -40,23 +39,18 @@ const Enquirylist = () => {
 	const [loader, setLoader] = useState(false)
 	const [enqData, setEnqData] = useState([])
 
-	// const refreshData =(data:any)=>{
-	// 	console.log(data,'iiiiiiiiiiii');
-	// 	fetchData()
-
-	// }
 	const fetchData = async (status = activeTab, offset = 1) => {
 		setLoader(true)
-		const queryParams = { status, page: offset - 1, size: 10 }
+		const queryParams = { status, page: offset - 1, size: 10, userId:'S0002' }
 		try {
 			const response = await fetchEnquiries('', queryParams)
 			if (response?.status === 'error') {
 				console.log('error:', response)
-				setEnqData(response?.Data)
+				setEnqData(response?.data)
 			} else {
 				response?.status === 'success'
 				console.log('success : ', response)
-				setEnqData(response?.Data)
+				setEnqData(response?.data)
 				setTotalRecords(response?.pagination?.totalRecords || 0)
 			}
 		} catch (err) {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { Button } from '@/components/ui/button'
@@ -14,12 +15,11 @@ import { Navigation } from 'swiper/modules'
 import 'swiper/css/navigation'
 import ChatBar from '@/components/ui/enquiry-docUpload/chatBar'
 import useApiRequests from '@/services/useApiRequests'
-import { useDispatch, useSelector } from 'react-redux'
 import moment from 'moment'
 import { useRouter } from 'next/navigation'
 import FixAppoinment from '@/components/ui/enquiry-docUpload/fixAppoinment'
-import { setLead } from '@/redux/slices'
 import AppoinmnetTableDialog from '@/components/ui/enquiry-docUpload/appoinmnetTable'
+import { useAppDispatch, useAppSelector } from '@/store'
 
 const documents = [
 	{ id: 1, name: 'phoneix-document.pdf', status: 'Upload complete' },
@@ -28,9 +28,9 @@ const documents = [
 ]
 
 const EnquiryView = () => {
-	const dispatch = useDispatch()
+	const dispatch = useAppDispatch()
 	const router = useRouter()
-	const enqId = useSelector((state: any) => state?.apps?.enqId)
+	const enqId = useAppSelector((state: any) => state?.apps?.enqId)
 	const fetchLeads: any = useApiRequests('leadById', 'GET')
 	const fetchEnquiries: any = useApiRequests('enquiryById', 'GET')
 	const deleteEnquiry: any = useApiRequests('enquiryDelete', 'DELETE')
@@ -55,8 +55,8 @@ const EnquiryView = () => {
 			} else {
 				if (response?.status === 'success') {
 					console.log('Success:', response)
-					setGetEnqData(response.Data)
-					console.log('Enquiry Data:', response.Data)
+					setGetEnqData(response.data)
+					console.log('Enquiry data:', response.data)
 				}
 
 				//   const leadId = response?.Data?.leadSeqNo;
@@ -97,7 +97,7 @@ const EnquiryView = () => {
 			const response = await deleteEnquiry('', {}, { enqId })
 			if (response?.status === 'error') {
 				console.log('Error:', response)
-			} else if (response?.status === 'SUCCESS') {
+			} else if (response?.status === 'success') {
 				console.log('Enquiry deleted successfully')
 				router.push('/enquiry')
 			}
@@ -106,18 +106,18 @@ const EnquiryView = () => {
 		}
 	}
 
-	const editData = async () => {
-		try {
-			const response = await editEnquiry('', {}, { enqId })
-			if (response?.status === 'error') {
-				console.log('Error:', response)
-			} else if (response?.status === 'SUCCESS') {
-				console.log('went to updated page')
-			}
-		} catch (error) {
-			console.log('err : ', error)
-		}
-	}
+	// const editData = async () => {
+	// 	try {
+	// 		const response = await editEnquiry('', {}, { enqId })
+	// 		if (response?.status === 'error') {
+	// 			console.log('Error:', response)
+	// 		} else if (response?.status === 'success') {
+	// 			console.log('went to updated page')
+	// 		}
+	// 	} catch (error) {
+	// 		console.log('err : ', error)
+	// 	}
+	// }
 
 	const handleClose = () => {
 		setOpenDialog(false)
@@ -225,9 +225,18 @@ const EnquiryView = () => {
 								<p className='text-s'>{getEnqData?.enqIntermedName}</p>
 							</div>
 
-							<div className='col-span-2'>
+							<div >
 								<p className='text-xs text-[#91929E]'>Description</p>
 								<p className='text-s'>{getEnqData?.enqDescription}</p>
+							</div>
+
+							<div >
+							<Input
+								label='Enquiry status'
+								placeholder='Status'
+								type='text'
+								className='w-full'
+							/>
 							</div>
 						</div>
 
@@ -292,12 +301,16 @@ const EnquiryView = () => {
 								type='text'
 								className='w-full'
 							/>
-							<Input
+							{/* <Input
 								label='Enquiry status'
 								placeholder='Status'
 								type='text'
 								className='w-full'
-							/>
+							/> */}
+
+							<Button className='mt-6 h-9 w-12'>
+								Save
+							</Button>
 						</div>
 
 						<div className='mt-3'>

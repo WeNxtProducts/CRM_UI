@@ -64,7 +64,7 @@ const UploadListArea = () => {
 			if (response?.Overall[0]?.status === 'failure')
 				toast.error('File Not Uploaded!');
 			if (response?.Overall[0]?.status === 'success') {
-				updateFileKeyAtIndex(index, response?.Overall[0]?.Data);
+				updateFileKeyAtIndex(index, response?.Overall[0]?.data);
 				toast.success(`${files?.filename} Uploaded Successfully`);
 			}
 		} catch {

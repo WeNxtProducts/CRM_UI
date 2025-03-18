@@ -20,7 +20,7 @@ const Events = ({ setRightExpanded, rightExpanded }: any) => {
             if (response?.status === 'error') {
                 console.log('error : ', response)
             } else if (response?.status === 'success') {
-                setEventData(response?.Data)
+                setEventData(response?.data)
             }
         } catch (err) {
             console.log('err : ', err)

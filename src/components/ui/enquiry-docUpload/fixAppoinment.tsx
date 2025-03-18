@@ -51,22 +51,22 @@ const FixAppoinment = ({ open, handleClose, enqId }: any) => {
 		handleClose()
 	}
 
-	const appoinmentData = async (Data: any) => {
+	const appoinmentData = async (data: any) => {
 		closeDialogFix()
 
-		console.log('data: ', Data)
+		console.log('data: ', data)
 		const selectedDate =
-			typeof Data.activityStartDate === 'string'
-				? parseISO(Data.activityStartDate)
-				: Data.activityStartDate
+			typeof data.activityStartDate === 'string'
+				? parseISO(data.activityStartDate)
+				: data.activityStartDate
 		const formattedDate = format(selectedDate, "yyyy-MM-dd'T'HH:mm")
 
-		const activityStartedTime = moment(Data.activityStartTime, 'HH:mm')
+		const activityStartedTime = moment(data.activityStartTime, 'HH:mm')
 		console.log('activityStartedTime : ', activityStartedTime)
 		const activityEndTime = activityStartedTime.add(30, 'minutes').format('HH:mm:ss')
 
 		const formData = {
-			...Data,
+			...data,
 			activityStartDate: formattedDate,
 			activityEndDate: formattedDate,
 			activityType: 'APPOINTMENT',
@@ -77,7 +77,7 @@ const FixAppoinment = ({ open, handleClose, enqId }: any) => {
 			}
 		}
 		try {
-			const response = await fixAppoinmnet(formData)
+			const response = await fixAppoinmnet(formData,{userId:'S0002'})
 			if (response?.status === 'error') {
 				console.log('error : ', response)
 			} else if (response?.status === 'success') {
@@ -89,10 +89,10 @@ const FixAppoinment = ({ open, handleClose, enqId }: any) => {
 		}
 	}
 
-	const onSubmit = (Data: any) => {
-		console.log('form data:', Data)
+	const onSubmit = (data: any) => {
+		console.log('form data:',data)
 		console.log('enqId:', enqId)
-		appoinmentData(Data)
+		appoinmentData(data)
 	}
 
 	return (

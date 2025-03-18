@@ -42,7 +42,7 @@ const LeadForm = () => {
 
 	const leadData = async (data: any) => {
 		try {
-			const response = await leadNewData(data)
+			const response = await leadNewData(data,{userId:'S0002'})
 			if (response?.status == 'error') {
 				console.log('error : ', response)
 			} else if (response?.status === 'success') {

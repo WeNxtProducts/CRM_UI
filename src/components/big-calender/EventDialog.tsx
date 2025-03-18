@@ -102,7 +102,7 @@ const EventDialog: React.FC<EventDialogProps> = ({ open, handleClose, currentEve
         setLoader(false)
         toast.success('Event Created Successfully');
         console.log("success : ", response)
-        handleClose(response?.Data);
+        handleClose(response?.data);
       }
     } catch (err) {
       console.log('err : ', err)

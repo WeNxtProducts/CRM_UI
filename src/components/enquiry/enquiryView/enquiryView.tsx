@@ -56,7 +56,7 @@ const EnquiryView = () => {
 				if (response?.status === 'success') {
 					console.log('Success:', response)
 					setGetEnqData(response.data)
-					console.log('Enquiry Data:', response.data)
+					console.log('Enquiry data:', response.data)
 				}
 
 				//   const leadId = response?.Data?.leadSeqNo;

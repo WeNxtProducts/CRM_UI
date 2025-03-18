@@ -52,7 +52,7 @@ const CalendarComponent = () => {
       if (response?.status === 'failure') {
         console.log('error : ', response)
       } else if (response?.status === 'success') {
-        const events = Array.isArray(response.Data) ? response.Data : [];
+        const events = Array.isArray(response.data) ? response.data : [];
         const transformedEvents = events.map((event: any) => transformEvent({ ...event }));
         setEventData(transformedEvents)
       }

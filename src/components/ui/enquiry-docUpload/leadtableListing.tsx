@@ -21,7 +21,7 @@ import {
 	TableRow
 } from '@/components/ui/table'
 import { useAppDispatch } from '@/store'
-import { setLead } from '@/store/slices/app.slice'
+import { setEnqId, setLead } from '@/store/slices/app.slice'
 
 const LeadtableListing = ({ leads = [] }: any) => {
 	const router = useRouter()
@@ -115,6 +115,7 @@ const LeadtableListing = ({ leads = [] }: any) => {
 						// if (lead.leadStatus === "Todo") {
 						//   setOpenDialog(true);
 						// }
+						dispatch(setEnqId(''))
 						dispatch(setLead(lead))
 						router.push('/enquiryCreate')
 					  }}

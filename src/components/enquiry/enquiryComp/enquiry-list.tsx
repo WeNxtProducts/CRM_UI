@@ -22,7 +22,6 @@ import {
 } from '@/components/ui/select'
 import Loader from '@/components/ui/Loader'
 import { useDispatch, useSelector } from 'react-redux'
-import { log } from 'console'
 
 const Enquirylist = () => {
 	// const enquiryList: any = useApiRequests('enquiryList', 'GET')
@@ -47,11 +46,11 @@ const Enquirylist = () => {
 			const response = await fetchEnquiries('', queryParams)
 			if (response?.status === 'error') {
 				console.log('error:', response)
-				setEnqData(response?.Data)
+				setEnqData(response?.data)
 			} else {
 				response?.status === 'success'
 				console.log('success : ', response)
-				setEnqData(response?.Data)
+				setEnqData(response?.data)
 				setTotalRecords(response?.pagination?.totalRecords || 0)
 			}
 		} catch (err) {

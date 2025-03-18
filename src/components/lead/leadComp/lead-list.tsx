@@ -9,25 +9,28 @@ import { Filter, Plus } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Pagination from '@/components/ui/pagination'
+import { setEnqId } from '@/store/slices/app.slice'
+import { useAppDispatch } from '@/store'
 // import {tasks} from '@/lib/constant'
 
 const LeadList = () => {
-	const [leads, setLeads] = useState([])
+	const dispatch = useAppDispatch()
 	const router = useRouter()
+	const [leads, setLeads] = useState([])
 	const fetchLeads: any = useApiRequests('leadList', 'GET')
 	const [leadListRecords, setLeadListRecords] = useState(0)
 
 	const fetchLeadData = async (offset = 1) => {
-		const queryParams = {page: offset - 1, size: 10, userId: 'S0002'}
+		const queryParams = { page: offset - 1, size: 10, userId: 'S0002' }
 		try {
-			const response = await fetchLeads('',queryParams)
+			const response = await fetchLeads('', queryParams)
 			// console.log(response,"lead")
 			if (response?.status === 'error') {
 				console.log('error : ', response)
-			} else if (response?.status === 'SUCCESS') {
+			} else if (response?.status === 'success') {
 				console.log('success : ', response)
-				setLeads(response?.Data)
-				setLeadListRecords(response?.pagination?.leadListRecords || 0)
+				setLeads(response?.data)
+				setLeadListRecords(response?.pagination?.totalRecords || 0)
 			}
 		} catch (error) {
 			console.log('err :', error)
@@ -36,6 +39,10 @@ const LeadList = () => {
 
 	useEffect(() => {
 		fetchLeadData()
+
+		// return () => {
+		// 	dispatch(setEnqId(''))
+		// }
 	}, [])
 
 	return (
@@ -79,18 +86,18 @@ const LeadList = () => {
 					<LeadRightBar />
 				</div>
 			</div>
-{/* 
+			{/* 
 			<div className='col-span-8 pl-3 pr-2'> 
                 <Pagination/>
             </div> */}
 
 			{leads && leads?.length > 0 && (
-				<div>
-				<Pagination 
-					total={leadListRecords}
-					pageSize={10}
-					onPageChange={(page) => fetchLeadData(page)}
-				/>
+				<div className='col-span-8 mt-2 pl-3 pr-2'>
+					<Pagination
+						total={leadListRecords}
+						pageSize={10}
+						onPageChange={(page) => fetchLeadData(page)}
+					/>
 				</div>
 			)}
 		</div>

@@ -34,9 +34,9 @@ const AppoinmnetTableDialog = ({ open, handleCloseAppTable, enqId }: any) => {
 			const response = await appoinmentTable('', {}, { enqId })
 			if (response?.status === 'error') {
 				console.log('Error:', response)
-			} else if (response?.status === 'SUCCESS') {
+			} else if (response?.status === 'success') {
 				console.log('success : ', response)
-				setAppoinmnets(response.Data)
+				setAppoinmnets(response.data)
 			}
 		} catch (error) {
 			console.log('err :', error)

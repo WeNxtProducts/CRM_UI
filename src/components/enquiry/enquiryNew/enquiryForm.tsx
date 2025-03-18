@@ -43,17 +43,17 @@ const EnquiryForm = () => {
 	const newEnquiry: any = useApiRequests('enquiryCreate', 'POST')
 	const editEnquiry: any = useApiRequests('enquiryById', 'GET')
 
-	const newData = async (Data: any) => {
+	const newData = async (data: any) => {
 		const formattedData = {
-			...Data,
-			enqDate: Data.enqDate ? new Date(Data.enqDate).toISOString() : null,
+			...data,
+			enqDate: data.enqDate ? new Date(data.enqDate).toISOString() : null,
 			lead: {
 				leadSeqNo: lead?.leadSeqNo,
 				leadName: lead?.leadName
 			}
 		}
 		try {
-			const response = await newEnquiry(formattedData)
+			const response = await newEnquiry(formattedData,{userId: 'S0002'})
 			if (response?.status === 'error') {
 				console.log('error : ', response)
 			} else if (response?.status === 'success') {
@@ -67,16 +67,17 @@ const EnquiryForm = () => {
 	}
 
 	const editEnquiryData = async () => {
+		console.log('get enq by id')
 		try {
-			const response = await editEnquiry('',{},{enqId})
-			if(response?.status ==='error'){
-				console.log('error : ', response);
-			}else if(response?.status === 'success' && response.Data){
-				const enquiryData = response.Data
+			const response = await editEnquiry('', {}, { enqId })
+			if (response?.status === 'error') {
+				console.log('error : ', response)
+			} else if (response?.status === 'success' && response.data) {
+				const enquiryData = response.data
 				Object.keys(enquiryData).forEach((key) => {
-					setValue(key, enquiryData[key]) 
+					setValue(key, enquiryData[key])
 				})
-				console.log('Enquiry prefetched successfully');
+				console.log('Enquiry prefetched successfully')
 				console.log('success : ', response)
 			}
 		} catch (error) {
@@ -85,13 +86,13 @@ const EnquiryForm = () => {
 	}
 
 	useEffect(() => {
-		// console.log('enqId : ', enqId)
-		editEnquiryData()
-	}, [enqId])
+		console.log('enqId : ', enqId)
+		if (enqId) editEnquiryData()
+	}, [])
 
-	const onSubmit = (Data: any) => {
-		console.log('form data:', Data)
-		newData(Data)
+	const onSubmit = (data: any) => {
+		console.log('form data:', data)
+		newData(data)
 	}
 
 	return (

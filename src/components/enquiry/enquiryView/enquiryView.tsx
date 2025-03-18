@@ -55,8 +55,8 @@ const EnquiryView = () => {
 			} else {
 				if (response?.status === 'success') {
 					console.log('Success:', response)
-					setGetEnqData(response.Data)
-					console.log('Enquiry Data:', response.Data)
+					setGetEnqData(response.data)
+					console.log('Enquiry data:', response.data)
 				}
 
 				//   const leadId = response?.Data?.leadSeqNo;
@@ -97,7 +97,7 @@ const EnquiryView = () => {
 			const response = await deleteEnquiry('', {}, { enqId })
 			if (response?.status === 'error') {
 				console.log('Error:', response)
-			} else if (response?.status === 'SUCCESS') {
+			} else if (response?.status === 'success') {
 				console.log('Enquiry deleted successfully')
 				router.push('/enquiry')
 			}
@@ -111,7 +111,7 @@ const EnquiryView = () => {
 	// 		const response = await editEnquiry('', {}, { enqId })
 	// 		if (response?.status === 'error') {
 	// 			console.log('Error:', response)
-	// 		} else if (response?.status === 'SUCCESS') {
+	// 		} else if (response?.status === 'success') {
 	// 			console.log('went to updated page')
 	// 		}
 	// 	} catch (error) {
@@ -225,9 +225,18 @@ const EnquiryView = () => {
 								<p className='text-s'>{getEnqData?.enqIntermedName}</p>
 							</div>
 
-							<div className='col-span-2'>
+							<div >
 								<p className='text-xs text-[#91929E]'>Description</p>
 								<p className='text-s'>{getEnqData?.enqDescription}</p>
+							</div>
+
+							<div >
+							<Input
+								label='Enquiry status'
+								placeholder='Status'
+								type='text'
+								className='w-full'
+							/>
 							</div>
 						</div>
 
@@ -292,12 +301,16 @@ const EnquiryView = () => {
 								type='text'
 								className='w-full'
 							/>
-							<Input
+							{/* <Input
 								label='Enquiry status'
 								placeholder='Status'
 								type='text'
 								className='w-full'
-							/>
+							/> */}
+
+							<Button className='mt-6 h-9 w-12'>
+								Save
+							</Button>
 						</div>
 
 						<div className='mt-3'>

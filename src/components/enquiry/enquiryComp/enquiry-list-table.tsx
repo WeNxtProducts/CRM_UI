@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react'
 import {
 	Table,
@@ -14,9 +15,9 @@ import { useRouter } from 'next/navigation'
 import { Lob, Product } from '@/lib/constant'
 import { Button } from '@/components/ui/button'
 import EnquiryAcceptedDialog from '@/components/ui/enquiry-docUpload/enquiryAcceptedDialog'
-import { useDispatch, useSelector } from 'react-redux'
-import { setEnqId } from '@/redux/slices'
 import useApiRequests from '@/services/useApiRequests'
+import { setEnqId } from '@/store/slices/app.slice'
+import { useAppDispatch } from '@/store'
 
 interface Enquiry {
 	enquiryNumber: string
@@ -43,11 +44,11 @@ const EnquiryListTable: React.FC<EnquiryListTableProps> = ({
 	const statusUpdate: any = useApiRequests('enqinfoUpdate', 'PUT')
 
 	const router = useRouter()
-	const dispatch = useDispatch()
+	const dispatch = useAppDispatch()
 	const [isDisabled, setIsDisabled] = useState(false)
 	const [messageAccepted, setMessageAccepted] = useState(false)
 
-	
+
 	const handleClick = (enqId: any) => {
 		if (!isDisabled) {
 			setIsDisabled(true)

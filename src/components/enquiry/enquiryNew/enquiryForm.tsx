@@ -43,10 +43,10 @@ const EnquiryForm = () => {
 	const newEnquiry: any = useApiRequests('enquiryCreate', 'POST')
 	const editEnquiry: any = useApiRequests('enquiryById', 'GET')
 
-	const newData = async (Data: any) => {
+	const newData = async (data: any) => {
 		const formattedData = {
-			...Data,
-			enqDate: Data.enqDate ? new Date(Data.enqDate).toISOString() : null,
+			...data,
+			enqDate: data.enqDate ? new Date(data.enqDate).toISOString() : null,
 			lead: {
 				leadSeqNo: lead?.leadSeqNo,
 				leadName: lead?.leadName
@@ -71,8 +71,8 @@ const EnquiryForm = () => {
 			const response = await editEnquiry('',{},{enqId})
 			if(response?.status ==='error'){
 				console.log('error : ', response);
-			}else if(response?.status === 'success' && response.Data){
-				const enquiryData = response.Data
+			}else if(response?.status === 'success' && response.data){
+				const enquiryData = response.data
 				Object.keys(enquiryData).forEach((key) => {
 					setValue(key, enquiryData[key]) 
 				})
@@ -89,9 +89,9 @@ const EnquiryForm = () => {
 		editEnquiryData()
 	}, [enqId])
 
-	const onSubmit = (Data: any) => {
-		console.log('form data:', Data)
-		newData(Data)
+	const onSubmit = (data: any) => {
+		console.log('form data:', data)
+		newData(data)
 	}
 
 	return (

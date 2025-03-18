@@ -49,9 +49,9 @@ const CalendarComponent = () => {
     setLoader(true)
     try {
       const response = await eventList()
-      if (response?.status === 'FAILURE') {
+      if (response?.status === 'failure') {
         console.log('error : ', response)
-      } else if (response?.status === 'SUCCESS') {
+      } else if (response?.status === 'success') {
         const events = Array.isArray(response.Data) ? response.Data : [];
         const transformedEvents = events.map((event: any) => transformEvent({ ...event }));
         setEventData(transformedEvents)

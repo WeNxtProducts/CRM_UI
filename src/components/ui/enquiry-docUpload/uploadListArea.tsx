@@ -46,9 +46,9 @@ const UploadListArea = () => {
 		}
 		try {
 			const response = await DMSFileDescriptionUpdate(payload);
-			if (response?.status === 'FAILURE')
+			if (response?.status === 'failure')
 				toast.error('Description Not Updated!');
-			if (response?.status === 'SUCCESS') {
+			if (response?.status === 'success') {
 				toast.success(response?.status_msg);
 			}
 		} catch {
@@ -61,9 +61,9 @@ const UploadListArea = () => {
 		const payload: any = [files]
 		try {
 			const response = await DMSFileUpload(payload);
-			if (response?.Overall[0]?.status === 'FAILURE')
+			if (response?.Overall[0]?.status === 'failure')
 				toast.error('File Not Uploaded!');
-			if (response?.Overall[0]?.status === 'SUCCESS') {
+			if (response?.Overall[0]?.status === 'success') {
 				updateFileKeyAtIndex(index, response?.Overall[0]?.Data);
 				toast.success(`${files?.filename} Uploaded Successfully`);
 			}
@@ -81,10 +81,10 @@ const UploadListArea = () => {
 		const deleteId: any = { doc_sys_id: [doc_sys_id] };
 		try {
 			const response = await DMSFileDelete(deleteId);
-			if (response?.status === 'SUCCESS') {
+			if (response?.status === 'success') {
 				deleteByIndex(index)
 				toast.success(`${payload?.filename} Deleted Successfully`);
-			} else if (response?.status === 'FAILURE') {
+			} else if (response?.status === 'failure') {
 				toast.error('File Not Deleted!');
 			}
 		} catch {
@@ -146,8 +146,8 @@ const UploadListArea = () => {
 		const payload: any = [{ path: item?.filePath }];
 		try {
 			const response = await DMSFileView(payload);
-			if (response?.status === 'FAILURE') console.log(response?.status_msg);
-			if (response?.status === 'SUCCESS') {
+			if (response?.status === 'failure') console.log(response?.status_msg);
+			if (response?.status === 'success') {
 				const updatedItem = { ...item, base64String: response?.base64Strings[0] };
 				handleFileDownloadOrView(updatedItem);
 			}

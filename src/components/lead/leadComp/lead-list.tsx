@@ -24,10 +24,10 @@ const LeadList = () => {
 			// console.log(response,"lead")
 			if (response?.status === 'error') {
 				console.log('error : ', response)
-			} else if (response?.status === 'SUCCESS') {
+			} else if (response?.status === 'success') {
 				console.log('success : ', response)
-				setLeads(response?.Data)
-				setLeadListRecords(response?.pagination?.leadListRecords || 0)
+				setLeads(response?.data)
+				setLeadListRecords(response?.pagination?.totalRecords || 0)
 			}
 		} catch (error) {
 			console.log('err :', error)
@@ -85,7 +85,7 @@ const LeadList = () => {
             </div> */}
 
 			{leads && leads?.length > 0 && (
-				<div>
+				<div className='col-span-8 pl-3 pr-2 mt-2'>
 				<Pagination 
 					total={leadListRecords}
 					pageSize={10}

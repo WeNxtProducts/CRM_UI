@@ -40,9 +40,9 @@ const LeadForm = () => {
 
 	const leadNewData: any = useApiRequests('leadCreate', 'POST')
 
-	const leadData = async (Data: any) => {
+	const leadData = async (data: any) => {
 		try {
-			const response = await leadNewData(Data)
+			const response = await leadNewData(data)
 			if (response?.status == 'error') {
 				console.log('error : ', response)
 			} else if (response?.status === 'success') {
@@ -55,9 +55,9 @@ const LeadForm = () => {
 		}
 	}
 
-	const onSubmit = (Data: any) => {
-		console.log(Data)
-		leadData(Data)
+	const onSubmit = (data: any) => {
+		console.log(data)
+		leadData(data)
 	}
 
 	return (

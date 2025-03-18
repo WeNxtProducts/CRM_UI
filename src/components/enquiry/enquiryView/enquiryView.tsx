@@ -106,18 +106,18 @@ const EnquiryView = () => {
 		}
 	}
 
-	const editData = async () => {
-		try {
-			const response = await editEnquiry('', {}, { enqId })
-			if (response?.status === 'error') {
-				console.log('Error:', response)
-			} else if (response?.status === 'SUCCESS') {
-				console.log('went to updated page')
-			}
-		} catch (error) {
-			console.log('err : ', error)
-		}
-	}
+	// const editData = async () => {
+	// 	try {
+	// 		const response = await editEnquiry('', {}, { enqId })
+	// 		if (response?.status === 'error') {
+	// 			console.log('Error:', response)
+	// 		} else if (response?.status === 'SUCCESS') {
+	// 			console.log('went to updated page')
+	// 		}
+	// 	} catch (error) {
+	// 		console.log('err : ', error)
+	// 	}
+	// }
 
 	const handleClose = () => {
 		setOpenDialog(false)

@@ -15,16 +15,19 @@ const LeadList = () => {
 	const [leads, setLeads] = useState([])
 	const router = useRouter()
 	const fetchLeads: any = useApiRequests('leadList', 'GET')
+	const [leadListRecords, setLeadListRecords] = useState(0)
 
-	const fetchLeadData = async () => {
+	const fetchLeadData = async (offset = 1) => {
+		const queryParams = {page: offset - 1, size: 10, userId: 'S0002'}
 		try {
-			const response = await fetchLeads()
+			const response = await fetchLeads('',queryParams)
 			// console.log(response,"lead")
 			if (response?.status === 'error') {
 				console.log('error : ', response)
 			} else if (response?.status === 'SUCCESS') {
 				console.log('success : ', response)
 				setLeads(response?.Data)
+				setLeadListRecords(response?.pagination?.leadListRecords || 0)
 			}
 		} catch (error) {
 			console.log('err :', error)
@@ -76,10 +79,20 @@ const LeadList = () => {
 					<LeadRightBar />
 				</div>
 			</div>
-
-			{/* <div className='col-span-8 pl-3 pr-2'> 
+{/* 
+			<div className='col-span-8 pl-3 pr-2'> 
                 <Pagination/>
             </div> */}
+
+			{leads && leads?.length > 0 && (
+				<div>
+				<Pagination 
+					total={leadListRecords}
+					pageSize={10}
+					onPageChange={(page) => fetchLeadData(page)}
+				/>
+				</div>
+			)}
 		</div>
 	)
 }

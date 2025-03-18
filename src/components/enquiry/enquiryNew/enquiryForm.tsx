@@ -28,19 +28,20 @@ import { useSelector } from 'react-redux'
 
 const EnquiryForm = () => {
 	const router = useRouter()
-	// const [date, setDate] = React.useState<Date>()
 	const enqId = useSelector((state: any) => state?.apps?.enqId)
+	const lead = useSelector((state: any) => state.apps.lead)
 	const [enquirySaved, setEnquirySaved] = useState(false)
 	const {
 		register,
 		handleSubmit,
 		// formState: { errors },
 		// getValues,
+		setValue,
 		control
 	} = useForm({})
 
-	const lead = useSelector((state: any) => state.apps.lead)
 	const newEnquiry: any = useApiRequests('enquiryCreate', 'POST')
+	const editEnquiry: any = useApiRequests('enquiryById', 'GET')
 
 	const newData = async (Data: any) => {
 		const formattedData = {
@@ -65,8 +66,27 @@ const EnquiryForm = () => {
 		}
 	}
 
+	const editEnquiryData = async () => {
+		try {
+			const response = await editEnquiry('',{},{enqId})
+			if(response?.status ==='error'){
+				console.log('error : ', response);
+			}else if(response?.status === 'success' && response.Data){
+				const enquiryData = response.Data
+				Object.keys(enquiryData).forEach((key) => {
+					setValue(key, enquiryData[key]) 
+				})
+				console.log('Enquiry prefetched successfully');
+				console.log('success : ', response)
+			}
+		} catch (error) {
+			console.log('err : ', error)
+		}
+	}
+
 	useEffect(() => {
-		console.log('enqId : ', enqId)
+		// console.log('enqId : ', enqId)
+		editEnquiryData()
 	}, [enqId])
 
 	const onSubmit = (Data: any) => {

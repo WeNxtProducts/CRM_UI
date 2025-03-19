@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input'
 
 export function DatePickerDemo({ date, setDate, label = 'Select Date' }: any) {
 	const [open, setOpen] = React.useState(false)
-	const [inputValue, setInputValue] = React.useState(date ? format(date, 'yyyy-MM-dd') : '')
+	const [inputValue, setInputValue] = React.useState(date ? format(date, 'dd-MM-yyyy') : '')
 	const inputRef = React.useRef<HTMLInputElement>(null)
 	const uniqueId = React.useId() // Generate a unique id for each instance
 
@@ -35,7 +35,7 @@ export function DatePickerDemo({ date, setDate, label = 'Select Date' }: any) {
 		setInputValue(formattedValue)
 		// When a full date is entered, parse and update state
 		if (formattedValue.length === 10) {
-			const parsedDate = parse(formattedValue, 'yyyy-MM-dd', new Date())
+			const parsedDate = parse(formattedValue, 'dd-MM-yyyy', new Date())
 			if (isValid(parsedDate)) {
 				setDate(parsedDate)
 			}
@@ -44,7 +44,7 @@ export function DatePickerDemo({ date, setDate, label = 'Select Date' }: any) {
 
 	// Memoize the computed calendarMonth and calendarKey so that they update only when needed
 	const { calendarMonth, calendarKey } = React.useMemo(() => {
-		const parsedInputDate = parse(inputValue, 'yyyy-MM-dd', new Date())
+		const parsedInputDate = parse(inputValue, 'dd-MM-yyyy', new Date())
 		const month =
 			inputValue.length === 10 && isValid(parsedInputDate) ? parsedInputDate : date || new Date()
 		const key =
@@ -61,7 +61,7 @@ export function DatePickerDemo({ date, setDate, label = 'Select Date' }: any) {
 					ref={inputRef}
 					label={label}
 					type='text'
-					placeholder='YYYY-MM-DD'
+					placeholder='DD-MM-YYYY'
 					value={inputValue}
 					onChange={handleInputChange}
 					onFocus={() => setOpen(true)}
@@ -91,7 +91,7 @@ export function DatePickerDemo({ date, setDate, label = 'Select Date' }: any) {
 							onSelect={(selectedDate) => {
 								if (selectedDate) {
 									setDate(selectedDate)
-									setInputValue(format(selectedDate, 'yyyy-MM-dd'))
+									setInputValue(format(selectedDate, 'dd-MM-yyyy'))
 								}
 								setOpen(false)
 								// Refocus the input if needed.

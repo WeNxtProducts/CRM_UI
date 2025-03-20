@@ -39,10 +39,6 @@ const LeadList = () => {
 
 	useEffect(() => {
 		fetchLeadData()
-
-		// return () => {
-		// 	dispatch(setEnqId(''))
-		// }
 	}, [])
 
 	return (

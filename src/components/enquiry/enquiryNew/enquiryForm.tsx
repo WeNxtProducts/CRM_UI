@@ -30,6 +30,7 @@ const EnquiryForm = () => {
 	const router = useRouter()
 	const enqId = useSelector((state: any) => state?.apps?.enqId)
 	const lead = useSelector((state: any) => state.apps.lead)
+	const [savedEnqId, setSavedEnqId] = useState<string | null>(null)
 	const [enquirySaved, setEnquirySaved] = useState(false)
 	const {
 		register,
@@ -55,10 +56,12 @@ const EnquiryForm = () => {
 		try {
 			const response = await newEnquiry(formattedData,{userId: 'S0002'})
 			if (response?.status === 'error') {
+				// alert('Failed to save enquiry')
 				console.log('error : ', response)
 			} else if (response?.status === 'success') {
 				console.log('Enquiry saved successfully!')
 				setEnquirySaved(true)
+				setSavedEnqId(response.data.enqSeqNo)
 				console.log('success : ', response)
 			}
 		} catch (err) {
@@ -97,7 +100,7 @@ const EnquiryForm = () => {
 
 	return (
 		<div>
-			<div className='mt-2 flex items-center gap-2 pl-3 md:pl-2 lg:pl-4'>
+			<div className='mt-2 flex items-center gap-2 pl-3 md:pl-2 lg:pl-4'>	
 				<div>
 					<button onClick={() => router.push('/enquiry')}>
 						<ArrowLeft className='mt-2 h-5 w-8' />
@@ -216,7 +219,7 @@ const EnquiryForm = () => {
 									<DatePickerDemo
 										date={field.value}
 										setDate={field.onChange}
-										label='Expected date for buisness' // Updates the form state
+										label='Expected date for buisness' 
 									/>
 								)}
 							/>
@@ -346,8 +349,7 @@ const EnquiryForm = () => {
 						<div className='flex justify-center gap-x-3'>
 							<Button variant='outline'>Back</Button>
 
-							<Button
-								onClick={() => setEnquirySaved(true)}>{`${enqId ? 'Update' : 'Submit'}`}</Button>
+							<Button>{`${enqId ? 'Update' : 'Submit'}`}</Button>
 						</div>
 					</form>
 					{enquirySaved && (
@@ -355,7 +357,11 @@ const EnquiryForm = () => {
 							enquiryDialogOpen={enquirySaved}
 							enquiryDialogHandle={() => {
 								setEnquirySaved(false)
+								setSavedEnqId(null)
+								router.push('enquiry')
 							}}
+							enquiryId={savedEnqId}
+							
 						/>
 					)}
 				</div>

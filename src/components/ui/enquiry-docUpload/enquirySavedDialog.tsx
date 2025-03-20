@@ -22,8 +22,51 @@ import {
 	SelectValue,
 	SelectWrapper
 } from '@/components/ui/select'
+import useApiRequests from '@/services/useApiRequests'
+import { useRouter } from 'next/navigation'
 
-const EnquirySavedDialog = ({ enquiryDialogOpen, enquiryDialogHandle }: any) => {
+const EnquirySavedDialog = ({ enquiryDialogOpen, enquiryDialogHandle, enquiryId }: any) => {
+	console.log("enquiry Saved by Id :", enquiryId);
+
+	const router = useRouter()
+
+	const statusUpdate: any = useApiRequests('enqinfoUpdate', 'PUT')
+
+	const status = async (enquiryId: any, status: any) => {
+		const payload = {
+			status,
+			enqDescription: 'Test'
+		}
+		try {
+			const response = await statusUpdate(payload, {}, { enquiryId })
+			if (response?.status === 'error') {
+				console.log('error:', response)
+			} else {
+				response?.status === 'success'
+				console.log('success : ', response)
+			}
+		} catch (error) {
+			console.log('err : ', error)
+		}
+	}
+
+	const handleReject = (enquiryId: any) => {
+		console.log('handleRejecthandleReject : ',enquiryId)
+		status(enquiryId, 'rejEnq')
+		router.push('/enquiry')
+	}
+
+	const handleClick = (enquiryId: any) => {
+			status(enquiryId, 'accEnq')
+			router.push('/enquiry')
+		}
+
+	const handleInfoReq = (enquiryId: any) =>{
+		status(enquiryId, 'infoReq')
+		router.push('/enquiry')
+	}	
+	
+	
 	return (
 		<Dialog
 			open={enquiryDialogOpen}
@@ -34,6 +77,7 @@ const EnquirySavedDialog = ({ enquiryDialogOpen, enquiryDialogHandle }: any) => 
 				</DialogHeader>
 
 				<div className='flex justify-center'>
+					
 					<Image
 						src={illustration}
 						height={150}
@@ -56,19 +100,22 @@ const EnquirySavedDialog = ({ enquiryDialogOpen, enquiryDialogHandle }: any) => 
 				<div className='mt-1 flex justify-center gap-x-6'>
 					<Button
 						variant='accept'
-						type='button'>
+						type='button'
+						onClick={handleClick}>
 						Accept
 					</Button>
 
 					<Button
 						variant='reject'
-						type='button'>
+						type='button'
+						onClick={handleReject}>
 						Reject
 					</Button>
 
 					<Button
 						variant='inforeq'
-						type='button'>
+						type='button'
+						onClick={handleInfoReq}>
 						Info Required
 					</Button>
 				</div>
@@ -86,13 +133,15 @@ const EnquirySavedDialog = ({ enquiryDialogOpen, enquiryDialogHandle }: any) => 
 						<Button
 							variant='default'
 							type='button'
-							onClick={() => enquiryDialogHandle()}>
+							onClick={() => enquiryDialogHandle()
+							}>
 							Close
 						</Button>
 					</DialogClose>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>
+		
 	)
 }
 

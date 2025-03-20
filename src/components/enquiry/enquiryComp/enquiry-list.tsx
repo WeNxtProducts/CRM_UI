@@ -22,6 +22,8 @@ import {
 } from '@/components/ui/select'
 import Loader from '@/components/ui/Loader'
 import { useDispatch, useSelector } from 'react-redux'
+import { useAppDispatch } from '@/store'
+import { setEnqId } from '@/store/slices/app.slice'
 
 const Enquirylist = () => {
 	// const enquiryList: any = useApiRequests('enquiryList', 'GET')
@@ -38,6 +40,7 @@ const Enquirylist = () => {
 	const [totalRecords, setTotalRecords] = useState(0)
 	const [loader, setLoader] = useState(false)
 	const [enqData, setEnqData] = useState([])
+	const dispatch = useAppDispatch()
 
 	const fetchData = async (status = activeTab, offset = 1) => {
 		setLoader(true)
@@ -63,69 +66,7 @@ const Enquirylist = () => {
 		fetchData(activeTab)
 	}, [activeTab])
 
-	// const enquiryAllList = async () => {
-	// 	try {
-	// 		const response = await enquiryList()
-	// 		if (response?.status === 'error') {
-	// 			console.log('error : ', response)
-	// 		} else if (response?.status === 'success') {
-	// 			console.log('success : ', response)
-	// 		}
-	// 	} catch (err) {
-	// 		console.log('err : ', err)
-	// 	}
-	// }
-
-	// const handleCreateEnquiry = async () => {
-	// 	try {
-	// 		const response = await enquiryCreate(enqRequest)
-	// 		if (response?.status === 'error') {
-	// 			console.log('error : ', response)
-	// 		} else if (response?.status === 'success') {
-	// 			console.log('success : ', response)
-	// 		}
-	// 	} catch (err) {
-	// 		console.log('err : ', err)
-	// 	}
-	// }
-
-	// const handleUpdateEnquiry = async () => {
-	// 	try {
-	// 		const response = await enquiryUpdate(enqRequest, {}, { id: 3 })
-	// 		if (response?.status === 'error') {
-	// 			console.log('error : ', response)
-	// 		} else if (response?.status === 'success') {
-	// 			console.log('success : ', response)
-	// 		}
-	// 	} catch (err) {
-	// 		console.log('err : ', err)
-	// 	}
-	// }
-
-	// const getEnquiryListById = async () => {
-	// 	const queryParams = {
-	// 		limit: 10,
-	// 		offset: 20
-	// 	}
-	// 	try {
-	// 		const response = await enquiryList('', queryParams, { id: 3 })
-	// 		if (response?.status === 'error') {
-	// 			console.log('error : ', response)
-	// 		} else if (response?.status === 'success') {
-	// 			console.log('success : ', response)
-	// 		}
-	// 	} catch (err) {
-	// 		console.log('err : ', err)
-	// 	}
-	// }
-
-	useEffect(() => {
-		// enquiryAllList()
-		// getEnquiryListById()
-		// handleCreateEnquiry()
-		// handleUpdateEnquiry()
-	}, [])
-
+	
 	return (
 		<div className='bg-white'>
 			{loader && <Loader />}
@@ -137,7 +78,10 @@ const Enquirylist = () => {
 					<Button
 						variant='default'
 						size='sm'
-						onClick={() => router.push('/enquiryCreate')}>
+						onClick={() => {
+							dispatch(setEnqId(''))
+							router.push('/enquiryCreate')}
+						}>
 						<Plus /> Add new enquiry
 					</Button>
 				</div>

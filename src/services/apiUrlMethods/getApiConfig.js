@@ -1,9 +1,9 @@
 const GET_API_URL = {
     enquiryList: {
-        url: 'api/enquiries/getAll'
+        url: 'Enquiry/all'
     },
     leadList: {
-        url: 'api/leads/getAll'
+        url: 'Lead/all'
     },
     eventList: {
         url: '/api/saleslead/dashboard/events'
@@ -37,7 +37,6 @@ const GET_API_URL = {
     calenderEventActivityList: {
         url: "/api/activities"
     }
-
 
 };
 

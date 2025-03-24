@@ -1,12 +1,9 @@
 const POST_API_URL = {
     enquiryCreate: {
-        url: 'api/enquiries/create'
+        url: 'Enquiry/create'
     },
     leadCreate: {
-        url: 'api/leads/create'
-    },
-    sendMessage: {
-        url: 'api/leads/increment-remainder'
+        url: 'Lead/create'
     },
     createEditEvents: {
         url: '/api/saleslead/dashboard/events'

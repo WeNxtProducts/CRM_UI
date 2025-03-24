@@ -22,8 +22,8 @@ import { DatePickerDemo } from '@/components/ui/datePicker'
 import LeadRightBar from '@/components/ui/enquiry-docUpload/leadRightBar'
 import useApiRequests from '@/services/useApiRequests'
 import LeadCreatedSuccesfully from '@/components/ui/enquiry-docUpload/leadCreatedSuccesfully'
-import { useAppDispatch } from '@/store'
-
+import { useAppDispatch, useAppSelector } from '@/store'
+import { useSelector } from 'react-redux'
 
 const LeadForm = () => {
 	const router = useRouter()
@@ -37,16 +37,22 @@ const LeadForm = () => {
 		getValues,
 		control
 	} = useForm({})
+	const userId = useAppSelector((state: any) => state?.users?.userId)
+	console.log("Fetched userId from Redux:", userId);
 
+	
 	const leadNewData: any = useApiRequests('leadCreate', 'POST')
 
 	const leadData = async (data: any) => {
 		try {
-			const response = await leadNewData(data,{userId:'S0002'})
+			const responseBody = { ...data, userId }
+			const response = await leadNewData(responseBody)
 			if (response?.status == 'error') {
 				console.log('error : ', response)
-			} else if (response?.status === 'success') {
+			} else if (response?.statusCode === 200) {
 				console.log('success : ', response)
+				console.log("Fetched userId from Redux:", userId);
+				
 				// dispatch(setEnquiryName(data.leadName))
 				setLeadAccDialog(true)
 			}
@@ -58,6 +64,7 @@ const LeadForm = () => {
 	const onSubmit = (data: any) => {
 		console.log(data)
 		leadData(data)
+		console.log("userId:", userId);
 	}
 
 	return (
@@ -278,21 +285,29 @@ const LeadForm = () => {
 						</div>
 
 						<div className='mb-3 mt-3 flex justify-center gap-x-3'>
-							<Button onClick={() => { router.push('/lead') }}>Back</Button>
+							<Button
+								onClick={() => {
+									router.push('/lead')
+								}}>
+								Back
+							</Button>
 
-							<Button onClick={() => {
-								setLeadAccDialog(true)
-							}}>Sumbit</Button>
+							<Button
+								onClick={() => {
+									setLeadAccDialog(true)
+								}}>
+								Sumbit
+							</Button>
 						</div>
 					</form>
-					{leadAccDialog &&
+					{leadAccDialog && (
 						<LeadCreatedSuccesfully
 							leadCreation={leadAccDialog}
 							handleLeadCreation={() => {
 								setLeadAccDialog(false)
 							}}
 						/>
-					}
+					)}
 				</div>
 				<div className='col-span-2'>
 					<LeadRightBar />

@@ -17,9 +17,10 @@ import mail from '@/Images/mail-image.svg'
 import SentMessageSuccesfully from './sentMessageSuccesfully'
 import useApiRequests from '@/services/useApiRequests'
 import { MessageSquareMore } from 'lucide-react'
+import { count } from 'console'
 
-const SentMessage = ({ messageOpen, messageClose, activeIcon, leadSource, leadDesc, id }: any) => {
-	const messageSent: any = useApiRequests('sendMessage', 'POST')
+const SentMessage = ({ messageOpen, messageClose, activeIcon, leadSource, leadDesc, id, remainderCount }: any) => {
+	const messageSent: any = useApiRequests('sendMessage', 'PUT')
 	const [sentMessage, setSentMessage] = useState(false)
 	const [messageText, setMessageText] = useState(leadDesc || '')
 	const closed = () => {
@@ -32,11 +33,11 @@ const SentMessage = ({ messageOpen, messageClose, activeIcon, leadSource, leadDe
 	}
 
 	const fetchSentMessage = async () => {
-		console.log('fetchSentMessage')
 		const payload = {
 			leadSource: leadSource,
 			leadDescription: messageText,
-			leadSeqNo: id
+			leadSeqNo: id,
+			remainderCount:remainderCount
 		}
 		try {
 			const response = await messageSent(payload)
@@ -49,7 +50,6 @@ const SentMessage = ({ messageOpen, messageClose, activeIcon, leadSource, leadDe
 			console.log('err :', error)
 		}
 	}
-
 	// useEffect(()=>{
 	// 	fetchSentMessage()
 	// }, [])

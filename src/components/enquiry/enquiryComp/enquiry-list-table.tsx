@@ -120,13 +120,13 @@ const EnquiryListTable: React.FC<EnquiryListTableProps> = ({
 								<TableCell className='text-center text-xs p-0'>{productLabel}</TableCell>
 								<TableCell className='text-center p-0'>
 									<div className='flex flex-col items-center gap-y-1'>
-										{enquiry.enqDate ? (
+										{enquiry?.enqDate ? (
 											<>
 												<span className='text-xs font-medium'>
-													{format(parseISO(enquiry.enqDate), 'yyyy-MM-dd')}
+													{format(parseISO(enquiry?.enqDate), 'yyyy-MM-dd')}
 												</span>
 												<span className='text-[11px] text-gray-500'>
-													{format(parseISO(enquiry.enqDate), 'hh:mma')}
+													{format(parseISO(enquiry?.enqDate), 'hh:mma')}
 												</span>
 											</>
 										) : (
@@ -139,10 +139,10 @@ const EnquiryListTable: React.FC<EnquiryListTableProps> = ({
 										{enquiry.enqUpdatedDate ? (
 											<>
 												<span className='text-xs font-medium'>
-													{format(parseISO(enquiry.enqUpdatedDate), 'yyyy-MM-dd')}
+													{format(parseISO(enquiry?.enqUpdatedDate), 'yyyy-MM-dd')}
 												</span>
 												<span className='text-[11px] text-gray-500'>
-													{format(parseISO(enquiry.enqUpdatedDate), 'hh:mma')}
+													{format(parseISO(enquiry?.enqUpdatedDate), 'hh:mma')}
 												</span>
 											</>
 										) : (

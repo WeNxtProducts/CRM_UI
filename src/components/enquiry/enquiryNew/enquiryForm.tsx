@@ -54,11 +54,11 @@ const EnquiryForm = () => {
 			}
 		}
 		try {
-			const response = await newEnquiry(formattedData,{userId: 'S0002'})
+			const response = await newEnquiry(formattedData)
 			if (response?.status === 'error') {
 				// alert('Failed to save enquiry')
 				console.log('error : ', response)
-			} else if (response?.status === 'success') {
+			} else if (response?.statusCode === 200) {
 				console.log('Enquiry saved successfully!')
 				setEnquirySaved(true)
 				setSavedEnqId(response.data.enqSeqNo)

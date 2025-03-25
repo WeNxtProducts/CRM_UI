@@ -29,6 +29,9 @@ const POST_API_URL = {
     },
     appoinments:{
         url:"api/activities"
+    },
+    salesListing:{
+        url:"User/Filter"
     }
 };
 

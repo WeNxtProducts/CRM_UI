@@ -53,7 +53,7 @@ const EnquiryView = () => {
 			if (response?.status === 'error') {
 				console.log('Error:', response)
 			} else {
-				if (response?.status === 'success') {
+				if (response?.statusCode === 200) {
 					console.log('Success:', response)
 					setGetEnqData(response.data)
 					console.log('Enquiry data:', response.data)
@@ -97,7 +97,7 @@ const EnquiryView = () => {
 			const response = await deleteEnquiry('', {}, { enqId })
 			if (response?.status === 'error') {
 				console.log('Error:', response)
-			} else if (response?.status === 'success') {
+			} else if (response?.statusCode === 200) {
 				console.log('Enquiry deleted successfully')
 				router.push('/enquiry')
 			}

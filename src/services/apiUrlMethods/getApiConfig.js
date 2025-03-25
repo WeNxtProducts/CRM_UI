@@ -21,7 +21,7 @@ const GET_API_URL = {
         url: '/api/saleslead/dashboard/salesgraph'
     },
     enquiryById: {
-        url: 'api/enquiries/get'
+        url: 'Enquiry'
     },
 
     // leadList: {
@@ -29,15 +29,14 @@ const GET_API_URL = {
     // }
 
     leadById: {
-        url: "api/leads/get"
+        url: "Lead"
     },
     appoinmentHistory: {
         url: "api/activities/enquiry"
     },
     calenderEventActivityList: {
         url: "/api/activities"
-    }
-
+    },
 };
 
 export default GET_API_URL;

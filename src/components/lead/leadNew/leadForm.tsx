@@ -30,6 +30,7 @@ const LeadForm = () => {
 	// const dispatch = useAppDispatch()
 	// const [date, setDate] = React.useState<Date>()
 	const [leadAccDialog, setLeadAccDialog] = useState(false)
+	const [sales, setSales] = useState()
 	const {
 		register,
 		handleSubmit,
@@ -38,21 +39,29 @@ const LeadForm = () => {
 		control
 	} = useForm({})
 	const userId = useAppSelector((state: any) => state?.users?.userId)
-	console.log("Fetched userId from Redux:", userId);
+	console.log('Fetched userId from Redux:', userId)
 
-	
+	const managerId = useAppSelector((state: any) => state?.users?.managerId)
+	console.log('Fetched mangerId from Redux:', managerId)
+
+	const role  = useAppSelector((state: any) => state?.users?.role)
+	console.log('role from redux:', role)
+
 	const leadNewData: any = useApiRequests('leadCreate', 'POST')
+	const salesName : any = useApiRequests('salesListing','POST')
+
 
 	const leadData = async (data: any) => {
+		const userSeqNo = userId
 		try {
-			const responseBody = { ...data, userId }
+			const responseBody = { ...data, userSeqNo }
 			const response = await leadNewData(responseBody)
 			if (response?.status == 'error') {
 				console.log('error : ', response)
 			} else if (response?.statusCode === 200) {
 				console.log('success : ', response)
-				console.log("Fetched userId from Redux:", userId);
-				
+				console.log('Fetched userId from Redux:', userId)
+
 				// dispatch(setEnquiryName(data.leadName))
 				setLeadAccDialog(true)
 			}
@@ -64,7 +73,7 @@ const LeadForm = () => {
 	const onSubmit = (data: any) => {
 		console.log(data)
 		leadData(data)
-		console.log("userId:", userId);
+		console.log('userId:', userId)
 	}
 
 	return (
@@ -185,7 +194,7 @@ const LeadForm = () => {
 								)}
 							/>
 
-							<Controller
+							{/* <Controller
 								name='leadAssignedBy'
 								control={control}
 								render={({ field }) => (
@@ -208,8 +217,16 @@ const LeadForm = () => {
 										</Select>
 									</SelectWrapper>
 								)}
-							/>
+							/> */}
 
+							{/* <Input
+								label='Assigned by whom'
+								type='text'
+								className='w-full'
+								placeholder='By whom'
+								{...register('leadAssignedBy')}
+							/> */}
+							{role !== 'sales' && (
 							<Controller
 								name='leadAssignedTo'
 								control={control}
@@ -234,6 +251,7 @@ const LeadForm = () => {
 									</SelectWrapper>
 								)}
 							/>
+						)}
 
 							<Controller
 								name='leadPriority'

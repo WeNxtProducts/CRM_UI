@@ -26,7 +26,7 @@ import { useAppDispatch } from '@/store'
 import { setEnqId } from '@/store/slices/app.slice'
 
 const Enquirylist = () => {
-	const fetchEnquiries: any = useApiRequests('enquiryList', 'GET')
+	const fetchEnquiries: any = useApiRequests('enquiryList', 'POST')
 
 	const router = useRouter()
 	const lead = useSelector((state: any) => state.apps.lead)
@@ -39,9 +39,12 @@ const Enquirylist = () => {
 
 	const fetchData = async (status = activeTab, offset = 1) => {
 		setLoader(true)
+		const payload = {
+			enqStatus : status
+		}  
 		// const queryParams = { status,page: offset - 1, size: 10 }
 		try {
-			const response = await fetchEnquiries('status')
+			const response = await fetchEnquiries(payload)
 			if (response?.status === 'error') {
 				console.log('error:', response)
 				setEnqData(response?.data)

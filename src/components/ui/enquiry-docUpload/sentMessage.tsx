@@ -28,7 +28,7 @@ const SentMessage = ({ messageOpen, messageClose, activeIcon, leadSource, leadDe
 		messageClose()
 	}
 	const handleSendMessage = () => {
-		setSentMessage(true)
+		// setSentMessage(true)
 		fetchSentMessage()
 	}
 
@@ -43,8 +43,11 @@ const SentMessage = ({ messageOpen, messageClose, activeIcon, leadSource, leadDe
 			const response = await messageSent(payload)
 			if (response?.status === 'error') {
 				console.log('error : ', response)
-			} else if (response?.status === 'success') {
+				// setSentMessage(false)
+				alert('Message is not sent')
+			} else if (response?.statusCode === 200) {
 				console.log('success : ', response)
+				setSentMessage(true)
 			}
 		} catch (error) {
 			console.log('err :', error)

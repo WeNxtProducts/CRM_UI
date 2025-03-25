@@ -1,7 +1,7 @@
 const GET_API_URL = {
-    enquiryList: {
-        url: 'Enquiry/all'
-    },
+    // enquiryList: {
+    //     url: 'Enquiry/all'
+    // },
     leadList: {
         url: 'Lead/all'
     },

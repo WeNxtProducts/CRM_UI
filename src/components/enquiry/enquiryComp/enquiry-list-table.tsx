@@ -18,6 +18,7 @@ import EnquiryAcceptedDialog from '@/components/ui/enquiry-docUpload/enquiryAcce
 import useApiRequests from '@/services/useApiRequests'
 import { setEnqId } from '@/store/slices/app.slice'
 import { useAppDispatch } from '@/store'
+import moment from 'moment'
 
 interface Enquiry {
 	enquiryNumber: string
@@ -72,14 +73,15 @@ const EnquiryListTable: React.FC<EnquiryListTableProps> = ({
 		setMessageAccepted(false)
 	}
 
-	const status = async (enq: any, status: any) => {
+	const status = async (enq: any, enqStatus: any) => {
 		console.log('enqId : ', enq)
 		const payload = {
-			status,
-			enqDescription: 'Test'
+			enqStatus,
+			enqDescription: 'Test',
+			enqSeqNo:enq?.enqSeqNo
 		}
 		try {
-			const response = await statusUpdate(payload, {}, { id: enq?.enqSeqNo })
+			const response = await statusUpdate(payload)
 			if (response?.status === 'error') {
 				console.log('error:', response)
 			} else {
@@ -115,7 +117,7 @@ const EnquiryListTable: React.FC<EnquiryListTableProps> = ({
 						return (
 							<TableRow key={index} >
 								<TableCell className='text-center text-xs p-0'>{enquiry.enqSeqNo}</TableCell>
-								<TableCell className='text-center text-xs p-0'>{enquiry.enqName}</TableCell>
+								<TableCell className='text-center text-xs p-0'>{enquiry?.lead?.leadName}</TableCell>
 								<TableCell className='text-center text-xs p-0'>{lobLabel}</TableCell>
 								<TableCell className='text-center text-xs p-0'>{productLabel}</TableCell>
 								<TableCell className='text-center p-0'>
@@ -123,10 +125,10 @@ const EnquiryListTable: React.FC<EnquiryListTableProps> = ({
 										{enquiry?.enqDate ? (
 											<>
 												<span className='text-xs font-medium'>
-													{format(parseISO(enquiry?.enqDate), 'yyyy-MM-dd')}
+												{moment(enquiry?.enqDate).format('YYYY-MM-DD')}
 												</span>
 												<span className='text-[11px] text-gray-500'>
-													{format(parseISO(enquiry?.enqDate), 'hh:mma')}
+												{moment(enquiry?.enqDate).format('hh:mma')}
 												</span>
 											</>
 										) : (

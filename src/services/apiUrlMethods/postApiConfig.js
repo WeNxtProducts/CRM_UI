@@ -1,4 +1,7 @@
 const POST_API_URL = {
+    enquiryList:{
+        url:'Enquiry/Filter'
+    },
     enquiryCreate: {
         url: 'Enquiry/create'
     },

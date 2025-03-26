@@ -6,13 +6,14 @@ import ReactECharts from 'echarts-for-react';
 import { LeadContext } from './LeadDetails';
 
 const LeadCharts = () => {
-  const { graphDetails }: any = useContext(LeadContext);
+  const { cardDetails }: any = useContext(LeadContext);
   const [options, setOptions] = useState(null);
 
   useEffect(() => {
-    if (graphDetails.length > 0) {
-      const formattedMonths = graphDetails.map((item: any) => item.month.slice(0, 3));
-      const formattedLeads = graphDetails.map((item: any) => item.leads);
+    if (cardDetails !== null) {
+      const graphDetails = JSON.parse(cardDetails?.monthLeads)
+      const formattedMonths = graphDetails.map((item: any) => item.month_name.slice(0, 3));
+      const formattedLeads = graphDetails.map((item: any) => item.lead);
 
       const newOptions: any = {
         tooltip: {
@@ -82,7 +83,7 @@ const LeadCharts = () => {
 
       setOptions(newOptions);
     }
-  }, [graphDetails]);
+  }, [cardDetails]);
 
   return (
     <>

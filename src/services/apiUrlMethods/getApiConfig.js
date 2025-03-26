@@ -9,19 +9,22 @@ const GET_API_URL = {
         url: '/api/saleslead/dashboard/events'
     },
     taskList: {
-        url: '/api/saleslead/dashboard/tasks'
+        url: '/Task/all'
     },
     activityList: {
-        url: '/api/saleslead/dashboard/activitylogs'
+        url: '/ActivityLog/all'
     },
     leadCards: {
-        url: '/api/saleslead/dashboard/stats'
+        url: '/Lead/Stats'
     },
     salesGraph: {
         url: '/api/saleslead/dashboard/salesgraph'
     },
     enquiryById: {
         url: 'Enquiry'
+    },
+    dashboardEvents: {
+        url: '/Activity/Filter'
     },
 
     // leadList: {
@@ -37,8 +40,8 @@ const GET_API_URL = {
     calenderEventActivityList: {
         url: "/api/activities"
     },
-    conversationDisplay:{
-        url:'Conversation/all'
+    conversationDisplay: {
+        url: 'Conversation/all'
     }
 };
 

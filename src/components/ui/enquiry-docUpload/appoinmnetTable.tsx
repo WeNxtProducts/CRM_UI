@@ -24,14 +24,19 @@ import moment from 'moment'
 
 const AppoinmnetTableDialog = ({ open, handleCloseAppTable, enqId }: any) => {
 	const router = useRouter()
-	const appoinmentTable: any = useApiRequests('appoinmentHistory', 'GET')
+	const appoinmentTable: any = useApiRequests('appoinmentHistory', 'POST')
 	const [appoinments, setAppoinmnets] = useState([])
 	const [openFixApp, setOpenFixApp] = useState(false)
 	const [openTable, setOpenTable] = useState(false)
 
 	const appoinmentTableData = async () => {
+		const enqSeqNo = enqId
+		const payload = {
+			enqSeqNo,
+			activityType: "APPOINTMENT"
+		}
 		try {
-			const response = await appoinmentTable('', {}, { enqId })
+			const response = await appoinmentTable(payload)
 			if (response?.status === 'error') {
 				console.log('Error:', response)
 			} else if (response?.status === 'success') {

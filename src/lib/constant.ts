@@ -192,22 +192,22 @@ export const tasks = [
   ]
 
   export const quoteHistory: any = [
-	{id: 'enquiry-1',
+	{id: 'quote-1',
     code: 'L12334',
     type: 'Marine',
     date: 'Oct 17, 2020 08:00',
 },{
-	id: 'enquiry-2',
+	id: 'quote-2',
     code: 'L12334',
     type: 'Marine',
     date: 'Oct 17, 2020 08:00',
 },{
-	id: 'enquiry-3',
+	id: 'quote-3',
     code: 'L12334',
     type: 'Marine',
     date: 'Oct 17, 2020 08:00',
 },{
-	id: 'enquiry-4',
+	id: 'quote-4',
     code: 'L12334',
     type: 'Marine',
     date: 'Oct 17, 2020 08:00',

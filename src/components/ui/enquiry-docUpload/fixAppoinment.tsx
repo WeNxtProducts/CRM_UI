@@ -77,7 +77,7 @@ const FixAppoinment = ({ open, handleClose, enqId }: any) => {
 			}
 		}
 		try {
-			const response = await fixAppoinmnet(formData,{userId:'S0002'})
+			const response = await fixAppoinmnet(formData)
 			if (response?.status === 'error') {
 				console.log('error : ', response)
 			} else if (response?.status === 'success') {

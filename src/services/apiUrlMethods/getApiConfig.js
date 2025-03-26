@@ -34,9 +34,7 @@ const GET_API_URL = {
     leadById: {
         url: "Lead"
     },
-    appoinmentHistory: {
-        url: "api/activities/enquiry"
-    },
+    
     calenderEventActivityList: {
         url: "/api/activities"
     },

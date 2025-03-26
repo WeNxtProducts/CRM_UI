@@ -28,14 +28,17 @@ const POST_API_URL = {
         baseURL: 'http://192.168.1.181:8097/',
     },
     appoinments:{
-        url:"api/activities"
+        url:"Activity/create"
     },
     salesListing:{
         url:"User/Filter"
     },
     conversationCreate:{
         url:'Conversation/create'
-    }
+    },
+    appoinmentHistory: {
+        url: "Activity/Filter"
+    },
 };
 
 export default POST_API_URL;

@@ -102,9 +102,9 @@ export const enquiries: any = [
 }]
 
 export const message: any = [
-	{ id: 1, text: "Emily Tyler Created a new lead", sender: "system", time: "08:15 AM" },
+	{ id: 1, text: "Emily Tyler Created a new lead", sender: "system", time: "08:15 AM", name:"sales" },
 	{ id: 2, text: "Hi I'm Aieto, doing well, thank you! Need to know about quote tariffs", sender: "lead", time: "08:16 AM", avatar: "/user1.jpg", name: "Lead" },
-	{ id: 3, text: "Enquiry created for Aieto, Appointment to be fixed soon.", sender: "system", time: "08:16 AM" },		
+	{ id: 3, text: "Enquiry created for Aieto, Appointment to be fixed soon.", sender: "system", time: "08:16 AM", name:"sales" },		
 	{ id: 4, text: "I'm Avlb 29-Oct", sender: "lead", time: "08:16 AM", avatar: "/user1.jpg", name: "Lead" }
 ] 
 

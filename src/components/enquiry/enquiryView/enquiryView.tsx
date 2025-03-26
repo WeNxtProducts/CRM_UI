@@ -40,7 +40,7 @@ const EnquiryView = () => {
 	const [loader, setLoader] = useState(false)
 	const [getEnqData, setGetEnqData] = useState<any>()
 	const [openDialog, setOpenDialog] = useState(false)
-	const [conversationData, setConversationData] = useState<any[]>([]);
+	const [conversationData, setConversationData] = useState([])
 	const {
 		register,
 		handleSubmit,
@@ -53,7 +53,6 @@ const EnquiryView = () => {
 		setLoader(true)
 		try {
 			const response = await fetchEnquiries('', {}, { enqId })
-
 			if (response?.status === 'error') {
 				console.log('Error:', response)
 			} else {
@@ -84,6 +83,7 @@ const EnquiryView = () => {
 	}
 	useEffect(() => {
 		fetchData()
+		fetchConversation()
 	}, [enqId])
 
 	const handleDeleteEnquiry = () => {
@@ -129,32 +129,37 @@ const EnquiryView = () => {
 		}
 	}
 
-	const fetchConversation = async () =>{
+	const fetchConversation = async () => {
 		try {
 			const response = await enquiryConversationTable()
-			if(response?.status === 'error'){
+			if (response?.status === 'error') {
 				console.log('Error:', response)
-			}else if(response?.statusCode === 200){
-				console.log('Conversation fetched successfully')
-				setConversationData(response.data)
+			} else if (response?.statusCode === 200) {
+				setConversationData(response?.data)
+				console.log('Conversation fetche : ', response?.data)
+				
 			}
 		} catch (error) {
 			console.log('err : ', error)
 		}
 	}
 
-	// const editData = async () => {
-	// 	try {
-	// 		const response = await editEnquiry('', {}, { enqId })
-	// 		if (response?.status === 'error') {
-	// 			console.log('Error:', response)
-	// 		} else if (response?.status === 'success') {
-	// 			console.log('went to updated page')
-	// 		}
-	// 	} catch (error) {
-	// 		console.log('err : ', error)
-	// 	}
-	// }
+	useEffect(() => {
+		console.log(' conversationData: ', conversationData)
+	}, [conversationData])
+
+	const editData = async () => {
+		try {
+			const response = await editEnquiry('', {}, { enqId })
+			if (response?.status === 'error') {
+				console.log('Error:', response)
+			} else if (response?.status === 'success') {
+				console.log('went to updated page')
+			}
+		} catch (error) {
+			console.log('err : ', error)
+		}
+	}
 
 	const handleClose = () => {
 		setOpenDialog(false)
@@ -404,7 +409,7 @@ const EnquiryView = () => {
 
 				<div className='col-span-2'>
 					<EnquiryRightBar />
-					<ChatBar conversationData={conversationData}/>
+					{conversationData?.length > 0 && <ChatBar conversationData={conversationData} />}
 				</div>
 			</div>
 		</div>

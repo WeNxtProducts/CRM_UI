@@ -3,7 +3,7 @@
 
 import { ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Separator } from '@/components/ui/separator'
 import { Input } from '@/components/ui/input'
 import { useForm, Controller } from 'react-hook-form'
@@ -22,14 +22,15 @@ import { DatePickerDemo } from '@/components/ui/datePicker'
 import LeadRightBar from '@/components/ui/enquiry-docUpload/leadRightBar'
 import useApiRequests from '@/services/useApiRequests'
 import LeadCreatedSuccesfully from '@/components/ui/enquiry-docUpload/leadCreatedSuccesfully'
-import { useAppDispatch } from '@/store'
-
+import { useAppDispatch, useAppSelector } from '@/store'
+import { useSelector } from 'react-redux'
 
 const LeadForm = () => {
 	const router = useRouter()
 	// const dispatch = useAppDispatch()
 	// const [date, setDate] = React.useState<Date>()
 	const [leadAccDialog, setLeadAccDialog] = useState(false)
+	const [sales, setSales] = useState<any[]>([])
 	const {
 		register,
 		handleSubmit,
@@ -37,18 +38,45 @@ const LeadForm = () => {
 		getValues,
 		control
 	} = useForm({})
+	const userId = useAppSelector((state: any) => state?.users?.userId)
+	console.log('Fetched userId from Redux:', userId)
+
+	const managerId = useAppSelector((state: any) => state?.users?.managerId)
+	console.log('Fetched mangerId from Redux:', managerId)
+
+	const role = useAppSelector((state: any) => state?.users?.role)
+	console.log('role from redux:', role)
 
 	const leadNewData: any = useApiRequests('leadCreate', 'POST')
+	const salesName: any = useApiRequests('salesListing', 'POST')
 
 	const leadData = async (data: any) => {
+		const userSeqNo = userId
 		try {
-			const response = await leadNewData(data,{userId:'S0002'})
+			const responseBody = { ...data, userSeqNo }
+			const response = await leadNewData(responseBody)
 			if (response?.status == 'error') {
 				console.log('error : ', response)
-			} else if (response?.status === 'success') {
+			} else if (response?.statusCode === 200) {
 				console.log('success : ', response)
+				console.log('Fetched userId from Redux:', userId)
 				// dispatch(setEnquiryName(data.leadName))
 				setLeadAccDialog(true)
+			}
+		} catch (err) {
+			console.log('err : ', err)
+		}
+	}
+
+	const salesInfo = async () => {
+		try {
+			const assignedTo = { assignedTo: managerId }
+			const response = await salesName(assignedTo)
+			if (response?.data === 'error') {
+				console.log('error : ', response)
+			} else if (response?.statusCode === 200) {
+				setSales(response?.data)
+				console.log('Sales data:', response)
 			}
 		} catch (err) {
 			console.log('err : ', err)
@@ -58,7 +86,12 @@ const LeadForm = () => {
 	const onSubmit = (data: any) => {
 		console.log(data)
 		leadData(data)
+		console.log('userId:', userId)
 	}
+
+	useEffect(() => {
+		salesInfo()
+	}, [managerId])
 
 	return (
 		<div>
@@ -178,7 +211,7 @@ const LeadForm = () => {
 								)}
 							/>
 
-							<Controller
+							{/* <Controller
 								name='leadAssignedBy'
 								control={control}
 								render={({ field }) => (
@@ -201,32 +234,45 @@ const LeadForm = () => {
 										</Select>
 									</SelectWrapper>
 								)}
-							/>
+							/> */}
 
-							<Controller
-								name='leadAssignedTo'
-								control={control}
-								render={({ field }) => (
-									<SelectWrapper label='Assigned to whom'>
-										<Select
-											onValueChange={field.onChange}
-											value={field.value}>
-											<SelectTrigger
-												id='custom-select'
-												className='w-full'>
-												<SelectValue placeholder='To whom' />
-											</SelectTrigger>
-											<SelectContent>
-												<SelectGroup>
-													<SelectItem value='option1'>Option 1</SelectItem>
-													<SelectItem value='option2'>Option 2</SelectItem>
-													<SelectItem value='option3'>Option 3</SelectItem>
-												</SelectGroup>
-											</SelectContent>
-										</Select>
-									</SelectWrapper>
-								)}
-							/>
+							{/* <Input
+								label='Assigned by whom'
+								type='text'
+								className='w-full'
+								placeholder='By whom'
+								{...register('leadAssignedBy')}
+							/> */}
+							{sales?.length > 0 && (
+								<Controller
+									name='leadAssignedTo'
+									control={control}
+									render={({ field }) => (
+										<SelectWrapper label='Assigned to whom'>
+											<Select
+												onValueChange={field.onChange}
+												value={field.value}>
+												<SelectTrigger
+													id='custom-select'
+													className='w-full'>
+													<SelectValue placeholder='To whom' />
+												</SelectTrigger>
+												<SelectContent>
+													<SelectGroup>
+														{sales?.map((salesRep: any) => (
+															<SelectItem
+																key={salesRep.userSeqNo}
+																value={salesRep.userSeqNo.toString()}>
+																{salesRep?.userName}
+															</SelectItem>
+														))}
+													</SelectGroup>
+												</SelectContent>
+											</Select>
+										</SelectWrapper>
+									)}
+								/>
+							)}
 
 							<Controller
 								name='leadPriority'
@@ -278,21 +324,29 @@ const LeadForm = () => {
 						</div>
 
 						<div className='mb-3 mt-3 flex justify-center gap-x-3'>
-							<Button onClick={() => { router.push('/lead') }}>Back</Button>
+							<Button
+								onClick={() => {
+									router.push('/lead')
+								}}>
+								Back
+							</Button>
 
-							<Button onClick={() => {
-								setLeadAccDialog(true)
-							}}>Sumbit</Button>
+							<Button
+								onClick={() => {
+									setLeadAccDialog(true)
+								}}>
+								Sumbit
+							</Button>
 						</div>
 					</form>
-					{leadAccDialog &&
+					{leadAccDialog && (
 						<LeadCreatedSuccesfully
 							leadCreation={leadAccDialog}
 							handleLeadCreation={() => {
 								setLeadAccDialog(false)
 							}}
 						/>
-					}
+					)}
 				</div>
 				<div className='col-span-2'>
 					<LeadRightBar />

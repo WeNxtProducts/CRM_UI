@@ -1,12 +1,12 @@
 const POST_API_URL = {
+    enquiryList:{
+        url:'Enquiry/Filter'
+    },
     enquiryCreate: {
-        url: 'api/enquiries/create'
+        url: 'Enquiry/create'
     },
     leadCreate: {
-        url: 'api/leads/create'
-    },
-    sendMessage: {
-        url: 'api/leads/increment-remainder'
+        url: 'Lead/create'
     },
     createEditEvents: {
         url: '/api/saleslead/dashboard/events'
@@ -29,6 +29,12 @@ const POST_API_URL = {
     },
     appoinments:{
         url:"api/activities"
+    },
+    salesListing:{
+        url:"User/Filter"
+    },
+    conversationCreate:{
+        url:'Conversation/create'
     }
 };
 

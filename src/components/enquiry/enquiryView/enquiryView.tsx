@@ -35,15 +35,19 @@ const EnquiryView = () => {
 	const fetchEnquiries: any = useApiRequests('enquiryById', 'GET')
 	const deleteEnquiry: any = useApiRequests('enquiryDelete', 'DELETE')
 	const editEnquiry: any = useApiRequests('enquiryUpdate', 'PUT')
+	const enquiryConversation: any = useApiRequests('conversationCreate', 'POST')
+	const enquiryConversationTable: any = useApiRequests('conversationDisplay', 'GET')
 	const [loader, setLoader] = useState(false)
 	const [getEnqData, setGetEnqData] = useState<any>()
 	const [openDialog, setOpenDialog] = useState(false)
+	const [conversationData, setConversationData] = useState<any[]>([]);
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
 		getValues,
-		control
+		control,
+		reset
 	} = useForm()
 	const fetchData = async () => {
 		setLoader(true)
@@ -53,7 +57,7 @@ const EnquiryView = () => {
 			if (response?.status === 'error') {
 				console.log('Error:', response)
 			} else {
-				if (response?.status === 'success') {
+				if (response?.statusCode === 200) {
 					console.log('Success:', response)
 					setGetEnqData(response.data)
 					console.log('Enquiry data:', response.data)
@@ -97,9 +101,42 @@ const EnquiryView = () => {
 			const response = await deleteEnquiry('', {}, { enqId })
 			if (response?.status === 'error') {
 				console.log('Error:', response)
-			} else if (response?.status === 'success') {
+			} else if (response?.statusCode === 200) {
 				console.log('Enquiry deleted successfully')
 				router.push('/enquiry')
+			}
+		} catch (error) {
+			console.log('err : ', error)
+		}
+	}
+
+	const sentConversation = async (data: any) => {
+		const enqSeqNo = enqId
+		const payload = {
+			enqSeqNo,
+			...data
+		}
+		try {
+			const response = await enquiryConversation(payload)
+			if (response?.status === 'error') {
+				console.log('Error:', response)
+			} else if (response?.statusCode === 200) {
+				console.log('Conversation sent successfully')
+				fetchConversation()
+			}
+		} catch (error) {
+			console.log('err : ', error)
+		}
+	}
+
+	const fetchConversation = async () =>{
+		try {
+			const response = await enquiryConversationTable()
+			if(response?.status === 'error'){
+				console.log('Error:', response)
+			}else if(response?.statusCode === 200){
+				console.log('Conversation fetched successfully')
+				setConversationData(response.data)
 			}
 		} catch (error) {
 			console.log('err : ', error)
@@ -125,6 +162,12 @@ const EnquiryView = () => {
 
 	const handleEditNavigate = () => {
 		router.push('/enquiryCreate')
+	}
+
+	const onSubmit = (data: any) => {
+		console.log('conversation data:', data)
+		sentConversation(data)
+		reset()
 	}
 
 	return (
@@ -225,18 +268,18 @@ const EnquiryView = () => {
 								<p className='text-s'>{getEnqData?.enqIntermedName}</p>
 							</div>
 
-							<div >
+							<div>
 								<p className='text-xs text-[#91929E]'>Description</p>
 								<p className='text-s'>{getEnqData?.enqDescription}</p>
 							</div>
 
-							<div >
-							<Input
-								label='Enquiry status'
-								placeholder='Status'
-								type='text'
-								className='w-full'
-							/>
+							<div>
+								<Input
+									label='Enquiry status'
+									placeholder='Status'
+									type='text'
+									className='w-full'
+								/>
 							</div>
 						</div>
 
@@ -287,19 +330,23 @@ const EnquiryView = () => {
 						</div>
 					</div>
 
-					<form className='mt-4 pr-2'>
+					<form
+						className='mt-4 pr-2'
+						onSubmit={handleSubmit(onSubmit)}>
 						<div className='mt-4 grid w-full grid-cols-1 gap-2 gap-x-10 gap-y-5 md:grid-cols-3'>
 							<Input
 								label='Lead comments'
 								type='text'
 								className='w-full'
 								placeholder='Enter your comments'
+								{...register('convLeadComment')}
 							/>
 							<Input
 								label='Sales comments'
 								placeholder='Enter your comments'
 								type='text'
 								className='w-full'
+								{...register('convSalesComment')}
 							/>
 							{/* <Input
 								label='Enquiry status'
@@ -308,9 +355,7 @@ const EnquiryView = () => {
 								className='w-full'
 							/> */}
 
-							<Button className='mt-6 h-9 w-12'>
-								Save
-							</Button>
+							<Button className='mt-6 h-9 w-12'>Save</Button>
 						</div>
 
 						<div className='mt-3'>
@@ -359,7 +404,7 @@ const EnquiryView = () => {
 
 				<div className='col-span-2'>
 					<EnquiryRightBar />
-					<ChatBar />
+					<ChatBar conversationData={conversationData}/>
 				</div>
 			</div>
 		</div>

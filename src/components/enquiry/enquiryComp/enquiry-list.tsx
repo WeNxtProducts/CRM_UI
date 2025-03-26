@@ -26,12 +26,7 @@ import { useAppDispatch } from '@/store'
 import { setEnqId } from '@/store/slices/app.slice'
 
 const Enquirylist = () => {
-	// const enquiryList: any = useApiRequests('enquiryList', 'GET')
-	// const enquiryListById: any = useApiRequests('enquiryCrud', 'GET');
-	// const enquiryCreate: any = useApiRequests('enquiryCrud', 'POST')
-	// const enquiryUpdate: any = useApiRequests('enquiryCrud', 'PUT')
-
-	const fetchEnquiries: any = useApiRequests('enquiryList', 'GET')
+	const fetchEnquiries: any = useApiRequests('enquiryList', 'POST')
 
 	const router = useRouter()
 	const lead = useSelector((state: any) => state.apps.lead)
@@ -44,17 +39,20 @@ const Enquirylist = () => {
 
 	const fetchData = async (status = activeTab, offset = 1) => {
 		setLoader(true)
-		const queryParams = { status, page: offset - 1, size: 10, userId:'S0002' }
+		const payload = {
+			enqStatus : status
+		}  
+		// const queryParams = { status,page: offset - 1, size: 10 }
 		try {
-			const response = await fetchEnquiries('', queryParams)
+			const response = await fetchEnquiries(payload)
 			if (response?.status === 'error') {
 				console.log('error:', response)
 				setEnqData(response?.data)
 			} else {
-				response?.status === 'success'
+				response?.statusCode === 200
 				console.log('success : ', response)
 				setEnqData(response?.data)
-				setTotalRecords(response?.pagination?.totalRecords || 0)
+				// setTotalRecords(response?.pagination?.totalRecords || 0)
 			}
 		} catch (err) {
 			console.log('err : ', err)
@@ -130,7 +128,7 @@ const Enquirylist = () => {
 								</SelectContent>
 							</Select>
 						</div>
-						{enqData && enqData?.length > 0 && (
+						{/* {enqData && enqData?.length > 0 && (
 							<div>
 								<Pagination
 									total={totalRecords}
@@ -138,7 +136,7 @@ const Enquirylist = () => {
 									onPageChange={(page) => fetchData(activeTab, page)}
 								/>
 							</div>
-						)}
+						)} */}
 					</div>
 					{enqData && enqData?.length > 0 ? (
 						<div className='mt-10'>

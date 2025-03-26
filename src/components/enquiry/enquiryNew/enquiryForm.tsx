@@ -25,6 +25,7 @@ import { DatePickerDemo } from '@/components/ui/datePicker'
 import EnquiryRightBar from '@/components/ui/enquiry-docUpload/enquiryRightBar'
 import EnquirySavedDialog from '@/components/ui/enquiry-docUpload/enquirySavedDialog'
 import { useSelector } from 'react-redux'
+import moment from 'moment'
 
 const EnquiryForm = () => {
 	const router = useRouter()
@@ -47,22 +48,21 @@ const EnquiryForm = () => {
 	const newData = async (data: any) => {
 		const formattedData = {
 			...data,
-			enqDate: data.enqDate ? new Date(data.enqDate).toISOString() : null,
-			lead: {
-				leadSeqNo: lead?.leadSeqNo,
-				leadName: lead?.leadName
-			}
+			enqDate: data.enqDate ? moment(data.enqDate).format("YYYY-MM-DD")  : null,
+			busdate: data.busdate ? moment(data.busdate).format("YYYY-MM-DD") : null,
+				leadSeqNo: lead?.leadSeqNo
 		}
 		try {
-			const response = await newEnquiry(formattedData,{userId: 'S0002'})
+			const response = await newEnquiry(formattedData)
 			if (response?.status === 'error') {
 				// alert('Failed to save enquiry')
 				console.log('error : ', response)
-			} else if (response?.status === 'success') {
+			} else if (response?.statusCode === 200) {
 				console.log('Enquiry saved successfully!')
 				setEnquirySaved(true)
 				setSavedEnqId(response.data.enqSeqNo)
 				console.log('success : ', response)
+
 			}
 		} catch (err) {
 			console.log('err : ', err)

@@ -1,9 +1,9 @@
 const GET_API_URL = {
-    enquiryList: {
-        url: 'api/enquiries/getAll'
-    },
+    // enquiryList: {
+    //     url: 'Enquiry/all'
+    // },
     leadList: {
-        url: 'api/leads/getAll'
+        url: 'Lead/all'
     },
     eventList: {
         url: '/api/saleslead/dashboard/events'
@@ -21,7 +21,7 @@ const GET_API_URL = {
         url: '/api/saleslead/dashboard/salesgraph'
     },
     enquiryById: {
-        url: 'api/enquiries/get'
+        url: 'Enquiry'
     },
 
     // leadList: {
@@ -29,16 +29,17 @@ const GET_API_URL = {
     // }
 
     leadById: {
-        url: "api/leads/get"
+        url: "Lead"
     },
     appoinmentHistory: {
         url: "api/activities/enquiry"
     },
     calenderEventActivityList: {
         url: "/api/activities"
+    },
+    conversationDisplay:{
+        url:'Conversation/all'
     }
-
-
 };
 
 export default GET_API_URL;

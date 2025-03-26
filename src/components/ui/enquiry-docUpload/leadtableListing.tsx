@@ -32,6 +32,7 @@ const LeadtableListing = ({ leads = [] }: any) => {
 		leadSource: string
 		leadDesc: string
 		id: any
+		count:number
 	} | null>(null)
 	const [activeIcon, setActiveIcon] = useState<string | null>(null)
 	const handleClose = () => {
@@ -45,7 +46,8 @@ const LeadtableListing = ({ leads = [] }: any) => {
 		setSelectedLead({
 			leadSource: icon,
 			leadDesc: lead.leadDescription || '',
-			id: lead.leadSeqNo
+			id: lead.leadSeqNo,
+			count: lead.remainderCount
 		})
 	}
 
@@ -71,7 +73,7 @@ const LeadtableListing = ({ leads = [] }: any) => {
 				  <TableCell className="text-center">{lead.leadSeqNo}</TableCell>
 				  <TableCell className="text-center font-medium">{lead.leadName}</TableCell>
 				  <TableCell className="text-center">
-					{moment(lead.leadCreatedDate).format("YYYY-MM-DD")}
+					{moment(lead.leadCreatedDate).format("DD-MM-YYYY")}
 				  </TableCell>
 				  <TableCell className="text-center">{lead.remainderCount}</TableCell>
 				  <TableCell className="text-center">
@@ -177,6 +179,7 @@ const LeadtableListing = ({ leads = [] }: any) => {
 			leadSource={selectedLead.leadSource}
 			leadDesc={selectedLead.leadDesc}
 			id={selectedLead.id}
+			remainderCount={selectedLead.count}
 		  />
 		)}
 	  

@@ -5,7 +5,7 @@ const PUT_API_URL = {
     },
 
     enquiryUpdate:{
-        url:'api/enquiries/edit'
+        url:'enquiry/update'
     },
 
     sendMessage: {

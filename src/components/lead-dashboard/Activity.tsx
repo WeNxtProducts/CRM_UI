@@ -5,19 +5,19 @@ import React, { useEffect, useState } from 'react'
 import { Button } from '../ui/button'
 import { ChevronRight } from 'lucide-react'
 import { CarFront } from "lucide-react";
-import { format, isToday, isYesterday, parseISO } from 'date-fns';
+import { format, isToday, isYesterday } from 'date-fns';
 import useApiRequests from '@/services/useApiRequests'
 
 const Activity = ({ setLeftExpanded, leftExpanded }: any) => {
     const activityList: any = useApiRequests('activityList', 'GET')
-    const [activityData, setActivityData] = useState<any>(null)
+    const [activityData, setActivityData] = useState<Record<string, any[]> | null>(null)
 
     const handleActivityList = async () => {
         try {
             const response = await activityList()
-            if (response?.status === 'error') {
+            if (response?.statusCode === 400) {
                 console.log('error : ', response)
-            } else if (response?.status === 'success') {
+            } else if (response?.statusCode === 200) {
                 const grouped = groupActivities(response?.data);
                 setActivityData(grouped)
             }
@@ -32,7 +32,7 @@ const Activity = ({ setLeftExpanded, leftExpanded }: any) => {
 
     const groupActivities = (data: any) => {
         return data?.reduce((acc: any, activity: any) => {
-            const activityDate = parseISO(activity?.activityDate || new Date());
+            const activityDate = new Date(activity?.activityLogDate || new Date().getTime());
             let groupLabel = format(activityDate, 'dd-MM-yyyy');
 
             if (isToday(activityDate)) {
@@ -62,7 +62,7 @@ const Activity = ({ setLeftExpanded, leftExpanded }: any) => {
             </div>
             {activityData !== null &&
                 <div className="space-y-6">
-                    {Object.entries(activityData).map(([groupLabel, activities]: any) => (
+                    {Object.entries(activityData).map(([groupLabel, activities]) => (
                         <div key={groupLabel}>
                             {/* Group Header with Line */}
                             <div className="flex items-center mb-1">
@@ -71,8 +71,8 @@ const Activity = ({ setLeftExpanded, leftExpanded }: any) => {
                             </div>
 
                             <div className="space-y-2">
-                                {activities?.map((activity: any) => (
-                                    <div key={activity.id} className="flex items-center p-1 bg-white">
+                                {activities?.map((activity: any, index: any) => (
+                                    <div key={`${index}-${activity?.activityLogDate}`} className="flex items-center p-1 bg-white">
                                         {/* Icon */}
                                         <div className="w-9 h-9 flex items-center justify-center bg-[#002280] rounded-full">
                                             <CarFront className="text-white w-5 h-5" />
@@ -80,8 +80,8 @@ const Activity = ({ setLeftExpanded, leftExpanded }: any) => {
 
                                         {/* Content */}
                                         <div className="ml-4 flex-1">
-                                            <p className="text-sm font-semibold">{activity.activityDescription}</p>
-                                            <p className="text-xs text-gray-500">{format(parseISO(activity.activityDate), "hh:mm a")}</p>
+                                            <p className="text-sm font-semibold">{activity.activityLogDescription}</p>
+                                            <p className="text-xs text-gray-500">{format(new Date(activity.activityLogDate), 'hh:mm a')}</p>
                                         </div>
                                     </div>
                                 ))}

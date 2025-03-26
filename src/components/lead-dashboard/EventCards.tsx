@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // import { Clock3, ArrowUp } from 'lucide-react';
-import { parseISO, isToday, isTomorrow, format } from 'date-fns';
+import { isToday, isTomorrow, format } from 'date-fns';
 
-const formatCardDateTime = (isoString: string): string => {
-    if (!isoString) return 'No data';
+const formatCardDateTime = (timestamp: number, startTime: string): string => {
+    if (!timestamp) return 'No data';
 
-    const cardDateTime = parseISO(isoString);
+    const cardDateTime = new Date(timestamp);
     let dateLabel = '';
 
     if (isToday(cardDateTime)) {
@@ -16,10 +16,13 @@ const formatCardDateTime = (isoString: string): string => {
         dateLabel = format(cardDateTime, 'dd-MMM-yyyy');
     }
 
-    const timeLabel = format(cardDateTime, 'h:mm a');
+    const timeParts = startTime.split(':');
+    const timeDate = new Date();
+    timeDate.setHours(parseInt(timeParts[0]), parseInt(timeParts[1]));
+
+    const timeLabel = format(timeDate, 'h:mm a');
     return `${dateLabel} | ${timeLabel}`;
 };
-
 
 const EventCards = ({ card }: any) => {
     const { activityPriority } = card;
@@ -41,7 +44,7 @@ const EventCards = ({ card }: any) => {
             </div>
 
             <div className="mt-4 flex justify-between items-center text-sm text-gray-500">
-                <div>{formatCardDateTime(card?.activityStartDate)}</div>
+                <div>{formatCardDateTime(card?.activityStartDate, card?.activityStartTime)}</div>
                 <div className="flex items-center bg-[#F4F9FD] rounded-lg p-1 mr-2">
                     <p
                         className={`text-white text-[8px] rounded-full px-1 py-0 ${card.activityType === 'APPOINTMENT'

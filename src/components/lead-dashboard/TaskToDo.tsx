@@ -22,6 +22,7 @@ const TaskToDo = ({ setRightExpanded, rightExpanded }: any) => {
   const handleEventList = async () => {
     try {
       const response = await taskList()
+      console.log('taskList : ', response)
       if (response?.status === 'error') {
         console.log('error : ', response)
       } else if (response?.status === 'success') {

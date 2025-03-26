@@ -10,16 +10,19 @@ import { useRouter } from 'next/navigation'
 
 const Events = ({ setRightExpanded, rightExpanded }: any) => {
     const router = useRouter()
-    const eventList: any = useApiRequests('calenderEventActivityList', 'GET')
+    const eventList: any = useApiRequests('dashboardEvents', 'POST')
     const [eventData, setEventData] = useState([])
 
 
     const handleEventList = async () => {
         try {
-            const response = await eventList()
-            if (response?.status === 'error') {
+            const response = await eventList({
+                activityType: "EVENT"
+            })
+            console.log('response : ', response)
+            if (response?.statusCode === 400) {
                 console.log('error : ', response)
-            } else if (response?.status === 'success') {
+            } else if (response?.statusCode === 200) {
                 setEventData(response?.data)
             }
         } catch (err) {

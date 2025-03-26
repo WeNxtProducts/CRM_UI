@@ -141,10 +141,10 @@ const EnquiryListTable: React.FC<EnquiryListTableProps> = ({
 										{enquiry.enqUpdatedDate ? (
 											<>
 												<span className='text-xs font-medium'>
-													{format(parseISO(enquiry?.enqUpdatedDate), 'yyyy-MM-dd')}
+													{moment(enquiry?.enqUpdatedDate).format ('yyyy-MM-dd')}
 												</span>
 												<span className='text-[11px] text-gray-500'>
-													{format(parseISO(enquiry?.enqUpdatedDate), 'hh:mma')}
+													{moment(enquiry?.enqUpdatedDate).format('hh:mma') }
 												</span>
 											</>
 										) : (

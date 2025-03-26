@@ -3,7 +3,7 @@
 
 import { ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Separator } from '@/components/ui/separator'
 import { Input } from '@/components/ui/input'
 import { useForm, Controller } from 'react-hook-form'
@@ -30,7 +30,7 @@ const LeadForm = () => {
 	// const dispatch = useAppDispatch()
 	// const [date, setDate] = React.useState<Date>()
 	const [leadAccDialog, setLeadAccDialog] = useState(false)
-	const [sales, setSales] = useState()
+	const [sales, setSales] = useState<any[]>([])
 	const {
 		register,
 		handleSubmit,
@@ -44,12 +44,11 @@ const LeadForm = () => {
 	const managerId = useAppSelector((state: any) => state?.users?.managerId)
 	console.log('Fetched mangerId from Redux:', managerId)
 
-	const role  = useAppSelector((state: any) => state?.users?.role)
+	const role = useAppSelector((state: any) => state?.users?.role)
 	console.log('role from redux:', role)
 
 	const leadNewData: any = useApiRequests('leadCreate', 'POST')
-	const salesName : any = useApiRequests('salesListing','POST')
-
+	const salesName: any = useApiRequests('salesListing', 'POST')
 
 	const leadData = async (data: any) => {
 		const userSeqNo = userId
@@ -61,9 +60,23 @@ const LeadForm = () => {
 			} else if (response?.statusCode === 200) {
 				console.log('success : ', response)
 				console.log('Fetched userId from Redux:', userId)
-
 				// dispatch(setEnquiryName(data.leadName))
 				setLeadAccDialog(true)
+			}
+		} catch (err) {
+			console.log('err : ', err)
+		}
+	}
+
+	const salesInfo = async () => {
+		try {
+			const assignedTo = { assignedTo: managerId }
+			const response = await salesName(assignedTo)
+			if (response?.data === 'error') {
+				console.log('error : ', response)
+			} else if (response?.statusCode === 200) {
+				setSales(response?.data)
+				console.log('Sales data:', response)
 			}
 		} catch (err) {
 			console.log('err : ', err)
@@ -75,6 +88,10 @@ const LeadForm = () => {
 		leadData(data)
 		console.log('userId:', userId)
 	}
+
+	useEffect(() => {
+		salesInfo()
+	}, [managerId])
 
 	return (
 		<div>
@@ -226,32 +243,36 @@ const LeadForm = () => {
 								placeholder='By whom'
 								{...register('leadAssignedBy')}
 							/> */}
-							{role !== 'sales' && (
-							<Controller
-								name='leadAssignedTo'
-								control={control}
-								render={({ field }) => (
-									<SelectWrapper label='Assigned to whom'>
-										<Select
-											onValueChange={field.onChange}
-											value={field.value}>
-											<SelectTrigger
-												id='custom-select'
-												className='w-full'>
-												<SelectValue placeholder='To whom' />
-											</SelectTrigger>
-											<SelectContent>
-												<SelectGroup>
-													<SelectItem value='option1'>Option 1</SelectItem>
-													<SelectItem value='option2'>Option 2</SelectItem>
-													<SelectItem value='option3'>Option 3</SelectItem>
-												</SelectGroup>
-											</SelectContent>
-										</Select>
-									</SelectWrapper>
-								)}
-							/>
-						)}
+							{sales?.length > 0 && (
+								<Controller
+									name='leadAssignedTo'
+									control={control}
+									render={({ field }) => (
+										<SelectWrapper label='Assigned to whom'>
+											<Select
+												onValueChange={field.onChange}
+												value={field.value}>
+												<SelectTrigger
+													id='custom-select'
+													className='w-full'>
+													<SelectValue placeholder='To whom' />
+												</SelectTrigger>
+												<SelectContent>
+													<SelectGroup>
+														{sales?.map((salesRep: any) => (
+															<SelectItem
+																key={salesRep.userSeqNo}
+																value={salesRep.userSeqNo.toString()}>
+																{salesRep?.userName}
+															</SelectItem>
+														))}
+													</SelectGroup>
+												</SelectContent>
+											</Select>
+										</SelectWrapper>
+									)}
+								/>
+							)}
 
 							<Controller
 								name='leadPriority'

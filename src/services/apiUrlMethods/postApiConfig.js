@@ -32,6 +32,9 @@ const POST_API_URL = {
     },
     salesListing:{
         url:"User/Filter"
+    },
+    conversationCreate:{
+        url:'Conversation/create'
     }
 };
 

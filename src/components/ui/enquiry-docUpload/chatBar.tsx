@@ -3,7 +3,7 @@ import { message } from '@/lib/constant';
 import { ChevronDown } from 'lucide-react';
 import React from 'react'
 
-const ChatBar = () => {
+const ChatBar = (conversationData:any) => {
 	return (
 		<div className='rounded-xl border mt-6'>
 			<div className='ml-4 mt-2 flex flex-row gap-x-1'>
@@ -17,7 +17,7 @@ const ChatBar = () => {
           <div key={message.id} className="flex flex-col">
             {message.sender === "lead" && (
               <div className="flex items-center space-x-2">
-                <span className="text-xxs font-semibold">{message.name}</span>
+                {/* <span className="text-xxs font-semibold">{message.name}</span> */}
               </div>
             )}
             <div

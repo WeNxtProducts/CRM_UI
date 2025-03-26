@@ -37,6 +37,9 @@ const GET_API_URL = {
     calenderEventActivityList: {
         url: "/api/activities"
     },
+    conversationDisplay:{
+        url:'Conversation/all'
+    }
 };
 
 export default GET_API_URL;
